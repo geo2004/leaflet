@@ -54,8 +54,7 @@
 
 
     	var baseLayers = {
-		"Grayscale": grayscale,
-		"Streets": streets,
+
         "Satellites": satellites,
 	};
     
