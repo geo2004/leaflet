@@ -2,7 +2,7 @@
 <html>
 <head>
 	
-	<title>Quick Start - Leaflet</title>
+	<title>Leaflet Belajar</title>
 
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,8 +55,9 @@
 	};
     
     var overlays = {
-		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer('http://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer')
-});
+		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer("https://as1.sesync.org/arcgis/rest/services/OA_Vulnerability/Global_Annual_Chlorophyll_A_2002/MapServer/", {
+  opacity : 1
+}).addTo(map);
 		
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
