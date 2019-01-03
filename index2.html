@@ -55,15 +55,10 @@
 	};
     
     var overlays = {
-		Boundaries: L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', {
-			layers: 'ne:ne_10m_admin_0_boundary_lines_land'
-		}),
-		'Countries, then boundaries': L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', {
-			layers: 'ne:ne_10m_admin_0_countries,ne:ne_10m_admin_0_boundary_lines_land'
-		}),
-		'Boundaries, then countries': L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', {
-			layers: 'ne:ne_10m_admin_0_boundary_lines_land,ne:ne_10m_admin_0_countries'
-		})
+		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer("http://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer", {
+  opacity : 1
+}).addTo(map);
+		
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
     
