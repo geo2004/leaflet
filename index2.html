@@ -35,12 +35,20 @@
 	var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
 			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-		mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
-    
+	    mbUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw';
+        
+	var sigiAttr = 'Map data &copy; <a href="https://sigi.pu.go.id/">Kementerian PUPR</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+	    sigiUrl = 'http://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/{id}/MapServer'
     
 	var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light'}),
 		streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets'});
-        satellites  = L.tileLayer(mbUrl, {id: 'mapbox.satellite'});
+            satellites  = L.tileLayer(mbUrl, {id: 'mapbox.satellite'});
+	
+	var spam   = L.esri.dynamicLayer(sigiUrl, {id: 'Satu_Peta_SPAM'}),
+	    ipal   = L.esri.dynamicLayer(sigiUrl, {id: 'Satu_Peta_TPA'}),
+            iplt  = L.esri.dynamicLayer(sigiUrl, {id: 'Satu_Peta_IPLT'});
         
         	var map = L.map('map', {
 		center: [-7, 110],
@@ -51,15 +59,15 @@
     	var baseLayers = {
 		"Grayscale": grayscale,
 		"Streets": streets,
-        "Satellites": satellites,
+                "Satellites": satellites,
 	};
     
-    var overlays = {
-		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer("https://as1.sesync.org/arcgis/rest/services/OA_Vulnerability/Global_Annual_Chlorophyll_A_2002/MapServer/", {
-  opacity : 1
-}).addTo(map);
-		
+        var overlays = {
+		"SPAM": spam,
+		"IPAL": ipal,
+                "IPLT": iplt,
 	};
+	
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
     
 </script>
