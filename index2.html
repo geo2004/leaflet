@@ -55,9 +55,8 @@
 	};
     
     var overlays = {
-		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer("http://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer", {
-  opacity : 1
-}).addTo(map);
+		'Sarana Pengolahan Air Minum': L.esri.dynamicMapLayer('http://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer')
+});
 		
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
