@@ -55,8 +55,8 @@
 		zoom: 10,
 		layers: [gray, spam]
 	});
-     spam.bindPopup(function (layer) {
-    return (layer.feature.properties);
+     spam.bindPopup(function (feature) {
+    return (feature.properties.namaobj);
   });
     	var baseLayers = {
 		"Grayscale ESRI": gray,
