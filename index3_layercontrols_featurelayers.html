@@ -64,13 +64,14 @@
 	};
     
     var overlays = {
-     "U.S. States": states,
+   
 		'Countries, then boundaries': L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', {
 			layers: 'ne:ne_10m_admin_0_countries,ne:ne_10m_admin_0_boundary_lines_land'
 		}),
 		'Boundaries, then countries': L.tileLayer.wms('https://demo.boundlessgeo.com/geoserver/ows?', {
 			layers: 'ne:ne_10m_admin_0_boundary_lines_land,ne:ne_10m_admin_0_countries'
-		})
+		}),
+	      "U.S. States": states,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
     
