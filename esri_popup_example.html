@@ -38,7 +38,7 @@
   }).addTo(map);
 
   trees.bindPopup(function (layer) {
-    return L.Util.template('<p>{namaobj}<br>{remarks}<br>{thnpbn}</p>', layer.feature.properties);
+    return L.Util.template('<p>{Nama Objek}<br>{Tahun Dibangun}<br>{Kapasitas Produksi}</p>', layer.feature.properties);
   });
 </script>
 
