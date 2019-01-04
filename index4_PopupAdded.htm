@@ -76,7 +76,7 @@
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
-  spam.bindPopup(function (layer) {
+  spam.bindPopup(function (feature) {
     return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{remarks}</p>', layer.feature.properties);
   });
  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
