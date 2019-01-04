@@ -44,7 +44,7 @@
 	var grayscale   = L.tileLayer(mbUrl, {id: 'mapbox.light'}),
 		streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets'});
         satellites  = L.tileLayer(mbUrl, {id: 'mapbox.satellite'});
-	soil = L.esri.dynamicMapLayer(sigiurl);
+	soil = L.esri.dynamicMapLayer(sigiUrl);
         
         	var map = L.map('map', {
 		center: [-7, 110],
