@@ -52,7 +52,7 @@
         satellites  = L.tileLayer(mbUrl, {id: 'mapbox.satellite'});
         
           var spam = L.esri.featureLayer({
-      url: "https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer/0",
+      url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/ArcGIS/rest/services/Airports_2/FeatureServer/0",
       style: function (feature) {
           return {color: '#bada55', weight: 1 };
       }
@@ -76,8 +76,8 @@
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
-  spam.bindPopup(function (evt) {
-    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{remarks}</p>', evt.feature.properties);
+  spam.bindPopup(function (layer) {
+    return L.Util.template('<p>{type}<br>{name}<br>{abbrev}</p>', layer.feature.properties);
   });
  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
