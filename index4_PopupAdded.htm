@@ -46,7 +46,7 @@
           var spam = L.esri.featureLayer({
       url: "https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer/0",
       style: function (feature) {
-          return {color: '#bada55', weight: 2 };
+          return {color: '#bada55', weight: 1 };
       }
   });
 
@@ -56,7 +56,7 @@
 		layers: [gray, spam]
 	});
      spam.bindPopup(function (layer) {
-    return L.Util.template(layer.feature.properties);
+    return (layer.feature.properties);
   });
     	var baseLayers = {
 		"Grayscale ESRI": gray,
