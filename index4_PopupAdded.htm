@@ -67,7 +67,7 @@
 	      "SPAM": spam,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
-	  spam.bindPopup(function (feature) {
+	  spam.bindPopup(function (layer) {
     return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{propinsi}<br>{kab_kota}<br>{kaprod}<br>{remarks}</p>', layer.feature.properties);
   });
     
