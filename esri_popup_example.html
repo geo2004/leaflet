@@ -34,11 +34,11 @@
   L.esri.basemapLayer('Streets').addTo(map);
 
   var trees = L.esri.featureLayer({
-    url: 'https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer/0'
+    url: 'https://services.arcgis.com/rOo16HdIMeOBI4Mb/ArcGIS/rest/services/Airports_2/FeatureServer/0'
   }).addTo(map);
 
   trees.bindPopup(function (layer) {
-    return L.Util.template('<p>{Nama Objek}<br>{Tahun Dibangun}<br>{Kapasitas Produksi}</p>', layer.feature.properties);
+    return L.Util.template('<p>{type}<br>{name}<br>{abbrev}</p>', layer.feature.properties);
   });
 </script>
 
