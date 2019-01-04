@@ -45,9 +45,9 @@
     	var sigiAttr = 'Map data &copy; <a href="https://sigi.pu.go.id/">Kementerian PUPR</a> contributors, ' +
 			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
 			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-	    sigiUrl = 'https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/{id2}/MapServer';
+	    sigiUrl = 'https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_SPAM/MapServer';
     
-	var spam   = L.esri.dynamicMapLayer(sigiUrl, {id2: 'Satu_Peta_SPAM'}),
+	var spam   = L.esri.dynamicMapLayer(sigiUrl),
 	    ipal   = L.esri.dynamicMapLayer(sigiUrl, {id2: 'Satu_Peta_TPA'}),
             iplt  = L.esri.dynamicMapLayer(sigiUrl, {id2: 'Satu_Peta_IPLT'});
         
@@ -64,9 +64,7 @@
 	};
     
         var overlays = {
-		"SPAM": spam,
-		"IPAL": ipal,
-                "IPLT": iplt
+		"SPAM": spam
 	};
 	
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
