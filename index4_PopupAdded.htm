@@ -51,8 +51,8 @@
 		streets  = L.tileLayer(mbUrl, {id: 'mapbox.streets'});
         satellites  = L.tileLayer(mbUrl, {id: 'mapbox.satellite'});
         
-          var spam = L.esri.featureLayer({
-      url: "https://services.arcgis.com/rOo16HdIMeOBI4Mb/ArcGIS/rest/services/Airports_2/FeatureServer/0",
+          var pkp = L.esri.featureLayer({
+      url: "https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Peta_PKP/FeatureServer/0",
       style: function (feature) {
           return {color: '#bada55', weight: 1 };
       }
@@ -61,7 +61,7 @@
         	var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 10,
-		layers: [streets, spam]
+		layers: [streets, pkp]
 	});
 
     	var baseLayers = {
@@ -72,12 +72,12 @@
 	};
     
     var overlays = {
-	      "SPAM": spam,
+	      "PKP": pkp,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
-  spam.bindPopup(function (layer) {
-    return L.Util.template('<p>{type}<br>{name}<br>{abbrev}</p>', layer.feature.properties);
+  pkp.bindPopup(function (layer) {
+    return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
   });
  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
