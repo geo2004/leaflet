@@ -55,7 +55,9 @@
 		zoom: 10,
 		layers: [gray, spam]
 	});
-    
+     spam.bindPopup(function (layer) {
+    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{propinsi}<br>{kab_kota}<br>{kaprod}<br>{remarks}</p>', layer.feature.properties);
+  });
     	var baseLayers = {
 		"Grayscale ESRI": gray,
 		"Grayscale Mapbox": grayscale,
@@ -67,9 +69,7 @@
 	      "SPAM": spam,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
-	  spam.bindPopup(function (layer) {
-    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{propinsi}<br>{kab_kota}<br>{kaprod}<br>{remarks}</p>', layer.feature.properties);
-  });
+	 
     
 </script>
 
