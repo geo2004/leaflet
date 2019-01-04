@@ -58,7 +58,7 @@
       }
   });
   spam.bindPopup(function (layer) {
-    return L.Util.template('<p>{COMMON_NAM}<br>{SCIENTIFIC}<br>{NOTES}</p>', layer.feature.properties);
+    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{remarks}</p>', layer.feature.properties);
   });
         	var map = L.map('map', {
 		center: [-7, 110],
