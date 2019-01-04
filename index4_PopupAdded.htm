@@ -49,7 +49,7 @@
           return {color: '#bada55', weight: 2 };
       }
   });
-  spam.bindPopup(function (layer) {
+  spam.bindPopup(function (feature) {
     return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{propinsi}<br>{kab_kota}<br>{kaprod}<br>{remarks}</p>', layer.feature.properties);
   });
         	var map = L.map('map', {
