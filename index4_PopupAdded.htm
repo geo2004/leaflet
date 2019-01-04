@@ -57,9 +57,7 @@
           return {color: '#bada55', weight: 1 };
       }
   });
-  spam.bindPopup(function (layer) {
-    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{remarks}</p>', layer.feature.properties);
-  });
+
         	var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 10,
@@ -77,6 +75,10 @@
 	      "SPAM": spam,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
+	
+  spam.bindPopup(function (layer) {
+    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{remarks}</p>', layer.feature.properties);
+  });
  var searchControl = L.esri.Geocoding.geosearch().addTo(map);
 
   var results = L.layerGroup().addTo(map);
