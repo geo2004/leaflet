@@ -60,13 +60,15 @@
         	
            var soil = L.esri.dynamicMapLayer({
     url: "https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer",
-    opacity: 0.7
+    style: function (layer) {
+          return {color: '#55b4da', weight: 1 };
+      }
   });
           
           var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 10,
-		layers: [streets, pkp]
+		layers: [streets, pkp, soil]
 	});
     	var baseLayers = {
 		"Grayscale ESRI": gray,
