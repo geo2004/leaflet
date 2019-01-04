@@ -56,7 +56,7 @@
 		layers: [gray, spam]
 	});
      spam.bindPopup(function (layer) {
-    return L.Util.template('<p>{namaobj}<br>{thnpbn}<br>{propinsi}<br>{kab_kota}<br>{kaprod}<br>{remarks}</p>', layer.feature.properties);
+    return L.Util.template(layer.feature.properties);
   });
     	var baseLayers = {
 		"Grayscale ESRI": gray,
