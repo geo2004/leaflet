@@ -59,7 +59,7 @@
   });
         	
            var soil = L.esri.dynamicMapLayer({
-    url: 'https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer',
+    url: "https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer",
     opacity: 0.7
   });
           
@@ -77,7 +77,7 @@
     
     var overlays = {
 	      "PKP": pkp,
-        "Soil": soil
+        "Soil": soil,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
