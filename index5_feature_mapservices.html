@@ -24,7 +24,8 @@
     integrity="sha512-zdT4Pc2tIrc6uoYly2Wp8jh6EPEWaveqqD3sT0lf5yei19BC1WulGuh5CesB0ldBKZieKGD7Qyf/G0jdSe016A=="
     crossorigin=""></script>
 
-	
+	 <link rel="stylesheet" href="L.Control.BetterScale.css" />
+  <script src="L.Control.BetterScale.js"></script>
 <style>
     body { margin:0; padding:0; }
     #map { position: absolute; top:0; bottom:0; right:0; left:0; }
@@ -83,6 +84,7 @@
         "IPLT": iplt,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
+	L.control.betterscale(metric).addTo(map);
 	
   pkp.bindPopup(function (layer) {
     return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
