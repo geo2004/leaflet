@@ -59,8 +59,8 @@
   });
          
 
- var jalan = L.esri.dynamicMapLayer({
-  url: 'https://sigi.pu.go.id:6080/arcgis/rest/services/KSP2018/IGTJalanNasional/MapServer',
+ var iplt = L.esri.dynamicMapLayer({
+  url: 'https://sigi.pu.go.id/portalpupr2/rest/services/SatuPeta/Satu_Peta_IPLT/MapServer',
 	   useCors: true,
     layers: [0],
   });
@@ -69,7 +69,7 @@
           var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 10,
-		layers: [streets, pkp, jalan]
+		layers: [streets, pkp, iplt]
 	});
     	var baseLayers = {
 		"Grayscale ESRI": gray,
@@ -80,7 +80,7 @@
     
     var overlays = {
 	      "PKP": pkp,
-        "Jalan Nas": jalan,
+        "IPLT": iplt,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
