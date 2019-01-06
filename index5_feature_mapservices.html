@@ -84,7 +84,7 @@
         "IPLT": iplt,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
-	L.control.betterscale(metric).addTo(map);
+	L.control.betterscale({metric: true}).addTo(map);
 	
   pkp.bindPopup(function (layer) {
     return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
