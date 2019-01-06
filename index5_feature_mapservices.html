@@ -59,7 +59,7 @@
   });
          
 
- var url = L.esri.dynamicMapLayer({
+ var soil = L.esri.dynamicMapLayer({
   url: "https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Petroleum/KGS_OilGasFields_Kansas/MapServer",
   opacity : 0.25,
   useCors: false
@@ -80,7 +80,7 @@
     
     var overlays = {
 	      "PKP": pkp,
-        "Soil": url,
+        "Soil": soil,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
