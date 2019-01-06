@@ -59,15 +59,15 @@
   });
          
 
- var soil = L.esri.dynamicMapLayer({
-  url: "https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Petroleum/KGS_OilGasFields_Kansas/MapServer",
+ var jalan = L.esri.dynamicMapLayer({
+  url: 'http://sigi.pu.go.id:6080/arcgis/rest/services/KSP2018/IGTJalanNasional/MapServer',
   });
           
           
           var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 10,
-		layers: [streets, pkp, soil]
+		layers: [streets, pkp, jalan]
 	});
     	var baseLayers = {
 		"Grayscale ESRI": gray,
@@ -78,7 +78,7 @@
     
     var overlays = {
 	      "PKP": pkp,
-        "Soil": soil,
+        "Jalan Nasional": jalan,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
