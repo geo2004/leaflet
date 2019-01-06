@@ -91,7 +91,7 @@
 if(error || featureCollection.features.length === 0) {
   return false;
 } else {
-  return 'Name: ' + featureCollection.features.properties.NAME;}
+  return 'Name: ' + featureCollection.features[0].properties.NAME;}
 }); 
 		 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
   var results = L.layerGroup().addTo(map);
