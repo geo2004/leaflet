@@ -57,13 +57,14 @@
           return {color: '#55b4da', weight: 1 };
       }
   });
-        	
-           var soil = L.esri.dynamicMapLayer({
-    url: "https://services.arcgisonline.com/arcgis/rest/services/Specialty/Soil_Survey_Map/MapServer",
-    style: function (layer) {
-          return {color: '#55b4da', weight: 1 };
-      }
-  });
+         
+
+ var url = L.esri.dynamicMapLayer({
+  url: "https://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Petroleum/KGS_OilGasFields_Kansas/MapServer",
+  opacity : 0.25,
+  useCors: false
+}).addTo(map);	
+          
           
           var map = L.map('map', {
 		center: [-7, 110],
@@ -79,7 +80,7 @@
     
     var overlays = {
 	      "PKP": pkp,
-        "Soil": soil,
+        "Soil": url,
 	};
     L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 	
