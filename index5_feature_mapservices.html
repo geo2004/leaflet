@@ -88,7 +88,7 @@
     return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
   });
 	 iplt.bindPopup(function (error, collection) {
-  return collection.features[0].properties.namboj;
+  return collection.features[0].properties.namobj;
   });
 		 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
   var results = L.layerGroup().addTo(map);
