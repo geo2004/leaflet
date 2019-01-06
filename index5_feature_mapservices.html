@@ -87,9 +87,12 @@
   pkp.bindPopup(function (layer) {
     return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
   });
-	 iplt.bindPopup(function (error, collection) {
-  return L.Util.template('<p>{namobj}<br>{propinsi}<br>{thnpbn}</p>', collection.features[0].properties);
-  });
+	 iplt.bindPopup(function (error, featureCollection) {
+if(error || featureCollection.features.length === 0) {
+  return false;
+} else {
+  return 'Name: ' + featureCollection.features.properties.NAME;}
+}); 
 		 var searchControl = L.esri.Geocoding.geosearch().addTo(map);
   var results = L.layerGroup().addTo(map);
   searchControl.on('results', function(data){
