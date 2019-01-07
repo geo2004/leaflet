@@ -93,6 +93,13 @@
         title: "Zoom to your location"
     }
 }).addTo(map);
+	L.control.mousePosition({
+    position: 'bottomleft',
+    strings: {
+        title: "Coordinates"
+    }
+}).addTo(map);
+	
 	
   pkp.bindPopup(function (layer) {
     return L.Util.template('<p>{kondisi}<br>{propinsi}<br>{kecamatan}</p>', layer.feature.properties);
