@@ -93,12 +93,7 @@
         title: "Zoom to your location"
     }
 }).addTo(map);
-	L.control.mousePosition({
-    position: 'bottomleft',
-    strings: {
-        title: "Coordinates"
-    }
-}).addTo(map);
+	L.control.mousePosition().addTo(map);
 	
 	
   pkp.bindPopup(function (layer) {
