@@ -113,9 +113,9 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
-    var bounds = new L.LatLngBounds(new L.LatLng(40, 7), new L.LatLng(55, 10));
+    var bounds = new L.LatLngBounds(new L.LatLng(-90, -180), new L.LatLng(90, 180));
 
-		map.addLayer(baseLayers).fitBounds(bounds);
+		map.addLayer(streets).fitBounds(bounds);
 
 		L.control.coordinates({
 			position:"topright",
