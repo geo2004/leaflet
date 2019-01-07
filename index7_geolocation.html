@@ -93,14 +93,7 @@
         title: "Zoom to your location"
     }
 }).addTo(map);
-	map.addLayer(service).fitBounds(bounds);
-		L.control.coordinates({
-			position:"topright",
-			useDMS:true,
-			labelTemplateLat:"N {y}",
-			labelTemplateLng:"E {x}",
-			useLatLngOrder:true
-		}).addTo(map);
+		
 	
 	
   pkp.bindPopup(function (layer) {
@@ -120,7 +113,17 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
-    
+    var bounds = new L.LatLngBounds(new L.LatLng(40, 7), new L.LatLng(55, 10));
+
+		map.addLayer(service).fitBounds(bounds);
+
+		L.control.coordinates({
+			position:"topright",
+			useDMS:true,
+			labelTemplateLat:"N {y}",
+			labelTemplateLng:"E {x}",
+			useLatLngOrder:true
+		}).addTo(map);
 </script>
 </body>
 </html>
