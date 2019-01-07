@@ -113,17 +113,7 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
-    var bounds = new L.LatLngBounds(new L.LatLng(-90, -180), new L.LatLng(90, 180));
-
-		map.addLayer(streets).fitBounds(bounds);
-
-		L.control.coordinates({
-			position:"topright",
-			useDMS:true,
-			labelTemplateLat:"N {y}",
-			labelTemplateLng:"E {x}",
-			useLatLngOrder:true
-		}).addTo(map);
+L.control.mousePosition().addTo(map);
 </script>
 </body>
 </html>
