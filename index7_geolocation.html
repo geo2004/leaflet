@@ -93,7 +93,14 @@
         title: "Zoom to your location"
     }
 }).addTo(map);
-	L.control.mousePosition().addTo(map);
+	map.addLayer(service).fitBounds(bounds);
+		L.control.coordinates({
+			position:"topright",
+			useDMS:true,
+			labelTemplateLat:"N {y}",
+			labelTemplateLng:"E {x}",
+			useLatLngOrder:true
+		}).addTo(map);
 	
 	
   pkp.bindPopup(function (layer) {
