@@ -114,7 +114,7 @@ if(error || featureCollection.features.length === 0) {
     }
   }); 
  var c = new L.Control.Coordinates();  
-    c.addTo(mymap);
+    c.addTo(map);
 
     map.on('click', function(e) {
     c.setCoordinates(e);
