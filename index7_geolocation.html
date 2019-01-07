@@ -113,7 +113,13 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
-L.control.mousePosition().addTo(map);
+ var c = new L.Control.Coordinates();  
+    c.addTo(mymap);
+
+    map.on('click', function(e) {
+    c.setCoordinates(e);
+
+    }); 
 </script>
 </body>
 </html>
