@@ -115,7 +115,7 @@ if(error || featureCollection.features.length === 0) {
   }); 
     var bounds = new L.LatLngBounds(new L.LatLng(40, 7), new L.LatLng(55, 10));
 
-		map.addLayer(service).fitBounds(bounds);
+		map.addLayer(baseLayers).fitBounds(bounds);
 
 		L.control.coordinates({
 			position:"topright",
