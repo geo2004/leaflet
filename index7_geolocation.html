@@ -113,7 +113,7 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
- var c = new L.Control.Coordinates();  
+ var c = new L.control.coordinates();  
     c.addTo(map);
 
     map.on('click', function(e) {
