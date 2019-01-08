@@ -1,27 +1,27 @@
 html, body{
-  height:100vh;
+  height:100%;
 }
  #wrapper {
   margin: 0 auto;
-  width: 100vw;
-  height:100vh;
+  width: 100%;
+  height:100%;
 }
 #panel{
  float: left;
   width: 100%;
-  height:5vh;
+  height:5%;
 background-color: #175B81;
 color:white;
 }
 #map {
   float: left;
   width: 80%;
-	height:92vh;
+	height:92%;
 }
 .sidebar {
   float: left;
   width: 20%;
-	height:92vh;
+	height:92%;
    background-color: white;
    color: #175B81;
 }
