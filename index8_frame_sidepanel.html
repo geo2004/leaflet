@@ -23,7 +23,7 @@
   <script src="https://unpkg.com/esri-leaflet-geocoder@2.2.13/dist/esri-leaflet-geocoder.js"
     integrity="sha512-zdT4Pc2tIrc6uoYly2Wp8jh6EPEWaveqqD3sT0lf5yei19BC1WulGuh5CesB0ldBKZieKGD7Qyf/G0jdSe016A=="
     crossorigin=""></script>
- 
+   <link rel="stylesheet" href="frameapp.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.66.0/dist/L.Control.Locate.min.css" />
 
@@ -32,90 +32,7 @@
 	<script src="L.Control.MousePosition.js" charset="utf-8"></script>
 	
 
-<style>
-	html,body{
-  height:100%;
-}
- #wrapper {
-  margin: 0 auto;
-  width: 100%;
-  height:100%;
-}
-#panel{
- float: left;
-  width: 100%;
-  height:50px;
-background-color: #175B81;
-color:white;
-}
-#map {
-  float: left;
-  width: 80%;
-	height:100%;
-}
-.sidebar {
-  float: left;
-  width: 20%;
-	height:100%;
-   background-color: white;
-   color: #175B81;
-}
-#footer {
-float: left;
-background-color: #175B81;
-color: white;
-  width: 100%;
-  height:25px
-}
-.text-labels     {
-	font-weight: bold;
-    color:#006400;
-	font-family: "Arial Black"
-	font-size: 20px ;
-    line-height:25px;
-    text-align:center;
-   }
-   
-table, th, td 
-	{
-		margin:0px 5px;
-		/*border:solid 1px #333; */
-		padding:2px 4px;
-		font:10px Verdana;
-	}
-th {
-		font-size:14px;
-		font-weight:bold
-	}
-td {
-		font-size:14px;
-		font-weight:normal
-	}
-tr {
-		background: white;
-	}
-	
-tbody  tr:hover {
-		background: yellow;
-	}
-table {
-		border-collapse: collapse;
-	}  
-.table a
-{
-    display:block;
-    text-decoration:none;
-}
-#f1{
-	font-weight:bold
-}
-.p2 {
-    font-size: 24px;
-	font-weight:bold;
-    position: relative;
-    top: 11px;
-	left: 20px;
-	</style>
+
 </head>
 <body>
 <div id="wrapper">
