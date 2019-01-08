@@ -1,6 +1,4 @@
-html, body{
-  height:100vh;
-}
+html, body { margin:0; padding:0; }
  #wrapper {
   margin: 0 auto;
   width: 100%;
