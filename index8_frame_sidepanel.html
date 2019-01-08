@@ -145,7 +145,7 @@ if(error || featureCollection.features.length === 0) {
       results.addLayer(L.marker(data.results[i].latlng));
     }
   }); 
-L.control.mousePosition().addTo(map);
+L.control.mousePosition( {position: bottomright}).addTo(map);
   
 </script>
 </body>
