@@ -16,12 +16,12 @@ color:white;
 #map {
   float: left;
   width: 80%;
-	height:92%;
+	height:90%;
 }
 .sidebar {
   float: left;
   width: 20%;
-	height:92%;
+	height:90%;
    background-color: white;
    color: #175B81;
 }
