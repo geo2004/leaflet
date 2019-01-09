@@ -18,7 +18,6 @@
   <script>
     //Map Center & Zoom
     var map = L.map('map').setView([-3.942699,138.526517],7);
-
     //Basemap
     var basemap0 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
@@ -32,16 +31,17 @@
        attribution: 'Google Satellite'
     });
     basemap0.addTo(map);
-
     //Marker
-var marker = L.marker([-8.085317,139.718297]);
-marker.addTo(map);
-marker.bindPopup('Alaku, Okaba, Merauke');
-
-var marker2 = L.marker([-4.037561, 138.953381]);
-marker2.addTo(map);
-marker2.bindPopup('AIKIMA, PISUGI Jayawijaya');
-
+	var markers = [
+		["Alaku, Okaba, Merauke",-8.085317,139.718297],
+		["Wetau, Waan, Merauke",-7.960800,137.923111]
+		];
+    
+    	for (var i = 0; i < markers.length; i++) {
+			marker = new L.marker([markers[i][1],markers[i][2]])
+				.bindPopup(markers[i][0])
+				.addTo(map);
+		}
 //Control Layer
 var baseMaps = {
   'OpenStreetMap': basemap0,
@@ -49,10 +49,8 @@ var baseMaps = {
   'Google Satellite': basemap2
 };
 var Layers = {
-   'Merauke': marker,
-   'Jayawijaya': marker2
+   'groups': marker
 };
-
 // layers: [Merauke]
 var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
 layerControl.addTo(map);
