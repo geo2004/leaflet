@@ -39,8 +39,8 @@ marker.addTo(map);
 marker.bindPopup('Alaku, Okaba, Merauke');
 
 var marker2 = L.marker([-4.037561, 138.953381]);
-marker2.addTo(map);
-marker2.bindPopup('AIKIMA, PISUGI Jayawijaya');
+marker.addTo(map);
+marker.bindPopup('AIKIMA, PISUGI Jayawijaya');
 
 //Control Layer
 var baseMaps = {
@@ -49,9 +49,9 @@ var baseMaps = {
   'Google Satellite': basemap2
 };
 var Layers = {
-   'Merauke': marker
+   'Merauke': marker,
    'Jayawijaya': marker2
-
+};
 
 // layers: [Merauke]
 };
