@@ -32,16 +32,12 @@
     });
     basemap0.addTo(map);
     //Marker
-	var markers = [
-		["Alaku, Okaba, Merauke",-8.085317,139.718297],
-		["Wetau, Waan, Merauke",-7.960800,137.923111]
-		];
-    
-    	for (var i = 0; i < markers.length; i++) {
-			marker = new L.marker([markers[i][1],markers[i][2]])
-				.bindPopup(markers[i][0])
-				.addTo(map);
-		}
+	var markers = L.layerGroup();
+	 
+    	L.marker([-8.085317,139.718297]).bindPopup("Alaku, Okaba, Merauke").addTo(markers);
+	  L.marker([-7.960800,137.923111]).bindPopup("Wetau, Waan, Merauke").addTo(markers);
+			
+		
 //Control Layer
 var baseMaps = {
   'OpenStreetMap': basemap0,
@@ -49,7 +45,7 @@ var baseMaps = {
   'Google Satellite': basemap2
 };
 var Layers = {
-   'groups': marker
+   'groups': markers
 };
 // layers: [Merauke]
 var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
