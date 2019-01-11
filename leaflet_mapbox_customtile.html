@@ -38,11 +38,6 @@
     });
      	
     basemap0.addTo(map);
-    //Marker
-	var markers = L.layerGroup();
-	 
-    	L.marker([-8.085317,139.718297]).bindPopup("Alaku, Okaba, Merauke").addTo(markers);
-	  L.marker([-7.960800,137.923111]).bindPopup("Wetau, Waan, Merauke").addTo(markers);
 		
 		var gl = L.mapboxGL({
     accessToken: token,
@@ -60,7 +55,6 @@ var baseMaps = {
  'mapbox Map': gl
 };
 var Layers = {
-   'groups': markers,
    'Batavia Tahun 1866': batavia1866
 };
 // layers: [Merauke]
