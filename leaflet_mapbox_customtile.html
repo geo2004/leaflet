@@ -1,10 +1,13 @@
 <html>
 <head>
-  <title>Propinsi Papua</title>
+  <title>Mapbox Custom TIleset</title>
   <!— Leaflet Javascript library —>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
   <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	  <!-- Mapbox GL -->
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel='stylesheet' />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
   <style>
     html, body, #map {
       width: 100%;
@@ -16,8 +19,10 @@
 <body>
   <div id="map"></div>
   <script>
+   //Mapbox Token
+    var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";
     //Map Center & Zoom
-    var map = L.map('map').setView([-3.942699,138.526517],7);
+    var map = L.map('map').setView([-6.176254,106.825385],14);
     //Basemap
     var basemap0 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
@@ -36,13 +41,17 @@
 	 
     	L.marker([-8.085317,139.718297]).bindPopup("Alaku, Okaba, Merauke").addTo(markers);
 	  L.marker([-7.960800,137.923111]).bindPopup("Wetau, Waan, Merauke").addTo(markers);
-			
+var gl = L.mapboxGL({
+    accessToken: token,
+    style: 'mapbox://styles/mapbox/bright-v8'
+});			
 		
 //Control Layer
 var baseMaps = {
   'OpenStreetMap': basemap0,
   'Stamen Terrain': basemap1,
-  'Google Satellite': basemap2
+  'Google Satellite': basemap2,
+  'mapbox Map': gl
 };
 var Layers = {
    'groups': markers
