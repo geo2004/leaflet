@@ -48,6 +48,10 @@
     accessToken: token,
     style: 'mapbox://styles/mapbox/bright-v8'
 });
+	  var batavia1866 = L.mapboxGL({
+		  accessToken: token,
+		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
+		  });
 //Control Layer
 var baseMaps = {
   'OpenStreetMap': basemap0,
@@ -56,7 +60,8 @@ var baseMaps = {
  'mapbox Map': gl
 };
 var Layers = {
-   'groups': markers 
+   'groups': markers,
+   'Batavia Tahun 1866': batavia1866
 };
 // layers: [Merauke]
 var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
