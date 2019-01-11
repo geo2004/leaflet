@@ -53,11 +53,10 @@ var baseMaps = {
   'OpenStreetMap': basemap0,
   'Stamen Terrain': basemap1,
   'Google Satellite': basemap2,
-
+ 'mapbox Map': gl
 };
 var Layers = {
-   'groups': markers,
-	  'mapbox Map': gl
+   'groups': markers 
 };
 // layers: [Merauke]
 var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
