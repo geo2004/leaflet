@@ -71,7 +71,7 @@
 	    var overlays1 = {
    'Batavia Tahun 1866': batavia1866
 };
-      L.control.layers(baseMaps1, overlays1).addTo(map1);
+      L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
         map1.attributionControl.setPrefix('');
 	    
         var map2 = L.map('map2', {
@@ -89,7 +89,7 @@
    'Batavia Tahun 1910': batavia1910
 };
         
-	    L.control.layers(baseMaps2, overlays2, collapsed=false).addTo(map2);	        
+	    L.control.layers(baseMaps2, overlays2, {collapsed:false}).addTo(map2);	        
   map1.sync(map2);
         map2.sync(map1);
     </script>
