@@ -69,6 +69,9 @@ var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
 layerControl.addTo(map1);
 var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
 layerControl.addTo(map2);
+	  
+	        map1.sync(map2);
+        map2.sync(map1);
   </script> 
 </body>
 </html>
