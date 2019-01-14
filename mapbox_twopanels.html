@@ -55,18 +55,26 @@
 		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
 		  });
 //Control Layer
-var baseMaps = {
+var baseMaps1 = {
   'OpenStreetMap': basemap0,
   'Google Satellite': basemap2,
  'mapbox Map': gl
 };
-var Layers = {
+	  var baseMaps2 = {
+  'OpenStreetMap': basemap0,
+  'Google Satellite': basemap2,
+ 'mapbox Map': gl
+};
+var Layers1 = {
+   'Batavia Tahun 1866': batavia1866
+};
+	  var Layers2 = {
    'Batavia Tahun 1866': batavia1866
 };
 
-var layerControl1 = L.control.layers(baseMaps, Layers, {collapsed:false});
+var layerControl1 = L.control.layers(baseMaps1, Layers1, {collapsed:false});
 layerControl1.addTo(map1);
-var layerControl2 = L.control.layers(baseMaps, Layers, {collapsed:false});
+var layerControl2 = L.control.layers(baseMaps2, Layers2, {collapsed:false});
 layerControl2.addTo(map2);
 	  
 	      
