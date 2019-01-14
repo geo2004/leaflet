@@ -1,0 +1,74 @@
+<html>
+<head>
+  <title>Mapbox Custom TIleset Two Panels</title>
+  <!— Leaflet Javascript library —>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.2.0/dist/leaflet.css" />
+
+  <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+	  <!-- Mapbox GL -->
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel='stylesheet' />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0px;
+    }
+      #map1, #map2 { width: 49.5%; height: 100%; }
+        #map1 { float: left; }
+        #map2 { float: right; }
+  </style>
+</head>
+<body>
+  <div id="map1"></div>
+   <div id="map2"></div>
+     <script src="https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"></script>
+	    <script type="text/javascript" src="L.Map.Sync.js"></script>
+  <script src="leaflet-mapbox-gl.js"></script>
+  <script>
+   //Mapbox Token
+    var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";
+    //Map Center & Zoom
+    var map1 = L.map('map1').setView([-6.176254,106.825385],14);
+    var map2 = L.map('map2').setView([-6.176254,106.825385],14);
+    //Basemap
+    var basemap0 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: 'OpenStreetMap'
+    });
+    var basemap1 = L.tileLayer('http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
+      attribution: 'Stamen Terrain'
+    });
+    var basemap2 = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+       maxZoom: 20,
+       subdomains:['mt0','mt1','mt2','mt3'],
+       attribution: 'Google Satellite'
+    });
+     	
+    basemap0.addTo(map1);
+		    basemap0.addTo(map2);
+		var gl = L.mapboxGL({
+    accessToken: token,
+    style: 'mapbox://styles/mapbox/bright-v8'
+});
+	  var batavia1866 = L.mapboxGL({
+		  accessToken: token,
+		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
+		  });
+//Control Layer
+var baseMaps = {
+  'OpenStreetMap': basemap0,
+  'Stamen Terrain': basemap1,
+  'Google Satellite': basemap2,
+ 'mapbox Map': gl
+};
+var Layers = {
+   'Batavia Tahun 1866': batavia1866
+};
+
+var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
+layerControl.addTo(map1);
+var layerControl = L.control.layers(baseMaps, Layers, {collapsed:false});
+layerControl.addTo(map2);
+  </script> 
+</body>
+</html>
