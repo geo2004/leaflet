@@ -31,12 +31,11 @@
     //Map Center & Zoom
     var map1 = L.map('map1').setView([-6.176254,106.825385],14);
     var map2 = L.map('map2').setView([-6.176254,106.825385],14);
+	    map1.sync(map2);
+        map2.sync(map1);
     //Basemap
     var basemap0 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
-    });
-    var basemap1 = L.tileLayer('http://a.tile.stamen.com/terrain/{z}/{x}/{y}.png', {
-      attribution: 'Stamen Terrain'
     });
     var basemap2 = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
        maxZoom: 20,
@@ -44,12 +43,13 @@
        attribution: 'Google Satellite'
     });
      	
-    basemap0.addTo(map1);
-		    basemap1.addTo(map2);
-		var gl = L.mapboxGL({
+   		var gl = L.mapboxGL({
     accessToken: token,
     style: 'mapbox://styles/mapbox/bright-v8'
 });
+	   basemap0.addTo(map1);
+		    gl.addTo(map2);
+	  
 	  var batavia1866 = L.mapboxGL({
 		  accessToken: token,
 		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
@@ -57,7 +57,6 @@
 //Control Layer
 var baseMaps = {
   'OpenStreetMap': basemap0,
-  'Stamen Terrain': basemap1,
   'Google Satellite': basemap2,
  'mapbox Map': gl
 };
@@ -70,8 +69,7 @@ layerControl1.addTo(map1);
 var layerControl2 = L.control.layers(baseMaps, Layers, {collapsed:false});
 layerControl2.addTo(map2);
 	  
-	        map1.sync(map2);
-        map2.sync(map1);
+	      
   </script> 
 </body>
 </html>
