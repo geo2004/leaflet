@@ -28,10 +28,7 @@
   <script>
    //Mapbox Token
     var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";
-    //Map Center & Zoom
-    var map1 = L.map('map1').setView([-6.176254,106.825385],14);
-    var map2 = L.map('map2').setView([-6.176254,106.825385],14);
-	
+
     //Basemap
     var basemap0 = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: 'OpenStreetMap'
@@ -41,17 +38,20 @@
        subdomains:['mt0','mt1','mt2','mt3'],
        attribution: 'Google Satellite'
     });
-     	
+    
    		var gl = L.mapboxGL({
     accessToken: token,
     style: 'mapbox://styles/mapbox/bright-v8'
 });
-	   basemap0.addTo(map1);
-		    gl.addTo(map2);
-	  
+
 	  var batavia1866 = L.mapboxGL({
 		  accessToken: token,
 		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
+		  });
+		  
+		    var batavia1910 = L.mapboxGL({
+		  accessToken: token,
+		  style: 'mapbox://styles/bram/cjqvyp9fd7m9m2rqi2ff8xatt'
 		  });
 //Control Layer
 var baseMaps1 = {
@@ -68,9 +68,14 @@ var Layers1 = {
    'Batavia Tahun 1866': batavia1866
 };
 	  var Layers2 = {
-   'Batavia Tahun 1866': batavia1866
+   'Batavia Tahun 1910': batavia1910
 };
-
+    //Map Center & Zoom
+    var map1 = L.map('map1').setView([-6.176254,106.825385],14);
+    var map2 = L.map('map2').setView([-6.176254,106.825385],14);
+		   basemap0.addTo(map1);
+		    gl.addTo(map2);
+	
 var layerControl1 = L.control.layers(baseMaps1, Layers1, {collapsed:false});
 layerControl1.addTo(map1);
 var layerControl2 = L.control.layers(baseMaps2, Layers2, {collapsed:false});
