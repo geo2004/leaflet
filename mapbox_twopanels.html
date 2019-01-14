@@ -66,9 +66,9 @@ var Layers = {
 };
 
 var layerControl1 = L.control.layers(baseMaps, Layers, {collapsed:false});
-layerControl.addTo(map1);
+layerControl1.addTo(map1);
 var layerControl2 = L.control.layers(baseMaps, Layers, {collapsed:false});
-layerControl.addTo(map2);
+layerControl2.addTo(map2);
 	  
 	        map1.sync(map2);
         map2.sync(map1);
