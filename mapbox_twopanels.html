@@ -75,13 +75,13 @@ var Layers1 = {
     var map2 = L.map('map2').setView([-6.176254,106.825385],14);
 		   basemap0.addTo(map1);
 		    gl.addTo(map2);
-	
+	    map1.sync(map2);
+        map2.sync(map1);
 var layerControl1 = L.control.layers(baseMaps1, Layers1, {collapsed:false});
 layerControl1.addTo(map1);
 var layerControl2 = L.control.layers(baseMaps2, Layers2, {collapsed:false});
 layerControl2.addTo(map2);
-    map1.sync(map2);
-        map2.sync(map1);	  
+	  
 	      
   </script> 
 </body>
