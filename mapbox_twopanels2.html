@@ -20,9 +20,9 @@
 <body>
     <div id="map1"></div>
     <div id="map2"></div>
-    <script src="L.Map.Sync.js"></script>
+   
 	<script src="leaflet-mapbox-gl.js"></script>
-
+ <script src="L.Map.Sync.js"></script>
     <script type="text/javascript">
        var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";       
 	   var center = [-6.176254,106.825385];
@@ -51,15 +51,8 @@
             center: center,
             zoom: 14
         });
-	    var baseMaps1 = {
-  'OpenStreetMap': layer1,
-  'Google Satellite': layer2
-};
-	    var overlays1 = {
-   'Batavia Tahun 1866': batavia1866
-};
-        L.control.layers(baseMaps1, overlays1).addTo(map1);
-        map1.attributionControl.setPrefix('');
+
+ 
 
         var map2 = L.map('map2', {
             layers: [layer2],
@@ -67,6 +60,17 @@
             zoom: 14,
             zoomControl: false
         });
+	        
+        map1.sync(map2);
+        map2.sync(map1);
+	   
+	    	    var baseMaps1 = {
+  'OpenStreetMap': layer1,
+  'Google Satellite': layer2
+};
+	    var overlays1 = {
+   'Batavia Tahun 1866': batavia1866
+};
 	     var baseMaps2 = {
   'OpenStreetMap': layer1,
   'Google Satellite': layer2
@@ -74,10 +78,11 @@
 	     var overlays2 = {
    'Batavia Tahun 1910': batavia1910
 };
-        L.control.layers(baseMaps2, overlays2).addTo(map2);
+              L.control.layers(baseMaps1, overlays1).addTo(map1);
+        map1.attributionControl.setPrefix('');
+	    L.control.layers(baseMaps2, overlays2).addTo(map2);
 		
-        map1.sync(map2);
-        map2.sync(map1);
+	
 
     </script>
 </body>
