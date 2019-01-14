@@ -52,18 +52,7 @@
             zoom: 14
         });
 
- 
-
-        var map2 = L.map('map2', {
-            layers: [layer2],
-            center: center,
-            zoom: 14,
-            zoomControl: false
-        });
-	        
-        map1.sync(map2);
-        map2.sync(map1);
-	   
+    
 	    	    var baseMaps1 = {
   'OpenStreetMap': layer1,
   'Google Satellite': layer2
@@ -71,6 +60,16 @@
 	    var overlays1 = {
    'Batavia Tahun 1866': batavia1866
 };
+      L.control.layers(baseMaps1, overlays1).addTo(map1);
+        map1.attributionControl.setPrefix('');
+	    
+        var map2 = L.map('map2', {
+            layers: [layer2],
+            center: center,
+            zoom: 14,
+            zoomControl: false
+        });
+	
 	     var baseMaps2 = {
   'OpenStreetMap': layer1,
   'Google Satellite': layer2
@@ -78,11 +77,11 @@
 	     var overlays2 = {
    'Batavia Tahun 1910': batavia1910
 };
-              L.control.layers(baseMaps1, overlays1).addTo(map1);
-        map1.attributionControl.setPrefix('');
-	    L.control.layers(baseMaps2, overlays2).addTo(map2);
-		
-	
+        
+	    L.control.layers(baseMaps2, overlays2).addTo(map2);	        
+    
+	    map1.sync(map2);
+        map2.sync(map1);
 
     </script>
 </body>
