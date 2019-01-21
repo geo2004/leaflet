@@ -9,7 +9,8 @@
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
       <script src="../leaflet/L.Control.Opacity.js"></script>
     <link href="L.Control.Opacity.css" rel="stylesheet" />
-
+<link rel="stylesheet" href="leaflet-layer-opacity-control.css"></link>
+<script src="../leaflet-layer-opacity-control.js">
     <style type="text/css">
         html, body { width: 100%; height: 100%; margin: 0; }
         #map1, #map2 { width: 49.5%; height: 100%; }
@@ -103,7 +104,11 @@
     label: "Basemap Opacity"
     }
 ).addTo(map2);
- 
+	    
+ L.control.layerOpacity({ 
+    Batavia Tahun 1910: overlays.batavia1910
+}).addTo(map2);
+	    
  map1.sync(map2);
         map2.sync(map1);
 	    
