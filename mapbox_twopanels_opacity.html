@@ -59,6 +59,11 @@
 		  accessToken: token,
 		  style: 'mapbox://styles/bram/cjqvyp9fd7m9m2rqi2ff8xatt'
 		  });
+	    
+	        var myLayer = L.mapboxGL({
+		  accessToken: token,
+		  style: 'mapbox://styles/bram/cjqvyp9fd7m9m2rqi2ff8xatt'
+		  });
         var map1 = L.map('map1', {
             layers: [layer1],
             center: center,
@@ -105,8 +110,12 @@
     }
 ).addTo(map2);
 	    
- L.control.layerOpacity({ 
-    batavia1910Id: overlays.batavia1910
+var overlays = {
+    "My Layer": myLayer
+};
+
+L.control.layerOpacity({ 
+    myLayerId: overlays.myLayer
 }).addTo(map2);
 	    
  map1.sync(map2);
