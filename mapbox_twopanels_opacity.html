@@ -103,25 +103,33 @@
 var sliderValue = document.getElementById('slider-value');
 	    
 	    
-	    	    var baseMaps1 = {
+
+     
+	    map1.on('load', function() {
+		     map1.addLayer({
+        "id": "batavia66",
+        "source": {
+            "type": "raster",
+            "url": "mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf"
+        },
+        "type": "raster"
+    });
+		     slider.addEventListener('input', function(e) {
+        // Adjust the layers opacity. layer here is arbitrary - this could
+        // be another layer name found in your style or a custom layer
+        // added on the fly using `addSource`.
+        map.setPaintProperty('batavia66', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+
+        // Value indicator
+        sliderValue.textContent = e.target.value + '%';
+			      });
+   	    	    var baseMaps1 = {
   'OpenStreetMap': layer1,
   'Google Satellite': layer2
 };
 	    var overlays1 = {
    'Batavia Tahun 1866': batavia1866
 };
-     
-	    map1.on('load', function() {
-		     slider.addEventListener('input', function(e) {
-        // Adjust the layers opacity. layer here is arbitrary - this could
-        // be another layer name found in your style or a custom layer
-        // added on the fly using `addSource`.
-        map.setPaintProperty('batavia1866', 'raster-opacity', parseInt(e.target.value, 10) / 100);
-
-        // Value indicator
-        sliderValue.textContent = e.target.value + '%';
-			      });
-   
 		     L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
         map1.attributionControl.setPrefix('');
 	    
