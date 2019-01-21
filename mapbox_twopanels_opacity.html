@@ -76,7 +76,7 @@
         map1.attributionControl.setPrefix('');
 	    
         var map2 = L.map('map2', {
-            layers: [layer3],
+            layers: [layer3, batavia1910],
             center: center,
             zoom: 14,
             zoomControl: false
@@ -98,7 +98,7 @@
     }
 ).addTo(map1);
   L.control.opacity(
-    baseMaps2,
+    batavia1910,
     {
     label: "Layers Opacity"
     }
