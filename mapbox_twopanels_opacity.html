@@ -19,8 +19,46 @@
 </head>
 
 <body>
+.map-overlay {
+    font:bold 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    position: absolute;
+    width: 25%;
+    top: 0;
+    left: 0;
+    padding: 10px;
+}
+
+.map-overlay .map-overlay-inner {
+    background-color: #fff;
+    box-shadow:0 1px 2px rgba(0, 0, 0, 0.20);
+    border-radius: 3px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.map-overlay label {
+    display: block;
+    margin: 0 0 10px;
+}
+
+.map-overlay input {
+    background-color: transparent;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    margin: 0;
+    cursor: ew-resize;
+}
+</style>
+
     <div id="map1"></div>
     <div id="map2"></div>
+	<div class='map-overlay top'>
+    <div class='map-overlay-inner'>
+        <label>Layer opacity: <span id='slider-value'>100%</span></label>
+        <input id='slider' type='range' min='0' max='100' step='0' value='100' />
+    </div>
+</div>
    
 	<script src="../leaflet/leaflet-mapbox-gl.js"></script>
  <script src="../leaflet/L.Map.Sync.js"></script>
@@ -60,7 +98,10 @@
             center: center,
             zoom: 14
         });
-    
+    var slider = document.getElementById('slider');
+var sliderValue = document.getElementById('slider-value');
+	    
+	    
 	    	    var baseMaps1 = {
   'OpenStreetMap': layer1,
   'Google Satellite': layer2
@@ -69,6 +110,16 @@
    'Batavia Tahun 1866': batavia1866
 };
       L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
+	    map1.on('load', function() {
+		     slider.addEventListener('input', function(e) {
+        // Adjust the layers opacity. layer here is arbitrary - this could
+        // be another layer name found in your style or a custom layer
+        // added on the fly using `addSource`.
+        map.setPaintProperty('batavia1866', 'raster-opacity', parseInt(e.target.value, 10) / 100);
+
+        // Value indicator
+        sliderValue.textContent = e.target.value + '%';
+    });
         map1.attributionControl.setPrefix('');
 	    
         var map2 = L.map('map2', {
@@ -102,6 +153,8 @@
  
  map1.sync(map2);
         map2.sync(map1);
+	    
+	   
     </script>
 </body>
 </html>
