@@ -110,13 +110,6 @@
     }
 ).addTo(map2);
 	    
-var overlays = {
-    "My Layer": myLayer
-};
-
-L.control.layerOpacity({ 
-    myLayerId: overlays.myLayer
-}).addTo(map2);
 	    
  map1.sync(map2);
         map2.sync(map1);
