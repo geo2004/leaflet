@@ -29,7 +29,11 @@
     <script type="text/javascript">
        var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";       
 	   var center = [-6.176254,106.825385];
-        var layer1 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+       var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		mbUrl = 'https://api.tiles.mapbox.com/v4/bram/cjqvyp9fd7m9m2rqi2ff8xatt/tiles/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw';
+	    var layer1 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
             maxZoom: 20,
             attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
         });
@@ -53,15 +57,9 @@
 		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
 		  });
 		  
-		    var batavia1910 = L.mapboxGL({
-		  accessToken: token,
-		  style: 'mapbox://styles/bram/cjqvyp9fd7m9m2rqi2ff8xatt'
-		  });
+		    var batavia1910 = L.tileLayer(mbUrl);
 	    
-	        var myLayer = L.mapboxGL({
-		  accessToken: token,
-		  style: 'mapbox://styles/bram/cjqvyp9fd7m9m2rqi2ff8xatt'
-		  });
+	   
         var map1 = L.map('map1', {
             layers: [layer1],
             center: center,
