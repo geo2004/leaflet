@@ -1,0 +1,116 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Leaflet Sync Demo</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet-src.js" crossorigin=""></script>
+	    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css" rel='stylesheet' />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.js"></script>
+      <script src="../leaflet/L.Control.Opacity.js"></script>
+    <link href="L.Control.Opacity.css" rel="stylesheet" />
+    <style type="text/css">
+        html, body { width: 100%; height: 100%; margin: 0; }
+        #map1, #map2 { width: 49.5%; height: 100%; }
+        #map1 { float: left; }
+        #map2 { float: right; }
+    </style>
+</head>
+
+<body>
+	
+
+    <div id="map1"></div>
+    <div id="map2"></div>
+	
+   
+	<script src="../leaflet/leaflet-mapbox-gl.js"></script>
+ <script src="../leaflet/L.Map.Sync.js"></script>
+    <script type="text/javascript">
+       var token ="pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw";       
+	   var center = [-6.176254,106.825385];
+       var mbAttr = 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+			'<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+			'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+		mbUrl = 'https://api.mapbox.com/styles/v1/bram/cjqvyp9fd7m9m2rqi2ff8xatt/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw';
+	    var layer1 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+        var layer2 = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+       maxZoom: 20,
+       subdomains:['mt0','mt1','mt2','mt3'],
+       attribution: 'Google Satellite'
+    });
+	    
+        var layer3 = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 20,
+            attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+        });
+        var layer4 = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+       maxZoom: 20,
+       subdomains:['mt0','mt1','mt2','mt3'],
+       attribution: 'Google Satellite'
+    });
+	  var batavia1866 = L.mapboxGL({
+		  accessToken: token,
+		  style: 'mapbox://styles/bram/cjqrvvxro02aw2slhpa333uyf'
+		  });
+		  
+		    var batavia1910 = L.tileLayer(mbUrl);
+	    
+	   
+        var map1 = L.map('map1', {
+            layers: [layer1],
+            center: center,
+            zoom: 14
+        });
+   
+     
+   	    	    var baseMaps1 = {
+  'OpenStreetMap': layer1,
+  'Google Satellite': layer2
+};
+	    var overlays1 = {
+   'Batavia Tahun 1866': batavia1866
+};
+		     L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
+        map1.attributionControl.setPrefix('');
+	    
+        var map2 = L.map('map2', {
+            layers: [layer3, batavia1910],
+            center: center,
+            zoom: 14,
+            zoomControl: false
+        });
+	
+	     var baseMaps2 = {
+  'OpenStreetMap': layer3,
+  'Google Satellite': layer4
+};
+	     var overlays2 = {
+   'Batavia Tahun 1910': batavia1910
+};
+        
+	    L.control.layers(baseMaps2, overlays2, {collapsed:false}).addTo(map2);	        
+ L.control.opacity(
+    baseMaps1,
+    {
+    label: "Basemap Opacity"
+    }
+).addTo(map1);
+  L.control.opacity(
+    overlays2,
+    {
+    label: "Basemap Opacity"
+    }
+).addTo(map2);
+	    
+	    
+ map1.sync(map2);
+        map2.sync(map1);
+	    
+	   
+    </script>
+</body>
+</html>
