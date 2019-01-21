@@ -109,7 +109,7 @@ var sliderValue = document.getElementById('slider-value');
 	    var overlays1 = {
    'Batavia Tahun 1866': batavia1866
 };
-      L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
+     
 	    map1.on('load', function() {
 		     slider.addEventListener('input', function(e) {
         // Adjust the layers opacity. layer here is arbitrary - this could
@@ -119,7 +119,8 @@ var sliderValue = document.getElementById('slider-value');
 
         // Value indicator
         sliderValue.textContent = e.target.value + '%';
-    });
+   
+		     L.control.layers(baseMaps1, overlays1, {collapsed:false}).addTo(map1);
         map1.attributionControl.setPrefix('');
 	    
         var map2 = L.map('map2', {
