@@ -18,6 +18,7 @@ color:white;
 }
 .sidebar {
   float: left;
+margin: 1 auto;
   width: 15%;
 	height:92%;
    background-color: white;
