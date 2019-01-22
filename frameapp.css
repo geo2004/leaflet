@@ -11,6 +11,7 @@ html, body { margin:0; padding:0; }
 background-color: #175B81;
 color:white;
 }
+
 #map {
   float: left;
   width: 80%;
@@ -19,6 +20,7 @@ color:white;
 .sidebar {
   float: left;
 margin: 1 auto;
+border: 10px;
   width: 50px;
 	height:92%;
    background-color: white;
