@@ -83,10 +83,11 @@ table {
 	font-weight:bold
 }
 .p2 {
-    font-size: 24px;
+    font-type: Verdana;
+	font-size: 24px;
 	font-weight:bold;
     position: relative;
-    top: 2%;
+    top: 3%;
 	left: 20px;
 }
 .p3 {
