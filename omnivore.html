@@ -8,17 +8,7 @@ href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
 src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> 
 <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script>
 </script> 
-<style> 
-    html, 
-    body, 
-    #map { 
-        height: 100%; 
-    } 
-</style> 
- 
-
-</head> 
- <script type="text/javascript"> 
+    <script type="text/javascript"> 
     function init() { 
         var map = L.map('map').setView([0,0], 2); 
         // OSM Mapnik 
@@ -40,6 +30,17 @@ src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
             }).addTo(map); 
     } 
 </script> 
+<style> 
+    html, 
+    body, 
+    #map { 
+        height: 100%; 
+    } 
+</style> 
+ 
+
+</head> 
+ 
 <body onload="init()"> 
     <div id="map"></div> 
 </body> 
