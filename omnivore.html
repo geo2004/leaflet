@@ -34,6 +34,30 @@
  
  
         var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson";
+ 	function getColor(d) {
+		return d > 10 ? '#800026' :
+				d > 5  ? '#BD0026' :
+				d > 2  ? '#E31A1C' :
+				d > 1  ? '#FC4E2A' :
+				d > 0.5   ? '#FD8D3C' :
+				d > 0.2   ? '#FEB24C' :
+				d > 0.1   ? '#FED976' :
+							'#FFEDA0';
+	}
+            function style(feature) {
+		return {
+			weight: 2,
+			opacity: 1,
+			color: 'white',
+			dashArray: '3',
+			fillOpacity: 0.7,
+			fillColor: getColor(feature.properties.mag)
+		};
+	}
+      var customLayer = L.geoJson(null, {
+		style: style,
+	});
+            var layer2 = omnivore.geojson(data, null, customLayer).addTo(map);
             var layer = omnivore.geojson(data, null, L.mapbox.featureLayer()).addTo(map);
 </script> 
 </body> 
