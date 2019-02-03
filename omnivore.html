@@ -31,7 +31,7 @@
  
         var runLayer = omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'); 
  runLayer.eachLayer(function(layer) { 
-                    layer.bindPopup(layer.feature.properties.name)
+                    layer.bindPopup(layer.feature.properties.detail)
                 }).addTo(map); 
 </script> 
 </body> 
