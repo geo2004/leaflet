@@ -2,12 +2,9 @@
 <html> 
 <head> 
 <title>Latest Earthquake Viewer</title> 
-<link rel="stylesheet" 
-href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" /> 
-<script 
-src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" /> 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script> 
 <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js"></script>
-</script> 
 
 <style> 
     html, 
@@ -33,7 +30,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
  
  
         var runLayer = omnivore.kml('EQ_live_USGS_mo.kml') 
-            .on('ready', function() { 
+        .on('ready', function() { 
                 map.fitBounds(runLayer.getBounds()); 
  
                 runLayer.eachLayer(function(layer) { 
