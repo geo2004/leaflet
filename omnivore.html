@@ -21,9 +21,7 @@ pt>
     function init() { 
         var map = L.map('map').setView([0,0], 2); 
         // OSM Mapnik 
-        var osmLink = "<a href='http://www.openstreetmap.org'>Open 
-StreetMap</a>"; 
-        L.tileLayer( 
+        var osmLink = L.tileLayer( 
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                 attribution: '&copy; ' + osmLink, 
                 maxZoom: 18 
