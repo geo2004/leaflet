@@ -34,12 +34,6 @@
  
  
         var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_month.geojson";
-            var styles = L.geoJson(null, {
-    // http://leafletjs.com/reference.html#geojson-style
-    style: function(feature) {
-        return { color: '#f00' };
-    }
-});
             var layer = omnivore.geojson(data, null, L.mapbox.featureLayer()).addTo(map);
 </script> 
 </body> 
