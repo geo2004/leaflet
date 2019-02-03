@@ -38,7 +38,7 @@
         return { color: '#f00' };
     }
 });
-            var layer = omnivore.geojson(data, null, styles).addTo(map);
+            var layer = omnivore.geojson(data, null, L.mapbox.featureLayer()).addTo(map);
 </script> 
 </body> 
  
