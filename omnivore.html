@@ -29,10 +29,12 @@
             }).addTo(map); 
  
  
-        var runLayer = omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'); 
- runLayer.eachLayer(function(layer) { 
-                    layer.bindPopup(layer.feature.properties.detail)
-                }).addTo(map); 
+        var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson";
+            var layer = L.geoJSON(data, {
+ onEachFeature: function (f, l) {
+   l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');
+ }
+}).addTo(map);
 </script> 
 </body> 
  
