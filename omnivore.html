@@ -29,7 +29,7 @@
             }).addTo(map); 
  
  
-        var runLayer = omnivore.kml('EQ_live_USGS_mo.kml'); 
+        var runLayer = omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson'); 
  runLayer.eachLayer(function(layer) { 
                     layer.bindPopup(layer.feature.properties.name)
                 }).addTo(map); 
