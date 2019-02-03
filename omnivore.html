@@ -31,9 +31,8 @@
  
         var runLayer = omnivore.kml('EQ_live_USGS_mo.kml'); 
  runLayer.eachLayer(function(layer) { 
-                    layer.bindPopup(layer.feature.properties.name); 
-                }); 
-            }).addTo(map); 
+                    layer.bindPopup(layer.feature.properties.name)
+                }).addTo(map); 
 </script> 
 </body> 
  
