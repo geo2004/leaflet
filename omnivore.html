@@ -29,8 +29,8 @@
             }).addTo(map); 
  
  
-        var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.geojson";
-            var layer = omnivore.geojson(data, {
+        var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_month_age_link.kml";
+            var layer = omnivore.kml(data, {
  onEachFeature: function (f, l) {
    l.bindPopup('<pre>'+JSON.stringify(f.properties,null,' ').replace(/[\{\}"]/g,'')+'</pre>');
  }
