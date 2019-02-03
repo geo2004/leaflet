@@ -32,7 +32,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
             }).addTo(map); 
  
  
-        var runLayer = omnivore.kml('../leaflet/EQ_live_USGS_mo.kml') 
+        var runLayer = omnivore.kml('EQ_live_USGS_mo.kml') 
             .on('ready', function() { 
                 map.fitBounds(runLayer.getBounds()); 
  
