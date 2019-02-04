@@ -103,6 +103,9 @@ background:#2c3e50;
 			radius: markerSize(feature.properties.mag)
 		};
 	}
+	function markerSize(magnitude) {
+  return magnitude * 30000;
+};
 
 	var day = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
 			omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson', null, day);	
