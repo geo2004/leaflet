@@ -124,8 +124,12 @@
 			omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson', null, month);
   
 		
-var map = L.mapbox.map('map', 'mapbox.dark');
-		
+var map = L.map('map', {
+		center: [-7, 110],
+		zoom: 4,
+		layers: [osm, day]
+	});
+ var map2 = L.mapbox.map('map', 'mapbox.dark');		
 		var baseLayers = {
 		"OpenStreetMap": osm,
 	};	
