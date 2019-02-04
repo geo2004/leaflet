@@ -17,6 +17,8 @@
 <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
 	<link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
+	<link rel="stylesheet" href="L.Control.HtmlLegend.css" />
+	<script src="L.Control.HtmlLegend.min.js"></script>
 <style> 
  body { margin:0; padding:0; }
  #map { position:absolute; top:0; bottom:0; width:100%; }
@@ -136,7 +138,8 @@
 	"Kejadian Gempa Sebulan Terakhir": month,
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
-		  var legend = L.control(document.getElementById('legend').innerHTML, { position: 'bottomright' }).addTo(map);
+		  var legend = L.control.htmllegend(document.getElementById('legend').innerHTML, { position: 'bottomright' });
+		map.addControl(legend)
 </script> 
 </body> 
  
