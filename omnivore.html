@@ -59,6 +59,9 @@
 	});
             var EQ = omnivore.geojson(data, null, customLayer);
             var EQ2 = omnivore.geojson(data, null, L.mapbox.featureLayer());
+	    var EQ3 = omnivore.geojson(data);
+		EQ3.setStyle(style); 
+		
       var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 4,
@@ -70,6 +73,7 @@
 		var overlays = {
 	      "Earthquake Today Custom Style": EQ,
         "Earthquake Today Mapbox Style": EQ2,
+	"Earthquake Today Custom Style 2": EQ3,
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
 </script> 
