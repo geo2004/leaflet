@@ -92,10 +92,11 @@ background:#2c3e50;
 				d > 0.1   ? '#FCE9E8' :
 							'#fff7fb';
 	}
-		function markerSize(magnitude) {
-  return magnitude * 30000
+		function markerSize(d) {
+  return d * 30000
 		}
-            function style(feature) {
+            
+		function style(feature) {
 		return {
 			weight: 2,
 			opacity: 1,
