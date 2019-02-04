@@ -101,7 +101,6 @@ background:#2c3e50;
 			dashArray: '3',
 			fillOpacity: 0.7,
 			fillColor: getValue(feature.properties.mag),
-			radius: getValue(feature.properties.mag)
 		};
 	}
 
@@ -147,7 +146,21 @@ var map = L.map('map', {
 
 legends.addTo(map);
 
+var Legend = L.Control.extend({  
+  options: {
+    position: 'bottomleft'
+  },
 
+  onAdd: function (map) {
+    var legend = L.DomUtil.create('div', 'map-legend', L.DomUtil.get('map'));
+
+    // here we can fill the legend with colors, strings and whatever
+
+    return legend;
+  }
+});
+
+map.addControl(new Legend());
 </script> 
 </body> 
  
