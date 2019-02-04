@@ -34,7 +34,7 @@
  
  
         var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
- 	function getColor(d) {
+ 	function getValue(d) {
 		return d > 10 ? '#800026' :
 				d > 5  ? '#BD0026' :
 				d > 2  ? '#E31A1C' :
@@ -44,7 +44,7 @@
 				d > 0.1   ? '#FED976' :
 							'#FFEDA0';
 	}
-            function styles(feature) {
+            function style(feature) {
 		return {
 			weight: 2,
 			opacity: 1,
@@ -57,6 +57,10 @@
       var customLayer = L.geoJson(null, {
 		style: styles,
 	});
+	var layer = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
+								
+				omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson', null, layer);	
+		
             var EQ = omnivore.geojson(data, null, customLayer);
             var EQ2 = omnivore.geojson(data, null, L.mapbox.featureLayer());
 	    var EQ3 = omnivore.geojson(data);
@@ -74,6 +78,7 @@
 	      "Earthquake Today Custom Style": EQ,
         "Earthquake Today Mapbox Style": EQ2,
 	"Earthquake Today Custom Style 2": EQ3,
+	"Earthquake Today Custom Style 3": layer,	
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
 </script> 
