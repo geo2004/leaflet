@@ -55,7 +55,7 @@
 		};
 	}
       var customLayer = L.geoJson(null, {
-		style: styles,
+		style: style,
 	});
 	var layer = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
 								
@@ -64,7 +64,7 @@
             var EQ = omnivore.geojson(data, null, customLayer);
             var EQ2 = omnivore.geojson(data, null, L.mapbox.featureLayer());
 	    var EQ3 = omnivore.geojson(data);
-		EQ3.setStyle(styles); 
+		EQ3.setStyle(style); 
 		
       var map = L.map('map', {
 		center: [-7, 110],
