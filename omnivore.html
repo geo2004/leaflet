@@ -92,9 +92,6 @@ background:#2c3e50;
 				d > 0.1   ? '#FCE9E8' :
 							'#fff7fb';
 	}
-		function markerSize(magnitude) {
-  return (magnitude * 30000);
-		}
             
 		function style(feature) {
 		return {
@@ -104,7 +101,7 @@ background:#2c3e50;
 			dashArray: '3',
 			fillOpacity: 0.7,
 			fillColor: getValue(feature.properties.mag),
-			radius: markerSize(feature.properties.mag)
+			radius: getValue(feature.properties.mag)
 		};
 	}
 
