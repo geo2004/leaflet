@@ -70,11 +70,10 @@ background:#2c3e50;
                 maxZoom: 18 
             }); 
  		function onEachFeature(feature, layer) {
-	// does this feature have a property named popupContent?
-	if (feature.properties && feature.properties.title) {
-	layer.bindPopup(feature.properties.title);
-		}
-	}
+      layer.bindPopup("<h3 > Magnitude: "+ feature.properties.mag + 
+      "</h3><h3>Location: " + feature.properties.place +
+      "</h3><hr><h3>" + new Date(feature.properties.time) + "</h3>" );
+    }
  
  	function getValue(d) {
 		return d > 10 ? '#BA1309' :
