@@ -129,7 +129,7 @@ var map = L.map('map', {
 		zoom: 4,
 		layers: [osm, day]
 	});
- var map2 = L.mapbox.map(null, 'mapbox.dark');		
+	
 		var baseLayers = {
 		"OpenStreetMap": osm,
 	};	
@@ -139,7 +139,14 @@ var map = L.map('map', {
 	"Kejadian Gempa Sebulan Terakhir": month,
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
-		   map.legendControl.addLegend(document.getElementById('legend').innerHTML);
+		var legend = L.control({ position: 'bottomright' });   
+		legend.onAdd = function (map) {
+		var div = L.DomUtil.create(document.getElementById('legend').innerHTML);
+		return div;
+		};
+
+	legend.addTo(map);
+
 
 </script> 
 </body> 
