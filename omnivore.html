@@ -136,7 +136,8 @@
 	"Kejadian Gempa Sebulan Terakhir": month,
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
-		 map.legendControl.addLegend(document.getElementById('legend').innerHTML);
+		  var legend = L.control(document.getElementById('legend').innerHTML, { position: 'bottomright' });
+		legend.addTo(map);
 </script> 
 </body> 
  
