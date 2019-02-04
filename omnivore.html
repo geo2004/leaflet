@@ -57,8 +57,17 @@
       var customLayer = L.geoJson(null, {
 		style: style,
 	});
-            var layer2 = omnivore.geojson(data, null, customLayer).addTo(map);
-            var layer = omnivore.geojson(data, null, L.mapbox.featureLayer()).addTo(map);
+            var EQ = omnivore.geojson(data, null, customLayer);
+            var EQ2 = omnivore.geojson(data, null, L.mapbox.featureLayer());
+   
+		var baseLayers = {
+		"OpenStreetMap": osmlink,
+	};	
+		var overlays = {
+	      "Earthquake Today Custom Style": EQ,
+        "Earthquake Today Mapbox Style": EQ2,
+	};
+		   L.control.layers(baseLayers,overlays,{}, {collapsed: true}).addTo(map);
 </script> 
 </body> 
  
