@@ -32,13 +32,12 @@
                 maxZoom: 18 
             }); 
  		function onEachFeature(feature, layer) {
-						// does this feature have a property named popupContent?
-						if (feature.properties && feature.properties.detail) {
-								layer.bindPopup(feature.properties.detail);
-						}
-				}
+	// does this feature have a property named popupContent?
+	if (feature.properties && feature.properties.title) {
+	layer.bindPopup(feature.properties.title);
+		}
+	}
  
-        var data = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson";
  	function getValue(d) {
 		return d > 10 ? '#800026' :
 				d > 5  ? '#BD0026' :
@@ -59,31 +58,27 @@
 			fillColor: getValue(feature.properties.mag)
 		};
 	}
-      var customLayer = L.geoJson(null, {
-		style: style,
-	});
-	var layer = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
-								
-				omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson', null, layer);	
-		
-            var EQ = omnivore.geojson(data, null, customLayer);
-            var EQ2 = omnivore.geojson(data, null, L.mapbox.featureLayer());
-	    var EQ3 = omnivore.geojson(data);
-		EQ3.setStyle(style); 
+
+	var day = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
+			omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson', null, day);	
+	var week = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
+			omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson', null, week);
+	var month = L.geoJson(null, {onEachFeature: onEachFeature, pointToLayer: function (feature, latlng) {return L.circleMarker(latlng, style(feature));}});
+			omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson', null, month);
+  
 		
       var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 4,
-		layers: [osm, EQ2]
+		layers: [osm, day]
 	});
 		var baseLayers = {
 		"OpenStreetMap": osm,
 	};	
 		var overlays = {
-	      "Earthquake Today Custom Style": EQ,
-        "Earthquake Today Mapbox Style": EQ2,
-	"Earthquake Today Custom Style 2": EQ3,
-	"Earthquake Today Custom Style 3": layer,	
+	"Kejadian Gempa Hari ini": day,
+	"Kejadian Gempa Seminggu Terakhir": week,
+	"Kejadian Gempa Sebulan Terakhir": month,
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
 </script> 
