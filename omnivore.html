@@ -17,11 +17,8 @@
 <script src='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v3.1.1/mapbox.css' rel='stylesheet' />
 <style> 
-    html, 
-    body, 
-    #map { 
-        height: 100%; 
-    }
+ body { margin:0; padding:0; }
+ #map { position:absolute; top:0; bottom:0; width:100%; }
 .custom-popup .leaflet-popup-content-wrapper {
   background:#2c3e50;
   color:#fff;
@@ -39,12 +36,38 @@
   border-left:15px solid transparent;
   border-right:15px solid transparent;
   border-top:15px solid #2c3e50;
+  }
+.legend label,
+.legend span {
+  display:block;
+  float:left;
+  height:15px;
+  width:20%;
+  text-align:center;
+  font-size:9px;
+  color:#808080;
   }	
 </style> 
  
 
 </head> 
- 
+ !-- Set the display of this container to none so we can
+     add it programmatically to `legendControl` -->
+<div id='legend' style='display:none;'>
+  <strong>The Title or Explanation of your Map</strong>
+  <nav class='legend clearfix'>
+    <span style='background:#F1EEF6;'></span>
+    <span style='background:#BDC9E1;'></span>
+    <span style='background:#74A9CF;'></span>
+    <span style='background:#2B8CBE;'></span>
+    <span style='background:#045A8D;'></span>
+    <label>0 - 20%</label>
+    <label>40%</label>
+    <label>60%</label>
+    <label>80%</label>
+    <label>100%</label>
+    <small>Source: <a href="#link to source">Name of source</a></small>
+</div>
     <div class='custom-popup' id="map"></div> 
         <script type="text/javascript"> 
             L.mapbox.accessToken = 'pk.eyJ1IjoiYnJhbSIsImEiOiJtVnh2WG5jIn0.ayfAH274xz11f_CPxO2dRw';
