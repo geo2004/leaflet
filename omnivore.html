@@ -26,7 +26,7 @@
 
         // OSM Mapnik 
        var osmLink = "<a href='https://www.openstreetmap.org'>OpenStreetMap</a>"; 
-        L.tileLayer( 
+       var osm = L.tileLayer( 
             'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
                 attribution: '&copy; ' + osmLink, 
                 maxZoom: 18 
@@ -62,7 +62,7 @@
       var map = L.map('map', {
 		center: [-7, 110],
 		zoom: 4,
-		layers: [osmlink, EQ2]
+		layers: [osml, EQ2]
 	});
 		var baseLayers = {
 		"OpenStreetMap": osmlink,
