@@ -143,45 +143,7 @@ var map = L.map('map', {
 };
 
 legends.addTo(map);
-		
- var densitythresholds = [
-                [0, 'rgb(237, 248, 233)'],
-                [40, 'rgb(186, 228, 179)'],
-                [100, 'rgb(116, 196, 118)'],
-                [200, 'rgb( 49, 163,  84)'],
-                [300, 'rgb(  0, 109,  44)']
-            ];
-            var populationthresholds = [
-                [0, '#FCE9E8'],
-                [1, '#F4AAA5'],
-                [2, '#EF8079)'],
-                [3, '#ED6B63'],
-                [4, '#EA564C']
-            ];
-
-            var colorByThresholds = function (thresholds, value) {
-                for (var i = 0; i < thresholds.length - 1; i++) {
-                    if (value < thresholds[i + 1][0])
-                        return thresholds[i][1];
-                }
-                return thresholds[thresholds.length - 1][1];
-            };
-
-            var legendbox = L.control({
-                position: 'bottomleft'
-            });
-            legendbox.onAdd = function (e) {
-                this._div = L.DomUtil.create('div', 'info legend');
-                var innerHTML = '<table><tr>';
-                innerHTML += 
-                for (var i = 0; i < populationthresholds.length; i++) {
-                    innerHTML += '<td style="background: ' + colorByThresholds(populationthresholds, populationthresholds[i][0]) + '">' + populationthresholds[i][0] + (typeof (populationthresholds[i + 1]) != 'undefined' ? '-' + populationthresholds[i + 1][0] : '+') + '</td>';
-                }
-                innerHTML += '</tr></table>';
-                this._div.innerHTML = innerHTML;
-                return this._div;
-            };
-            legendbox.addTo(map);		
+			
   </script> 
 </body> 
  
