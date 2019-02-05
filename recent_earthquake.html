@@ -142,7 +142,7 @@ for (var i = 0; i < thresholds.length - 1; i++) {
 			color: 'white',
 			dashArray: '3',
 			fillOpacity: 0.7,
-			fillColor: colorByThresholds(densitythresholds, magnitude),
+			fillColor: getValue(feature.properties.mag),
 		};
 	}
 
