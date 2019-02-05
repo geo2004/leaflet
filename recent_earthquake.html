@@ -88,34 +88,22 @@ for (var i = 0; i < thresholds.length - 1; i++) {
        }
       return thresholds[thresholds.length -1][1];
 		};
-	var features = omnivore.geojson('https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson',{
-                style: function (feature) {
-                    var magnitude = feature.properties.mag;
-                    return {
-                        fillColor: colorByThresholds(densitythresholds, magnitude),
-                        fillOpacity: 0.75,
-                        weight: 1,
-                        color: 'black'
-                    };
-                },
-                onEachFeature: function (feature, layer) {
-                    layer.on({
-                        'mousemove': function (e) {
-                            e.target.setStyle({
-                                weight: 4
-                            });
-                            infobox.refresh(feature.properties);
-                        },
-                        'mouseout': function (e) {
-                            densitylayer.resetStyle(e.target);
-                            infobox.refresh();
-                        },
-                        'click': function (e) {
-                            map.fitBounds(e.target.getBounds());
-                        }
-                    });
-                }
-            });		
+		
+  var legendbox = L.control({position: 'bottomleft'});
+     legendbox.onAdd = function (e) {
+       this._div = L.DomUtil.create('div', 'info legend');
+          var innerHTML = '<table><tr>';
+          innerHTML += '<td>Magnitude:</td>'; 
+          for (var i = 0; i < densitythresholds.length; i++)  {
+            innerHTML += '<td style="background: '+ colorByThresholds(densitythresholds, densitythresholds[i][0] + '">' + densitythresholds[i][0] + (typeof (densitythresholds[i+1]) != 'undefined' ? '-' + densitythresholds[i+1][0] : '+') + '</td>');
+            }
+            innerHTML += '</tr></table>';
+            this._div.innerHTML = innerHTML;
+            return this._div;
+            };
+            
+legendbox.addTo(map);  	
+			
 		
  		function onEachFeature(feature, layer) {
       layer.bindPopup("<h3 > Magnitude: "+ feature.properties.mag + 
@@ -166,8 +154,7 @@ var map = L.map('map', {
 		var overlays = {
 	"Kejadian Gempa Hari ini": day,
 	"Kejadian Gempa Seminggu Terakhir": week,
-	"Kejadian Gempa Sebulan Terakhir": month,
-	"Kejadian Gempa Sebulan Terakhir 2": features,		
+	"Kejadian Gempa Sebulan Terakhir": month,	
 	};
 		   L.control.layers(baseLayers,overlays,{}, {collapsed: false}).addTo(map);
 		var legends = L.control({ position: 'bottomright' });   
@@ -188,20 +175,7 @@ var map = L.map('map', {
 
 legends.addTo(map);
 
-  var legendbox = L.control({position: 'bottomleft'});
-     legendbox.onAdd = function (e) {
-       this._div = L.DomUtil.create('div', 'info legend');
-          var innerHTML = '<table><tr>';
-          innerHTML += '<td>Magnitude:</td>'; 
-          for (var i = 0; i < densitythresholds.length; i++)  {
-            innerHTML += '<td style="background: '+ colorByThresholds(densitythresholds, densitythresholds[i][0] + '">' + densitythresholds[i][0] + (typeof (densitythresholds[i+1]) != 'undefined' ? '-' + densitythresholds[i+1][0] : '+') + '</td>');
-            }
-            innerHTML += '</tr></table>';
-            this._div.innerHTML = innerHTML;
-            return this._div;
-            };
-            
-legendbox.addTo(map);            
+          
 </script> 
 </body> 
  
