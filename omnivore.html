@@ -87,9 +87,7 @@ background:#2c3e50;
 				d > 3  ? '#EF8079' :
 				d > 2  ? '#F4AAA5' :
 				d > 1  ? '#F4AAA5' :
-				d > 0.5   ? '#F7BFBC' :
-				d > 0.2   ? '#F9D4D2' :
-				d > 0.1   ? '#FCE9E8' :
+				d > 0.5   ? '#FCE9E8' :
 							'#fff7fb';
 	}
             
@@ -131,7 +129,7 @@ var map = L.map('map', {
 		var legends = L.control({ position: 'bottomright' });   
 		legends.onAdd = function (map) {
   var div = L.DomUtil.create('div', 'info legend'),
-        grades = [0, 0.1, 0.2, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9,10],
+        grades = [0, 0.5, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
         labels = [];
 
     // loop through our density intervals and generate a label with a colored square for each interval
