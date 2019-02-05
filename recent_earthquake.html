@@ -143,7 +143,27 @@ var map = L.map('map', {
 };
 
 legends.addTo(map);
-			
+
+L.Control.Watermark = L.Control.extend({
+    onAdd: function(map) {
+        var img = L.DomUtil.create('img');
+
+        img.src = 'https://farm5.staticflickr.com/4818/40029315383_e422149db5_b.jpg';
+        img.style.width = '280px';
+
+        return img;
+    },
+
+    onRemove: function(map) {
+        // Nothing to do here
+    }
+});
+
+L.control.watermark = function(opts) {
+    return new L.Control.Watermark(opts);
+}
+
+L.control.watermark({ position: 'topleft' }).addTo(map);		
   </script> 
 </body> 
  
