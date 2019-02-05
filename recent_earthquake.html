@@ -164,7 +164,7 @@ legends.addTo(map);
        this._div = L.DomUtil.create('div', 'info legend');
           var innerHTML = '<table><tr>';
           innerHTML += '<td>Magnitude:</td>'; 
-          for (var i = 0; i < populationthresholds.length; i++)  {
+          for (var i = 0; i < densitythresholds.length; i++)  {
             innerHTML += '<td style='background: + colorByThresholds(densityThresholds, densitythresholds[i][0] + '">' + densitythresholds[i][0] + (typeof (densitythresholds[i+1]) != 'undefined' ? '-' + densitythresholds[i+1][0] : '+') + '</td>;
             }
             innerHTML += '</tr></table>';
