@@ -89,7 +89,6 @@ background:#2c3e50;
 				d > 3  ? '#EF8079' :
 				d > 1  ? '#F4AAA5' :
 				d > 0.5   ? '#FCE9E8' :
-							'#fff7fb';
 	}
             
 		function style(feature) {
@@ -136,7 +135,7 @@ var map = L.map('map', {
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
             '<i style="background:' + getValue(grades[i] + 1) + '"></i> ' +
-            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+' +'<td>SR:</td>');
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
     }
 
     return div;
