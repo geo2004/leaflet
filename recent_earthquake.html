@@ -91,6 +91,16 @@ background:#2c3e50;
 				d > 0.5   ? '#FCE9E8' :
 		'#fff7fb';
 	}
+			function getValue(d) {
+		return 		d > 9  ? '#CF15OA' :
+				d > 7  ? '#E52C20' :
+				d > 5  ? '#EA564C' :
+				d > 4  ? '#ED6B63' :
+				d > 3  ? '#EF8079' :
+				d > 1  ? '#F4AAA5' :
+				d > 0.5   ? '#FCE9E8' :
+		'#fff7fb';
+	}
             
 		function style(feature) {
 		return {
@@ -100,6 +110,7 @@ background:#2c3e50;
 			dashArray: '3',
 			fillOpacity: 0.7,
 			fillColor: getValue(feature.properties.mag),
+			radius: 4*feature.properties.mag
 		};
 	}
 
