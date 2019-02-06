@@ -100,7 +100,7 @@ background:#2c3e50;
 			dashArray: '3',
 			fillOpacity: 0.7,
 			fillColor: getValue(feature.properties.mag),
-			radius: feature.properties.mag^4
+			radius: Math.pow(feature.properties.mag)
 		};
 	}
 
