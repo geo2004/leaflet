@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HELC Submission Viewer</title>
+  <!-- Include Leaflet CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <style>
+    /* Set the map container to fill the entire screen */
+    #map {
+      height: 100vh;
+      width: 100%;
+    }
+
+    .attribute-table {
+      max-height: 400px;
+      overflow-y: auto;
+      padding: 10px;
+      width: 400px; /* Set the width of the table container */
+    }
+
+    .attribute-table table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .attribute-table th,
+    .attribute-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+      cursor: pointer;
+      word-wrap: break-word; /* Allow content to wrap within cells */
+    }
+
+    .attribute-table th {
+      background-color: #87CEEB; /* Light Blue */
+      color: #fff; /* White text color */
+      position: sticky;
+      top: -10px;
+      z-index: 2; /* Increase the z-index to keep the header above the tbody */
+    }
+
+    .attribute-table tr:hover {
+      background-color: #f5f5f5;
+    }
+
+    .attribute-table thead,
+    .attribute-table tbody {
+      display: table;
+      width: calc(100% - 17px); /* Adjust for scrollbar width */
+    }
+
+    .attribute-table thead {
+      display: table-header-group;
+    }
+
+    .attribute-table tbody {
+      display: table-row-group;
+    }
+
+    .attribute-table tbody tr {
+      background-color: #fff;
+    }
+
+    .attribute-table tbody tr.green {
+      background-color: green;
+      color: #fff; /* White text color for green background */
+    }
+
+    .attribute-table tbody tr.yellow {
+      background-color: yellow;
+      color: #000; /* Black text color for yellow background */
+    }
+
+    .attribute-table th:nth-child(1),
+    .attribute-table td:nth-child(1) {
+      width: 50%; /* Adjust the width as needed */
+    }
+
+    .attribute-table th:nth-child(2),
+    .attribute-table td:nth-child(2) {
+      width: 50%; /* Adjust the width as needed */
+    }
+
+    .no-scroll-map {
+      pointer-events: none;
+    }
+  .legend {
+    position: bottomleft;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    font-size: 14px;
+  }
+
+  .legend h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .legend-color {
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  </style>
+</head>
+<body>
+
+  <!-- Create a container for the map -->
+  <div id="map"></div>
+
+  <script>
+    var map = L.map('map', {
+      center: [39.748824, -84.209605],
+      zoom: 4,
+    });
+
+  // Enable scroll wheel zoom when the map is loaded
+  map.on('load', function () {
+    map.scrollWheelZoom.enable();
+  });
+  
+
+
+    // Add a base map layer (you can choose a different one if you like)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Parse the GeoJSON data
+    var geojson_data = {
+"type": "FeatureCollection",
+"name": "HELC_Complete",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Org_name": "SARCOA", "Address_1": "1075 S Brannon Stand", "Address_2": null, "City": "Dothan", "State": "Alabama", "zipcode": "36305", "Status": "Complete", "number": 1 }, "geometry": { "type": "Point", "coordinates": [ -77.4467524, 37.592304600000013 ] } },
+{ "type": "Feature", "properties": { "Org_name": "AHN Foundation", "Address_1": "4924 Pearce Ave", "Address_2": null, "City": "Lakewood", "State": "California", "zipcode": "90712", "Status": "Complete", "number": 2 }, "geometry": { "type": "Point", "coordinates": [ -118.1296041, 33.847989199999986 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Denver Regional Council of Govenments - Area Agency on Aging", "Address_1": "1001 17th St.", "Address_2": "Suite 700", "City": "Denver", "State": "Colorado", "zipcode": "80202", "Status": "Complete", "number": 3 }, "geometry": { "type": "Point", "coordinates": [ -104.993925, 39.748869799999987 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Health Empowerment Network of DC", "Address_1": "811 L Street, SE", "Address_2": null, "City": "Washington", "State": "District of C", "zipcode": "20003", "Status": "Complete", "number": 4 }, "geometry": { "type": "Point", "coordinates": [ -76.9944291, 38.8773316 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Manity, Inc.", "Address_1": "2729 N Haven Dr.", "Address_2": null, "City": "Eagle", "State": "Idaho", "zipcode": "83616", "Status": "Complete", "number": 5 }, "geometry": { "type": "Point", "coordinates": [ -116.3906267, 43.730056499999989 ] } },
+{ "type": "Feature", "properties": { "Org_name": "AgeOptions", "Address_1": "1048 Lake Street", "Address_2": "Suite 300", "City": "Oak Park", "State": "Illinois", "zipcode": "60301", "Status": "Complete", "number": 6 }, "geometry": { "type": "Point", "coordinates": [ -87.802383099999986, 41.889001199999981 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Beacon Community Connections", "Address_1": "123 E Main St. Ste 200", "Address_2": "Beacon Community Connections", "City": "Lafayette", "State": "Louisiana", "zipcode": "70501", "Status": "Complete", "number": 7 }, "geometry": { "type": "Point", "coordinates": [ -92.0178842, 30.2230898 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Healthy Living for ME", "Address_1": "1 Weston Court, Suite 109", "Address_2": null, "City": "Augusta", "State": "Maine", "zipcode": "04330", "Status": "Complete", "number": 8 }, "geometry": { "type": "Point", "coordinates": [ -69.77913239999998, 44.3143408 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Maryland Living Well Center of Excellence, a Division of MAC, Inc. AAA", "Address_1": "909 Progress Circle", "Address_2": "Suite 100", "City": "Salisbury", "State": "Maryland", "zipcode": "21601", "Status": "Complete", "number": 9 }, "geometry": { "type": "Point", "coordinates": [ -75.5862436, 38.3456791 ] } },
+{ "type": "Feature", "properties": { "Org_name": "AgeSpan, Inc.", "Address_1": "280 Merrimack Street, Suite 400", "Address_2": "AgeSpan (formerlly Elder Services of the Merrimack Valley)", "City": "Lawrence", "State": "Massachusetts", "zipcode": "01843", "Status": "Complete", "number": 10 }, "geometry": { "type": "Point", "coordinates": [ -71.150477699999982, 42.7028963 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Somerville-Cambridge Elder Services", "Address_1": "Somerville-Cambridge Elder Services", "Address_2": "61 Medford St", "City": "Somerville", "State": "Massachusetts", "zipcode": "02143", "Status": "Complete", "number": 11 }, "geometry": { "type": "Point", "coordinates": [ -71.0874224, 42.3752711 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Detroit Area Agency on Aging", "Address_1": "1333 Brewery Park,", "Address_2": "Suite 200", "City": "Detroit", "State": "Michigan", "zipcode": "48207", "Status": "Complete", "number": 12 }, "geometry": { "type": "Point", "coordinates": [ -83.0402675, 42.3435088 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Mid-America Regional Council", "Address_1": "600 Broadway", "Address_2": "Suite 200", "City": "Kansas City", "State": "Missouri", "zipcode": "64105", "Status": "Complete", "number": 13 }, "geometry": { "type": "Point", "coordinates": [ -94.5884811, 39.105999800000021 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Health and Welfare Council of Long Island", "Address_1": "110 Walt Whitman Road, Suite 101", "Address_2": null, "City": "Huntington Station", "State": "New York", "zipcode": "11746", "Status": "Complete", "number": 14 }, "geometry": { "type": "Point", "coordinates": [ -73.410351, 40.827266899999977 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Western New York Integrated Care Collaborative, Inc.", "Address_1": "742 Delaware Avenue", "Address_2": null, "City": "Buffalo", "State": "New York", "zipcode": "14052", "Status": "Complete", "number": 15 }, "geometry": { "type": "Point", "coordinates": [ -78.873054799999977, 42.9044007 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Impact Health", "Address_1": "866 Hendersonville Rd", "Address_2": null, "City": "Asheville", "State": "North Carolin", "zipcode": "28803", "Status": "Complete", "number": 16 }, "geometry": { "type": "Point", "coordinates": [ -82.531478, 35.540572 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Piedmont Triad Regional Council", "Address_1": "1398 Carrollton Crossing Drive", "Address_2": null, "City": "Kernersville", "State": "North Carolin", "zipcode": "27284", "Status": "Complete", "number": 17 }, "geometry": { "type": "Point", "coordinates": [ -80.065016500000013, 36.07980570000003 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Quality Comprehensive Health Center", "Address_1": "3607 Beatties Ford Rd", "Address_2": null, "City": "Charlotte", "State": "North Carolin", "zipcode": "28216", "Status": "Complete", "number": 18 }, "geometry": { "type": "Point", "coordinates": [ -80.8579596, 35.282993299999973 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Partners for Advancing Community Health", "Address_1": "1554 Polaris Parkway, Suite 325", "Address_2": "Akron Summit Community Action, Inc.", "City": "Columbus", "State": "Ohio", "zipcode": "43240", "Status": "Complete", "number": 19 }, "geometry": { "type": "Point", "coordinates": [ -82.9780476, 40.1457341 ] } },
+{ "type": "Feature", "properties": { "Org_name": "The Foodbank, Inc.", "Address_1": "56 Armor Pl Dayton OH 45417", "Address_2": "The Foodbank, Inc.", "City": "Dayton", "State": "Ohio", "zipcode": "45417", "Status": "Complete", "number": 20 }, "geometry": { "type": "Point", "coordinates": [ -84.209605, 39.748824 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Western Reserve Area Agency on Aging", "Address_1": "1700 East 13th St. # 600", "Address_2": null, "City": "Cleveland", "State": "Ohio", "zipcode": "44114", "Status": "Complete", "number": 21 }, "geometry": { "type": "Point", "coordinates": [ -81.68503, 41.503461200000032 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Oregon Wellness Network", "Address_1": "3410 Cherry Ave NE", "Address_2": null, "City": "Salem", "State": "Oregon", "zipcode": "97303", "Status": "Complete", "number": 22 }, "geometry": { "type": "Point", "coordinates": [ -123.0194739, 44.9751933 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Project Access NOW (PANOW)", "Address_1": "650 NE Holladay St", "Address_2": "#1700", "City": "Portland", "State": "Oregon", "zipcode": "97232", "Status": "Complete", "number": 23 }, "geometry": { "type": "Point", "coordinates": [ -122.659161, 45.529671 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Chef2Home Metz", "Address_1": "2 Woodland Dr", "Address_2": null, "City": "Dallas", "State": "Pennsylvania", "zipcode": "18612", "Status": "Complete", "number": 24 }, "geometry": { "type": "Point", "coordinates": [ -75.9811564, 41.3459438 ] } },
+{ "type": "Feature", "properties": { "Org_name": "REMA, LLC (dba Sociants)", "Address_1": "1353 Luis Vigoreaux Ave.", "Address_2": "PMB 486", "City": "Guaynabo", "State": "Puerto Rico", "zipcode": "00966", "Status": "Complete", "number": 25 }, "geometry": { "type": "Point", "coordinates": [ -66.108844, 18.4000897 ] } },
+{ "type": "Feature", "properties": { "Org_name": "ASSURED HEART FOUNDATION", "Address_1": "9319 LBJ FWY", "Address_2": "STE 115", "City": "DALLAS", "State": "Texas", "zipcode": "75243", "Status": "Complete", "number": 26 }, "geometry": { "type": "Point", "coordinates": [ -96.7372783, 32.913974 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Community Council of Greater Dallas", "Address_1": "Community Council of Greater Dallas", "Address_2": "1341 W Mockingbird Lane", "City": "Dallas", "State": "Texas", "zipcode": "75247", "Status": "Complete", "number": 27 }, "geometry": { "type": "Point", "coordinates": [ -96.865732499999979, 32.8222431 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Community Council of Greater Dallas", "Address_1": "Community Council of Greater Dallas", "Address_2": "Community Council of Greater Dallas", "City": "Dallas, Texas 75247", "State": "Texas", "zipcode": "76006", "Status": "Complete", "number": 28 }, "geometry": { "type": "Point", "coordinates": [ -96.865732499999979, 32.8222431 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Houston Health Department / Harris County Area Agency on Aging", "Address_1": "8000 N. Stadium Dr.", "Address_2": null, "City": "Houston", "State": "Texas", "zipcode": "77054-18", "Status": "Complete", "number": 29 }, "geometry": { "type": "Point", "coordinates": [ -95.408435899999986, 29.693355600000011 ] } },
+{ "type": "Feature", "properties": { "Org_name": "The Health Collaborative", "Address_1": "2300 W Commerce", "Address_2": "Suite 301", "City": "San Antonio", "State": "Texas", "zipcode": "78207", "Status": "Complete", "number": 30 }, "geometry": { "type": "Point", "coordinates": [ -98.5206255, 29.427141099999979 ] } },
+{ "type": "Feature", "properties": { "Org_name": "CHW Liberation Consulting, LLC", "Address_1": "5510 5510 Cherokee Avenue", "Address_2": "Ste. 300", "City": "Alexandria", "State": "Virginia", "zipcode": "22312", "Status": "Complete", "number": 31 }, "geometry": { "type": "Point", "coordinates": [ -77.1659962, 38.8051822 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Better Health Together", "Address_1": "157 S Howard Street", "Address_2": "Suite 102", "City": "Spokane", "State": "Washington", "zipcode": "99201", "Status": "Complete", "number": 32 }, "geometry": { "type": "Point", "coordinates": [ -117.4204879, 47.6552297 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Center For Independence", "Address_1": "7801 Bridgeport Way W #200 Lakewood WA 98499", "Address_2": null, "City": "Lakewood", "State": "Washington", "zipcode": "98499", "Status": "Complete", "number": 33 }, "geometry": { "type": "Point", "coordinates": [ -122.5177063, 47.1861519 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Lucid Living", "Address_1": "8006 East B St.", "Address_2": null, "City": "Tacoma", "State": "Washington", "zipcode": "98404", "Status": "Complete", "number": 34 }, "geometry": { "type": "Point", "coordinates": [ -122.430193177745423, 47.184180703122216 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Washington State Department of Social and Health Services (WA DSHS)", "Address_1": "4500 10th Ave SE", "Address_2": null, "City": "Olympia", "State": "Washington", "zipcode": "98503", "Status": "Complete", "number": 35 }, "geometry": { "type": "Point", "coordinates": [ -122.8260105, 47.038961699999987 ] } },
+{ "type": "Feature", "properties": { "Org_name": "The Arc of the Mid Ohio Valley", "Address_1": "1917 Dudley Ave.", "Address_2": null, "City": "Parkersburg", "State": "West Virginia", "zipcode": "26101", "Status": "Complete", "number": 36 }, "geometry": { "type": "Point", "coordinates": [ -81.54348539999998, 39.2763657 ] } },
+{ "type": "Feature", "properties": { "Org_name": "YMCA of Metropolitan Milwaukee", "Address_1": "P.O. Box 2174", "Address_2": "YMCA of Metropolitan Milwaukee", "City": "Milwaukee", "State": "Wisconsin", "zipcode": "53201", "Status": "Complete", "number": 37 }, "geometry": { "type": "Point", "coordinates": [ -87.929636155095665, 43.060874874206846 ] } }
+]
+}
+;
+    var geojson_data2 = {
+"type": "FeatureCollection",
+"name": "HELC_Incomplete",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Org_name": "Assured heart Foundation", "Address_1": "9319 lbj fwy ste 115", "Address_2": "https://assuredheartfoundation.com/", "City": "DALLAS", "State": "Texas", "zipcode": "75243", "Status": "incomplete", "number": 1 }, "geometry": { "type": "Point", "coordinates": [ -77.0454274, 38.915641699999959 ] } },
+{ "type": "Feature", "properties": { "Org_name": "BroadReach Healthcare", "Address_1": "607 14th St NW # 530, Washington, DC 20005", "Address_2": null, "City": "Minneapolis", "State": "Minnesota", "zipcode": "20005", "Status": "incomplete", "number": 2 }, "geometry": { "type": "Point", "coordinates": [ -71.4575401, 41.844488899999988 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Cartwill Empowerment Solutions", "Address_1": "2242 W. Roosevelt Blvd", "Address_2": "Suite D", "City": "Monroe", "State": "North Carolina", "zipcode": "28110", "Status": "incomplete", "number": 3 }, "geometry": { "type": "Point", "coordinates": [ -80.5611837, 35.0091017 ] } },
+{ "type": "Feature", "properties": { "Org_name": "CCAH", "Address_1": "1600 Green Hills Road", "Address_2": "Suite 101", "City": "Scott Valley", "State": "California", "zipcode": "95066", "Status": "incomplete", "number": 4 }, "geometry": { "type": "Point", "coordinates": [ -122.009953, 37.050180399999967 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Chinese American Service League", "Address_1": "2141 S Tan Court", "Address_2": null, "City": "Chicago", "State": "Illinois", "zipcode": "60616", "Status": "incomplete", "number": 5 }, "geometry": { "type": "Point", "coordinates": [ -87.6355727, 41.8544147 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Community Health Worker Training Insitute", "Address_1": "Suite #104, PMB #256, 5904 South Cooper", "Address_2": null, "City": "Arlington", "State": "Texas", "zipcode": "76017", "Status": "incomplete", "number": 6 }, "geometry": { "type": "Point", "coordinates": [ -97.1358535, 32.651306 ] } },
+{ "type": "Feature", "properties": { "Org_name": "CT Department of Social Services", "Address_1": "55 Farmington Ave.", "Address_2": "MFP Unit - 9th Floor", "City": "Hartford", "State": "Connecticut", "zipcode": "06105", "Status": "incomplete", "number": 7 }, "geometry": { "type": "Point", "coordinates": [ -72.6877505, 41.767775299999961 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Diversity inc", "Address_1": "1464 Metz rd", "Address_2": null, "City": "Soledad", "State": "California", "zipcode": "93960", "Status": "incomplete", "number": 8 }, "geometry": { "type": "Point", "coordinates": [ -121.3162518, 36.426552600000022 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Family Bridges,inc.", "Address_1": "Family Bridges,inc.", "Address_2": "Family Bridges,inc.", "City": "Oakland", "State": "California", "zipcode": "94607", "Status": "incomplete", "number": 9 }, "geometry": { "type": "Point", "coordinates": [ -122.2656177, 37.7997305 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Food is Medicine Coalition", "Address_1": "Food is Medicine Coalition", "Address_2": "Food is Medicine Coalition", "City": "Chicago", "State": "Illinois", "zipcode": "60625", "Status": "incomplete", "number": 10 }, "geometry": { "type": "Point", "coordinates": [ -87.7024817, 41.971106799999987 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Houston Food Bank", "Address_1": "535 Portwall St.", "Address_2": null, "City": "Houston", "State": "Texas", "zipcode": "77029", "Status": "incomplete", "number": 11 }, "geometry": { "type": "Point", "coordinates": [ -95.2748896, 29.780649799999981 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Institute for Education in Healthcare/ Community Health Worker Association of RI", "Address_1": "600 Mount Pleasant Ave", "Address_2": "Alger Hall", "City": "Providence", "State": "Rhode Island", "zipcode": "02908", "Status": "incomplete", "number": 12 }, "geometry": { "type": "Point", "coordinates": [ -71.4575401, 41.844488899999988 ] } },
+{ "type": "Feature", "properties": { "Org_name": "International Pre-Diabetes Center Inc. D/B/A: Pre-Diabetes Professional Training Center", "Address_1": "14500 Roscoe Blvd., 4th Floor", "Address_2": "N/A", "City": "Panorama City", "State": "California", "zipcode": "91402", "Status": "incomplete", "number": 13 }, "geometry": { "type": "Point", "coordinates": [ -118.449122, 34.221224699999972 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Jewish Family Services of Washtenaw County", "Address_1": "2245 St. State St.", "Address_2": null, "City": "Ann Arbor", "State": "Michigan", "zipcode": "48105", "Status": "incomplete", "number": 14 }, "geometry": { "type": "Point", "coordinates": [ -83.7387772, 42.253986699999977 ] } },
+{ "type": "Feature", "properties": { "Org_name": "JS Senior Solutions", "Address_1": "5107 McKinley Street", "Address_2": null, "City": "Hollywood", "State": "Florida", "zipcode": "33021", "Status": "incomplete", "number": 15 }, "geometry": { "type": "Point", "coordinates": [ -80.1953532, 26.023617 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Klaatch", "Address_1": "135 Eastern Parkway", "Address_2": "14E", "City": "Brooklyn", "State": "New York", "zipcode": "11238", "Status": "incomplete", "number": 16 }, "geometry": { "type": "Point", "coordinates": [ -73.9644072, 40.672552500000023 ] } },
+{ "type": "Feature", "properties": { "Org_name": "LifeSpring Homenutrition", "Address_1": "22651 Lambert St #109", "Address_2": null, "City": "Lake forest", "State": "California", "zipcode": "92630", "Status": "incomplete", "number": 17 }, "geometry": { "type": "Point", "coordinates": [ -117.7148401, 33.633623 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Lutheran Social Services of WI & Upper MI, Inc.", "Address_1": "6737 W. Washington Street", "Address_2": null, "City": "West Allis", "State": "Wisconsin", "zipcode": "53214", "Status": "incomplete", "number": 18 }, "geometry": { "type": "Point", "coordinates": [ -87.9968633, 43.021008199999983 ] } },
+{ "type": "Feature", "properties": { "Org_name": "McLeod Health, AccessHealth Pee Dee", "Address_1": "144 N. Ravenel Street", "Address_2": null, "City": "Florence", "State": "South Carolina", "zipcode": "29506", "Status": "incomplete", "number": 19 }, "geometry": { "type": "Point", "coordinates": [ -79.7605779, 34.198264199999983 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Northern MI Health Consortium", "Address_1": "220 W. Garfield", "Address_2": "Northern Michigan Community Health Innovation Region", "City": "Charlevoix", "State": "Michigan", "zipcode": "49720", "Status": "incomplete", "number": 20 }, "geometry": { "type": "Point", "coordinates": [ -85.263611799999978, 45.3113014 ] } },
+{ "type": "Feature", "properties": { "Org_name": "OCALI", "Address_1": "470 Glenmont", "Address_2": null, "City": "Columbus", "State": "Ohio", "zipcode": "43220", "Status": "incomplete", "number": 21 }, "geometry": { "type": "Point", "coordinates": [ -83.006229299999987, 40.0450995 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Texas Health Resources", "Address_1": "Arlington, Tx", "Address_2": "Stephenville, TX", "City": "STEPHENVILLE", "State": "Texas", "zipcode": "76401-1379", "Status": "incomplete", "number": 22 }, "geometry": { "type": "Point", "coordinates": [ -97.0001367, 28.839646 ] } },
+{ "type": "Feature", "properties": { "Org_name": "The Network of Behavioral Health Providers", "Address_1": "9401 Southwest Freeway", "Address_2": "Suite 1242", "City": "Houston", "State": "Texas", "zipcode": "77074", "Status": "incomplete", "number": 23 }, "geometry": { "type": "Point", "coordinates": [ -95.53798279999998, 29.67817 ] } },
+{ "type": "Feature", "properties": { "Org_name": "The Rural Outreach Center", "Address_1": "730 Olean Road", "Address_2": null, "City": "East Aurora", "State": "New York", "zipcode": "14052", "Status": "incomplete", "number": 24 }, "geometry": { "type": "Point", "coordinates": [ -78.6030527, 42.74657710000001 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Timothy Freemn, MD, Center for Intellectual and Developmental Disabilities", "Address_1": "3120 Burnet Ave", "Address_2": "Suite 401", "City": "Cincinnati", "State": "Ohio", "zipcode": "45229", "Status": "incomplete", "number": 25 }, "geometry": { "type": "Point", "coordinates": [ -84.500478, 39.135882099999989 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Value Network IPA,LLC", "Address_1": "55 Dodge Road", "Address_2": null, "City": "Getzville", "State": "New York", "zipcode": "14068", "Status": "incomplete", "number": 26 }, "geometry": { "type": "Point", "coordinates": [ -78.796747899999986, 43.0251503 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Virginia Community Health Worker Association", "Address_1": "1717 E. Cary St.", "Address_2": null, "City": "RICHMOND", "State": "Virginia", "zipcode": "23223-5667", "Status": "incomplete", "number": 27 }, "geometry": { "type": "Point", "coordinates": [ -77.4287911, 37.532089299999988 ] } },
+{ "type": "Feature", "properties": { "Org_name": "Winona Health Foundation (Winona Community HUB)", "Address_1": "855 Mankato Ave", "Address_2": null, "City": "Winona", "State": "Minnesota", "zipcode": "55987", "Status": "incomplete", "number": 28 }, "geometry": { "type": "Point", "coordinates": [ -91.6237888, 44.033312900000013 ] } },
+{ "type": "Feature", "properties": { "Org_name": "YWCA San Antonio", "Address_1": "YWCA San Antonio", "Address_2": "YWCA San Antonio", "City": "San Antonio", "State": "Texas", "zipcode": "78237", "Status": "incomplete", "number": 29 }, "geometry": { "type": "Point", "coordinates": [ -98.573806, 29.4112185 ] } },
+{ "type": "Feature", "properties": { "Org_name": "ZeOmega", "Address_1": "Tennyson Parkway", "Address_2": null, "City": "Plano", "State": "Texas", "zipcode": "75204", "Status": "incomplete", "number": 30 }, "geometry": { "type": "Point", "coordinates": [ -96.83154474902058, 33.07104713829132 ] } }
+]
+}
+;
+    // Define a GeoJSON layer and add it to the map
+    var geojsonLayer = L.geoJSON(geojson_data, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: 'green',
+          color: '#000',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        });
+      },
+      onEachFeature: function (feature, layer) {
+        // Popup with information from GeoJSON properties
+        var popupContent = "<p><b>Organization:</b> " + feature.properties.Org_name + "</p>" +
+                           "<p><b>Address:</b> " + feature.properties.Address_1 + "</p>";
+        layer.bindPopup(popupContent);
+
+        // Hover popup showing only Org_name and Address_1
+        layer.on('mouseover', function (e) {
+          this.openPopup();
+        });
+
+        layer.on('mouseout', function (e) {
+          this.closePopup();
+        });
+      }
+    });
+
+    var geojsonLayer2 = L.geoJSON(geojson_data2, {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+          radius: 8,
+          fillColor: 'yellow',
+          color: '#000',
+          weight: 1,
+          opacity: 1,
+          fillOpacity: 0.8
+        });
+      },
+      onEachFeature: function (feature, layer) {
+        // Popup with information from GeoJSON properties
+        var popupContent = "<p><b>Organization:</b> " + feature.properties.Org_name + "</p>" +
+                           "<p><b>Address:</b> " + feature.properties.Address_1 + "</p>";
+        layer.bindPopup(popupContent);
+
+        // Hover popup showing only Org_name and Address_1
+        layer.on('mouseover', function (e) {
+          this.openPopup();
+        });
+
+        layer.on('mouseout', function (e) {
+          this.closePopup();
+        });
+      }
+    });
+
+    geojsonLayer.addTo(map);
+    geojsonLayer2.addTo(map);
+
+    // Function to process a GeoJSON layer and add rows to the attribute table
+    function processGeojsonLayer(layer, tbody, layerClass) {
+      layer.eachLayer(function (layer) {
+        var row = L.DomUtil.create('tr', layerClass, tbody);
+
+        // Add Organization cell
+        var orgCell = L.DomUtil.create('td', '', row);
+        orgCell.innerHTML = layer.feature.properties.Org_name;
+        orgCell.addEventListener('click', function () {
+          map.flyTo(layer.getLatLng(), 15, {
+            duration: 2,
+            easeLinearity: 0.25,
+          });
+        });
+
+        // Add Address cell
+        var addressCell = L.DomUtil.create('td', '', row);
+        addressCell.innerHTML = layer.feature.properties.Address_1;
+        addressCell.addEventListener('click', function () {
+          map.flyTo(layer.getLatLng(), 15, {
+            duration: 2,
+            easeLinearity: 0.25,
+          });
+        });
+
+        // Set the row background color to match the circle color
+        row.style.backgroundColor = layer.options.fillColor;
+      });
+    }
+
+    // Create a custom control for the attribute table
+    var attributeControl = L.control({ position: 'bottomright' });
+
+    attributeControl.onAdd = function (map) {
+      var div = L.DomUtil.create('div', 'info attribute-table');
+      var table = L.DomUtil.create('table', '', div);
+      var thead = L.DomUtil.create('thead', '', table);
+      var tbody = L.DomUtil.create('tbody', '', table);
+
+      var headerRow = L.DomUtil.create('tr', '', thead);
+      L.DomUtil.create('th', '', headerRow).innerHTML = 'Organization';
+      L.DomUtil.create('th', '', headerRow).innerHTML = 'Address';
+
+      // Process geojsonLayer initially
+      processGeojsonLayer(geojsonLayer, tbody, 'green');
+
+      // Process geojsonLayer2 initially
+      processGeojsonLayer(geojsonLayer2, tbody, 'yellow');
+
+      return div;
+    };
+
+    attributeControl.addTo(map);
+
+    // Create a layer control with base map and GeoJSON layer
+    var baseMaps = {
+      "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      })
+    };
+
+    var overlayMaps = {
+      "Completed Submission": geojsonLayer,
+      "Incompleted Submission": geojsonLayer2
+    };
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+    // Add event listeners to enable/disable scroll wheel zoom based on cursor position
+    var attributeTable = document.querySelector('.attribute-table');
+
+    attributeTable.addEventListener('mouseenter', function () {
+      map.scrollWheelZoom.disable();
+    });
+
+    attributeTable.addEventListener('mouseleave', function () {
+      map.scrollWheelZoom.enable();
+    });
+
+    // Listen for overlay add/remove events to update the attribute table
+    map.on('overlayadd', function (event) {
+      if (event.layer === geojsonLayer || event.layer === geojsonLayer2) {
+        updateAttributeTable();
+      }
+    });
+
+    map.on('overlayremove', function (event) {
+      if (event.layer === geojsonLayer || event.layer === geojsonLayer2) {
+        updateAttributeTable();
+      }
+    });
+
+    // Function to update the attribute table based on the currently visible layers
+    function updateAttributeTable() {
+      // Clear the existing table rows
+      var tbody = document.querySelector('.attribute-table tbody');
+      tbody.innerHTML = '';
+
+      // Process geojsonLayer if it is visible
+      if (map.hasLayer(geojsonLayer)) {
+        processGeojsonLayer(geojsonLayer, tbody, 'green');
+      }
+
+      // Process geojsonLayer2 if it is visible
+      if (map.hasLayer(geojsonLayer2)) {
+        processGeojsonLayer(geojsonLayer2, tbody, 'yellow');
+      }
+    }
+	
+  // Create a legend control
+  var legendControl = L.control({ position: 'bottomleft' });
+
+  legendControl.onAdd = function (map) {
+    var legendDiv = L.DomUtil.create('div', 'legend');
+
+    var legendContent = '<h4>Legend</h4>';
+
+    // Legend items
+    var legendItems = [
+      { color: 'green', label: 'Completed Submission' },
+      { color: 'yellow', label: 'Incompleted Submission' }
+    ];
+
+    legendItems.forEach(function (item) {
+      legendContent += '<div class="legend-item">';
+      legendContent += '<div class="legend-color" style="background-color: ' + item.color + '"></div>';
+      legendContent += '<div>' + item.label + '</div>';
+      legendContent += '</div>';
+    });
+
+    legendDiv.innerHTML = legendContent;
+
+    return legendDiv;
+  };
+
+  legendControl.addTo(map);
+
+  </script>
+
+</body>
+</html>
