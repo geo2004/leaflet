@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HeatMap Application</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+	(function(a,b,c){if(typeof module!=="undefined"&&module.exports){module.exports=c()}else if(typeof define==="function"&&define.amd){define(c)}else{b[a]=c()}})("h337",this,function(){var a={defaultRadius:40,defaultRenderer:"canvas2d",defaultGradient:{.25:"rgb(0,0,255)",.55:"rgb(0,255,0)",.85:"yellow",1:"rgb(255,0,0)"},defaultMaxOpacity:1,defaultMinOpacity:0,defaultBlur:.85,defaultXField:"x",defaultYField:"y",defaultValueField:"value",plugins:{}};var b=function h(){var b=function d(a){this._coordinator={};this._data=[];this._radi=[];this._min=0;this._max=1;this._xField=a["xField"]||a.defaultXField;this._yField=a["yField"]||a.defaultYField;this._valueField=a["valueField"]||a.defaultValueField;if(a["radius"]){this._cfgRadius=a["radius"]}};var c=a.defaultRadius;b.prototype={_organiseData:function(a,b){var d=a[this._xField];var e=a[this._yField];var f=this._radi;var g=this._data;var h=this._max;var i=this._min;var j=a[this._valueField]||1;var k=a.radius||this._cfgRadius||c;if(!g[d]){g[d]=[];f[d]=[]}if(!g[d][e]){g[d][e]=j;f[d][e]=k}else{g[d][e]+=j}if(g[d][e]>h){if(!b){this._max=g[d][e]}else{this.setDataMax(g[d][e])}return false}else{return{x:d,y:e,value:j,radius:k,min:i,max:h}}},_unOrganizeData:function(){var a=[];var b=this._data;var c=this._radi;for(var d in b){for(var e in b[d]){a.push({x:d,y:e,radius:c[d][e],value:b[d][e]})}}return{min:this._min,max:this._max,data:a}},_onExtremaChange:function(){this._coordinator.emit("extremachange",{min:this._min,max:this._max})},addData:function(){if(arguments[0].length>0){var a=arguments[0];var b=a.length;while(b--){this.addData.call(this,a[b])}}else{var c=this._organiseData(arguments[0],true);if(c){this._coordinator.emit("renderpartial",{min:this._min,max:this._max,data:[c]})}}return this},setData:function(a){var b=a.data;var c=b.length;this._data=[];this._radi=[];for(var d=0;d<c;d++){this._organiseData(b[d],false)}this._max=a.max;this._min=a.min||0;this._onExtremaChange();this._coordinator.emit("renderall",this._getInternalData());return this},removeData:function(){},setDataMax:function(a){this._max=a;this._onExtremaChange();this._coordinator.emit("renderall",this._getInternalData());return this},setDataMin:function(a){this._min=a;this._onExtremaChange();this._coordinator.emit("renderall",this._getInternalData());return this},setCoordinator:function(a){this._coordinator=a},_getInternalData:function(){return{max:this._max,min:this._min,data:this._data,radi:this._radi}},getData:function(){return this._unOrganizeData()}};return b}();var c=function i(){var a=function(a){var b=a.gradient||a.defaultGradient;var c=document.createElement("canvas");var d=c.getContext("2d");c.width=256;c.height=1;var e=d.createLinearGradient(0,0,256,1);for(var f in b){e.addColorStop(f,b[f])}d.fillStyle=e;d.fillRect(0,0,256,1);return d.getImageData(0,0,256,1).data};var b=function(a,b){var c=document.createElement("canvas");var d=c.getContext("2d");var e=a;var f=a;c.width=c.height=a*2;if(b==1){d.beginPath();d.arc(e,f,a,0,2*Math.PI,false);d.fillStyle="rgba(0,0,0,1)";d.fill()}else{var g=d.createRadialGradient(e,f,a*b,e,f,a);g.addColorStop(0,"rgba(0,0,0,1)");g.addColorStop(1,"rgba(0,0,0,0)");d.fillStyle=g;d.fillRect(0,0,2*a,2*a)}return c};var c=function(a){var b=[];var c=a.min;var d=a.max;var e=a.radi;var a=a.data;var f=Object.keys(a);var g=f.length;while(g--){var h=f[g];var i=Object.keys(a[h]);var j=i.length;while(j--){var k=i[j];var l=a[h][k];var m=e[h][k];b.push({x:h,y:k,value:l,radius:m})}}return{min:c,max:d,data:b}};function d(b){var c=b.container;var d=this.shadowCanvas=document.createElement("canvas");var e=this.canvas=b.canvas||document.createElement("canvas");var f=this._renderBoundaries=[1e4,1e4,0,0];var g=getComputedStyle(b.container)||{};e.className="heatmap-canvas";this._width=e.width=d.width=b.width||+g.width.replace(/px/,"");this._height=e.height=d.height=b.height||+g.height.replace(/px/,"");this.shadowCtx=d.getContext("2d");this.ctx=e.getContext("2d");e.style.cssText=d.style.cssText="position:absolute;left:0;top:0;";c.style.position="relative";c.appendChild(e);this._palette=a(b);this._templates={};this._setStyles(b)}d.prototype={renderPartial:function(a){if(a.data.length>0){this._drawAlpha(a);this._colorize()}},renderAll:function(a){this._clear();if(a.data.length>0){this._drawAlpha(c(a));this._colorize()}},_updateGradient:function(b){this._palette=a(b)},updateConfig:function(a){if(a["gradient"]){this._updateGradient(a)}this._setStyles(a)},setDimensions:function(a,b){this._width=a;this._height=b;this.canvas.width=this.shadowCanvas.width=a;this.canvas.height=this.shadowCanvas.height=b},_clear:function(){this.shadowCtx.clearRect(0,0,this._width,this._height);this.ctx.clearRect(0,0,this._width,this._height)},_setStyles:function(a){this._blur=a.blur==0?0:a.blur||a.defaultBlur;if(a.backgroundColor){this.canvas.style.backgroundColor=a.backgroundColor}this._width=this.canvas.width=this.shadowCanvas.width=a.width||this._width;this._height=this.canvas.height=this.shadowCanvas.height=a.height||this._height;this._opacity=(a.opacity||0)*255;this._maxOpacity=(a.maxOpacity||a.defaultMaxOpacity)*255;this._minOpacity=(a.minOpacity||a.defaultMinOpacity)*255;this._useGradientOpacity=!!a.useGradientOpacity},_drawAlpha:function(a){var c=this._min=a.min;var d=this._max=a.max;var a=a.data||[];var e=a.length;var f=1-this._blur;while(e--){var g=a[e];var h=g.x;var i=g.y;var j=g.radius;var k=Math.min(g.value,d);var l=h-j;var m=i-j;var n=this.shadowCtx;var o;if(!this._templates[j]){this._templates[j]=o=b(j,f)}else{o=this._templates[j]}var p=(k-c)/(d-c);n.globalAlpha=p<.01?.01:p;n.drawImage(o,l,m);if(l<this._renderBoundaries[0]){this._renderBoundaries[0]=l}if(m<this._renderBoundaries[1]){this._renderBoundaries[1]=m}if(l+2*j>this._renderBoundaries[2]){this._renderBoundaries[2]=l+2*j}if(m+2*j>this._renderBoundaries[3]){this._renderBoundaries[3]=m+2*j}}},_colorize:function(){var a=this._renderBoundaries[0];var b=this._renderBoundaries[1];var c=this._renderBoundaries[2]-a;var d=this._renderBoundaries[3]-b;var e=this._width;var f=this._height;var g=this._opacity;var h=this._maxOpacity;var i=this._minOpacity;var j=this._useGradientOpacity;if(a<0){a=0}if(b<0){b=0}if(a+c>e){c=e-a}if(b+d>f){d=f-b}var k=this.shadowCtx.getImageData(a,b,c,d);var l=k.data;var m=l.length;var n=this._palette;for(var o=3;o<m;o+=4){var p=l[o];var q=p*4;if(!q){continue}var r;if(g>0){r=g}else{if(p<h){if(p<i){r=i}else{r=p}}else{r=h}}l[o-3]=n[q];l[o-2]=n[q+1];l[o-1]=n[q+2];l[o]=j?n[q+3]:r}k.data=l;this.ctx.putImageData(k,a,b);this._renderBoundaries=[1e3,1e3,0,0]},getValueAt:function(a){var b;var c=this.shadowCtx;var d=c.getImageData(a.x,a.y,1,1);var e=d.data[3];var f=this._max;var g=this._min;b=Math.abs(f-g)*(e/255)>>0;return b},getDataURL:function(){return this.canvas.toDataURL()}};return d}();var d=function j(){var b=false;if(a["defaultRenderer"]==="canvas2d"){b=c}return b}();var e={merge:function(){var a={};var b=arguments.length;for(var c=0;c<b;c++){var d=arguments[c];for(var e in d){a[e]=d[e]}}return a}};var f=function k(){var c=function h(){function a(){this.cStore={}}a.prototype={on:function(a,b,c){var d=this.cStore;if(!d[a]){d[a]=[]}d[a].push(function(a){return b.call(c,a)})},emit:function(a,b){var c=this.cStore;if(c[a]){var d=c[a].length;for(var e=0;e<d;e++){var f=c[a][e];f(b)}}}};return a}();var f=function(a){var b=a._renderer;var c=a._coordinator;var d=a._store;c.on("renderpartial",b.renderPartial,b);c.on("renderall",b.renderAll,b);c.on("extremachange",function(b){a._config.onExtremaChange&&a._config.onExtremaChange({min:b.min,max:b.max,gradient:a._config["gradient"]||a._config["defaultGradient"]})});d.setCoordinator(c)};function g(){var g=this._config=e.merge(a,arguments[0]||{});this._coordinator=new c;if(g["plugin"]){var h=g["plugin"];if(!a.plugins[h]){throw new Error("Plugin '"+h+"' not found. Maybe it was not registered.")}else{var i=a.plugins[h];this._renderer=new i.renderer(g);this._store=new i.store(g)}}else{this._renderer=new d(g);this._store=new b(g)}f(this)}g.prototype={addData:function(){this._store.addData.apply(this._store,arguments);return this},removeData:function(){this._store.removeData&&this._store.removeData.apply(this._store,arguments);return this},setData:function(){this._store.setData.apply(this._store,arguments);return this},setDataMax:function(){this._store.setDataMax.apply(this._store,arguments);return this},setDataMin:function(){this._store.setDataMin.apply(this._store,arguments);return this},configure:function(a){this._config=e.merge(this._config,a);this._renderer.updateConfig(this._config);this._coordinator.emit("renderall",this._store._getInternalData());return this},repaint:function(){this._coordinator.emit("renderall",this._store._getInternalData());return this},getData:function(){return this._store.getData()},getDataURL:function(){return this._renderer.getDataURL()},getValueAt:function(a){if(this._store.getValueAt){return this._store.getValueAt(a)}else if(this._renderer.getValueAt){return this._renderer.getValueAt(a)}else{return null}}};return g}();var g={create:function(a){return new f(a)},register:function(b,c){a.plugins[b]=c}};return g});
+	</script>
+    <script>
+	(function (name, context, factory) {
+
+  // Supports UMD. AMD, CommonJS/Node.js and browser context
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = factory();
+  } else if (typeof define === "function" && define.amd) {
+    define(factory);
+  } else {
+    context[name] = factory();
+  }
+
+})("HeatmapOverlay", this, function () {
+
+  // Leaflet < 0.8 compatibility
+  if (typeof L.Layer === 'undefined') {
+    L.Layer = L.Class;
+  }
+
+  var HeatmapOverlay = L.Layer.extend({
+
+    initialize: function (config) {
+      this.cfg = config;
+      this._el = L.DomUtil.create('div', 'leaflet-zoom-hide');
+      this._data = [];
+      this._max = 1;
+      this._min = 0;
+      this.cfg.container = this._el;
+    },
+
+    onAdd: function (map) {
+      var size = map.getSize();
+      var h337 = typeof require !== 'undefined' ? require('heatmap.js') : window.h337;
+
+      this._map = map;
+
+      this._width = size.x;
+      this._height = size.y;
+
+      this._el.style.width = size.x + 'px';
+      this._el.style.height = size.y + 'px';
+      this._el.style.position = 'absolute';
+
+      this._resetOrigin();
+
+      map.getPanes().overlayPane.appendChild(this._el);
+
+      if (!this._heatmap) {
+        this._heatmap = h337.create(this.cfg);
+      } 
+
+      // this resets the origin and redraws whenever
+      // the zoom changed or the map has been moved
+      map.on('moveend', this._resetOrigin, this);
+      this._draw();
+    },
+
+    addTo: function (map) {
+      map.addLayer(this);
+      return this;
+    },
+
+    onRemove: function (map) {
+      // remove layer's DOM elements and listeners
+      map.getPanes().overlayPane.removeChild(this._el);
+
+      map.off('moveend', this._resetOrigin, this);
+    },
+    _draw: function() {
+      if (!this._map) { return; }
+      
+      var mapPane = this._map.getPanes().mapPane;
+      var point = mapPane._leaflet_pos;      
+
+      // reposition the layer
+      this._el.style[HeatmapOverlay.CSS_TRANSFORM] = 'translate(' +
+        -Math.round(point.x) + 'px,' +
+        -Math.round(point.y) + 'px)';
+
+      this._update();
+    },
+    _update: function() {
+      var bounds, zoom, scale;
+      var generatedData = { max: this._max, min: this._min, data: [] };
+
+      bounds = this._map.getBounds();
+      zoom = this._map.getZoom();
+      scale = Math.pow(2, zoom);
+
+      if (this._data.length == 0) {
+        if (this._heatmap) {
+          this._heatmap.setData(generatedData);
+        }
+        return;
+      }
+
+
+      var latLngPoints = [];
+      var radiusMultiplier = this.cfg.scaleRadius ? scale : 1;
+      var localMax = 0;
+      var localMin = 0;
+      var valueField = this.cfg.valueField;
+      var len = this._data.length;
+    
+      while (len--) {
+        var entry = this._data[len];
+        var value = entry[valueField];
+        var latlng = entry.latlng;
+
+
+        // we don't wanna render points that are not even on the map ;-)
+        if (!bounds.contains(latlng)) {
+          continue;
+        }
+        // local max is the maximum within current bounds
+        localMax = Math.max(value, localMax);
+        localMin = Math.min(value, localMin);
+
+        var point = this._map.latLngToContainerPoint(latlng);
+        var latlngPoint = { x: Math.round(point.x), y: Math.round(point.y) };
+        latlngPoint[valueField] = value;
+
+        var radius;
+
+        if (entry.radius) {
+          radius = entry.radius * radiusMultiplier;
+        } else {
+          radius = (this.cfg.radius || 2) * radiusMultiplier;
+        }
+        latlngPoint.radius = radius;
+        latLngPoints.push(latlngPoint);
+      }
+      if (this.cfg.useLocalExtrema) {
+        generatedData.max = localMax;
+        generatedData.min = localMin;
+      }
+
+      generatedData.data = latLngPoints;
+
+      this._heatmap.setData(generatedData);
+    },
+    setData: function(data) {
+      this._max = data.max || this._max;
+      this._min = data.min || this._min;
+      var latField = this.cfg.latField || 'lat';
+      var lngField = this.cfg.lngField || 'lng';
+      var valueField = this.cfg.valueField || 'value';
+    
+      // transform data to latlngs
+      var data = data.data;
+      var len = data.length;
+      var d = [];
+    
+      while (len--) {
+        var entry = data[len];
+        var latlng = new L.LatLng(entry[latField], entry[lngField]);
+        var dataObj = { latlng: latlng };
+        dataObj[valueField] = entry[valueField];
+        if (entry.radius) {
+          dataObj.radius = entry.radius;
+        }
+        d.push(dataObj);
+      }
+      this._data = d;
+    
+      this._draw();
+    },
+    // experimential... not ready.
+    addData: function(pointOrArray) {
+      if (pointOrArray.length > 0) {
+        var len = pointOrArray.length;
+        while(len--) {
+          this.addData(pointOrArray[len]);
+        }
+      } else {
+        var latField = this.cfg.latField || 'lat';
+        var lngField = this.cfg.lngField || 'lng';
+        var valueField = this.cfg.valueField || 'value';
+        var entry = pointOrArray;
+        var latlng = new L.LatLng(entry[latField], entry[lngField]);
+        var dataObj = { latlng: latlng };
+        
+        dataObj[valueField] = entry[valueField];
+        this._max = Math.max(this._max, dataObj[valueField]);
+        this._min = Math.min(this._min, dataObj[valueField]);
+
+        if (entry.radius) {
+          dataObj.radius = entry.radius;
+        }
+        this._data.push(dataObj);
+        this._draw();
+      }
+    },
+    _resetOrigin: function () {
+      this._origin = this._map.layerPointToLatLng(new L.Point(0, 0));
+      
+      var size = this._map.getSize();
+      if (this._width !== size.x || this._height !== size.y) {
+        this._width  = size.x;
+        this._height = size.y;
+
+        this._el.style.width = this._width + 'px';
+        this._el.style.height = this._height + 'px';
+      }
+      this._draw();
+    } 
+  });
+
+  HeatmapOverlay.CSS_TRANSFORM = (function() {
+    var div = document.createElement('div');
+    var props = [
+    'transform',
+    'WebkitTransform',
+    'MozTransform',
+    'OTransform',
+    'msTransform'
+    ];
+
+    for (var i = 0; i < props.length; i++) {
+      var prop = props[i];
+      if (div.style[prop] !== undefined) {
+        return prop;
+      }
+    }
+
+    return props[0];
+  })();
+
+  return HeatmapOverlay;
+});
+	</script>
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; right: 0; left: 0; }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<script>
+    // GeoJSON Point Layer
+    var corporatePoints = {
+        "type": "FeatureCollection",
+        "name": "Corporate_Layer",
+        "features": [
+ 		{ "type": "Feature", "properties": { "Nr_": 84, "Adress": "Platz d. Republik 1, 10557 Berlin", "Name_": "Bundestag", "Type": "Corporate", "Descriptio": "Bundestag", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.376101, 52.518653] } },            
+		{ "type": "Feature", "properties": { "Nr_": 80, "Adress": "Müllerstraße 178, 13353 Berlin", "Name_": "Bayer AG", "Type": "Corporate", "Descriptio": "Global agierendes Unternehmen im Life science Sector", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3695482, 52.540171199999968] } },
+            { "type": "Feature", "properties": { "Nr_": 81, "Adress": "Fennstr.22, 13353 Berlin", "Name_": "Bayer AG", "Type": "Corporate", "Descriptio": "Global agierendes Unternehmen im Life science Sector", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.364115499999979, 52.539333500000012] } },
+            { "type": "Feature", "properties": { "Nr_": 82, "Adress": "Max-Dohrn-Straße 10, 10589 Berlin", "Name_": "Bayer AG", "Type": "Corporate", "Descriptio": "Global agierendes Unternehmen im Life science Sector/ Unternehmenszentrale", "Fls_che": "190.000 qm Werksgekände" }, "geometry": { "type": "Point", "coordinates": [13.29713460000001, 52.530938299999988] } },
+            { "type": "Feature", "properties": { "Nr_": 83, "Adress": "Nonnendammallee 104, 13629 Berlin", "Name_": "Siemens AG", "Type": "Corporate", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.259418300000011, 52.538136199999983] } }
+        ]
+    };
+
+    var innovationHubPoints = {
+        "type": "FeatureCollection",
+        "name": "InnovationHub_Layer",
+        "features": [
+            { "type": "Feature", "properties": { "Nr_": 1, "Adress": "Lankwitzer Str. 48, 12107 Berlin", "Name_": "Hybrick Berlin", "Type": "Innovation Hub", "Descriptio": "Real Estate Platform für Unternehmen aus dem Life Sciece und High Tech Segment", "Fls_che": "22.000 vermietbare Fläche" }, "geometry": { "type": "Point", "coordinates": [ 13.373362499999979, 52.437208 ] } },
+            { "type": "Feature", "properties": { "Nr_": 6, "Adress": "Fabeck Str 60-62, 14195 Berlin", "Name_": "Fubic", "Type": "Innovation Hub", "Descriptio": "Technologie und Gründungszentrum", "Fls_che": "8000" }, "geometry": { "type": "Point", "coordinates": [ 13.29762460000002, 52.449629599999973 ] } },
+            { "type": "Feature", "properties": { "Nr_": 7, "Adress": "Berthold-Brecht-Platz 3, 10117 Berlin", "Name_": "Digital Labs Charité BIH Innovation", "Type": "Innovation Hub", "Descriptio": "Unterstützt die Charite und BIH bei der Entwicklung von digital Health Lösungen.", "Fls_che": "14.875 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.3864975, 52.5225753 ] } }
+        ]
+    };
+	
+var universityInstituteRDPoints = {
+    "type": "FeatureCollection",
+    "name": "Univ_Institute_RD_Layer",
+    "features": [
+        { "type": "Feature", "properties": { "Nr_": 41, "Adress": "Anna-Louisa-Karsch-Str. 2, 10178 Berlin", "Name_": "BIH QUEST Center, der BIH Academy, BIH Innovations, der Core-Unit eHealth und der BIH Geschäftsstelle.", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.401855800000011, 52.5206353] } },
+        { "type": "Feature", "properties": { "Nr_": 42, "Adress": "Augustenburger Pl. 1, 13353 Berlin", "Name_": "Charite Campus Wedding", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3481942, 52.5422269] } },
+        { "type": "Feature", "properties": { "Nr_": 43, "Adress": "Luisen Str 65, 10117 Berlin", "Name_": "Rahel Hirsch Center for Translation Medicine", "Type": "University/Institute/R&D", "Descriptio": "Stellt dem Klinikum und Forschungsgruppen modernste Klinik,-Labor und Büroflächen zur Verfügung", "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.37941890000001, 52.526864] } },
+        { "type": "Feature", "properties": { "Nr_": 44, "Adress": "Augustenburger Platz 1, 13353 Berlin", "Name_": "BIH Center for Regenerative Therapies (BCRT), der Clinical Research Unit (CRU) und einiger Core Facilities.", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3481942, 52.5422269] } },
+        { "type": "Feature", "properties": { "Nr_": 45, "Adress": "Charitéplatz 1, 10117 Berlin", "Name_": "Charité Mitte", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.376689399999989, 52.526596499999982] } },
+        { "type": "Feature", "properties": { "Nr_": 46, "Adress": "Kapelle-Ufer 2, 10117 Berlin", "Name_": "Charité - Kapelle - Ufer", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.375321499999989, 52.523259600000017] } },
+        { "type": "Feature", "properties": { "Nr_": 47, "Adress": "Augustenburger Platz 1, 13535 Berlin", "Name_": "Campus Virchow-Klinikum (CVK) Charité", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": "270.000qm mit 2000 Betten" }, "geometry": { "type": "Point", "coordinates": [13.3481942, 52.5422269] } },
+        { "type": "Feature", "properties": { "Nr_": 48, "Adress": "Unter den Eichen 87, 12205 Berlin", "Name_": "Bundesanstalt für Materialforschung", "Type": "University/Institute/R&D", "Descriptio": "wissenschaftlich-technische Bundesbehörde im Geschäftsbereich des Bundesministeriums für Wirtschaft und Klimaschutz.", "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.287903, 52.442690199999987] } },
+        { "type": "Feature", "properties": { "Nr_": 49, "Adress": "Hindenburgdamm 30, 12203 Berlin", "Name_": "Charité Campus Benjamin Franklin", "Type": "University/Institute/R&D", "Descriptio": "Verfügt über 1.200 Betten und 36 wissenschaftlichen Einrichtungen", "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.32175, 52.4421879] } },
+        { "type": "Feature", "properties": { "Nr_": 50, "Adress": "Anna-Louisa-Karsch-Straße 2, 10178 Berlin", "Name_": "Fraunhofer-Verbund IUK-Technologie", "Type": "University/Institute/R&D", "Descriptio": "Forschung zu Zell Therapie und Immonologie", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.401855800000011, 52.5206353] } },
+        { "type": "Feature", "properties": { "Nr_": 51, "Adress": "Pascalstraße 13, 10587 Berlin", "Name_": "Fraunhofer IPK Anwendungszentrum Mikroproduktionstechnik", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3234947, 52.523247299999973] } },
+        { "type": "Feature", "properties": { "Nr_": 52, "Adress": "Anna-Louisa-Karsch-Straße 2, 10178 Berlin", "Name_": "Fraunhofer Hauptsitz Berlin", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.401855800000011, 52.5206353] } },
+        { "type": "Feature", "properties": { "Nr_": 53, "Adress": "Hardenbergstraße 20, 10623 Berlin", "Name_": "Fraunhofer Center for Responsible Research and Innovation (CeRRI)", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.329854799999969, 52.5070379] } },
+        { "type": "Feature", "properties": { "Nr_": 54, "Adress": "Müggelseedamm 310, 12587 Berlin", "Name_": "Leibniz-Institut für Gewässerökologie und Binnenfischerei (IGB)", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.6475638, 52.448807] } },
+        { "type": "Feature", "properties": { "Nr_": 55, "Adress": "Alfred-Kowalke-Straße 17, 10315 Berlin", "Name_": "Leibniz-Institut für Zoo- und Wildtierforschung (IZW) im Forschungsverbund Berlin e.V.", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.5214279, 52.505959] } },
+        { "type": "Feature", "properties": { "Nr_": 56, "Adress": "Ihnestraße 63, 14195 Berlin", "Name_": "Max-Planck-Institut für molekulare Genetik", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.27362880000001, 52.444976900000022] } },
+        { "type": "Feature", "properties": { "Nr_": 57, "Adress": "Virchowweg 12, 10117 Berlin", "Name_": "Max-Planck-Institut für Infektionsbiologie", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3753582, 52.5252027] } },
+        { "type": "Feature", "properties": { "Nr_": 58, "Adress": "Markgrafenstraße 37, 10117 Berlin", "Name_": "Max-Planck-Gesellschaft zur Förderung der Wissenschaften e.V. Büro Berlin", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.393498, 52.513447600000013] } },
+        { "type": "Feature", "properties": { "Nr_": 59, "Adress": "Faradayweg 4-6, 14195 Berlin", "Name_": "Fritz-Haber-Institut der Max-Planck-Gesellschaft", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.2827642, 52.448581] } },
+        { "type": "Feature", "properties": { "Nr_": 60, "Adress": "Robert-Rössle-Straße 10, 13125 Berlin", "Name_": "Leibniz-Forschungsinstitut für Molekulare Pharmakologie", "Type": "University/Institute/R&D", "Descriptio": "Forschung zu Themen wie innovativer Mikroelektronik.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.50457240000002, 52.627318900000013] } },
+        { "type": "Feature", "properties": { "Nr_": 61, "Adress": "Chausseestraße 111, 10115 Berlin", "Name_": "Leibniz-Gemeinschaft", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.3824447, 52.530707] } },
+        { "type": "Feature", "properties": { "Nr_": 62, "Adress": "Straße des 17 Juni 135, 10623 Berlin", "Name_": "Technische Universität Berlin", "Type": "University/Institute/R&D", "Descriptio": "Lehre und Forschung in Natur- und Ingenieurswissenschaften", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.32708940000002, 52.512220500000033] } },
+        { "type": "Feature", "properties": { "Nr_": 63, "Adress": "Nordufer 20, 13353 Berlin", "Name_": "Robert Koch Institut", "Type": "University/Institute/R&D", "Descriptio": "Bekämpfung von Infektionskrankheiten und Analyse von gesundheillichen Trends.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.34727240000003, 52.53920710000002] } },
+        { "type": "Feature", "properties": { "Nr_": 64, "Adress": "Kaiserwerther Straße 16-18, 14195 Berlin", "Name_": "Freie Universität Berlin", "Type": "University/Institute/R&D", "Descriptio": "Lehre und Forschung in Geistes und Sozialwissenschaften sowie Naturwissenschaften und Medizin.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.285642, 52.4479764] } },
+        { "type": "Feature", "properties": { "Nr_": 65, "Adress": "Unter den Linden 6, 10117 Berlin", "Name_": "Humbold-Universität zu Berlin", "Type": "University/Institute/R&D", "Descriptio": "Lehre und Forschung in den Geistes,-Sozial, -Naturwissenschaften und der Humanmedizin.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.393563400000019, 52.51862890000001] } },
+        { "type": "Feature", "properties": { "Nr_": 66, "Adress": "Fabeck Str 34-36, 14195 Berlin", "Name_": "Institut für anorganische Chemie auf dem Campus der Freien Universität Berlin", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [13.2941286, 52.453525899999967] } },
+        { "type": "Feature", "properties": { "Nr_": 84, "Adress": "Gustav-Meyer-Allee 25, 13355 Berlin", "Name_": "Fraunhofer-Institut für Zuverlässigkeit und Mikrointegration (IZM)", "Type": "University/Institute/R&D", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [13.386910199999971, 52.5413513] } }
+    ]
+};
+
+	var techParkPoints = {
+	"type": "FeatureCollection",
+"name": "Techpark_Layer",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Nr_": 3, "Adress": "Volmerstraße 5-9, Berlin", "Name_": "ZBU I", "Type": "TechPark", "Descriptio": "Zentrum für Biotschnologie und Umwelt welches sich im Adlershof befindet.", "Fls_che": "13.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.536436900000011, 52.430271899999987 ] } },
+{ "type": "Feature", "properties": { "Nr_": 4, "Adress": "Lindenberger Weg 80, 13125 Berlin", "Name_": "Cambus Berlin Buch", "Type": "TechPark", "Descriptio": "Einer der größten Biotechparks D-Lands. LABOR UND Büroflächen mit modernster Ausstatung", "Fls_che": "29.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.507567, 52.626862 ] } },
+{ "type": "Feature", "properties": { "Nr_": 5, "Adress": "Lindenberger Weg 80, 13125 Berlin", "Name_": "ZBU II", "Type": "TechPark", "Descriptio": "Zentrum für Biotschnologie und Umwelt welches sich im Adlershof befindet.", "Fls_che": "7.200 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.507567, 52.626862 ] } },
+{ "type": "Feature", "properties": { "Nr_": 11, "Adress": "Ostendstraße 1-14, 12459 Berlin", "Name_": "Behrens Ufer Berlin", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.53373860000001, 52.455571200000023 ] } },
+{ "type": "Feature", "properties": { "Nr_": 12, "Adress": "Waßmannsdorfer Allee 5, 12529 Schönefeld", "Name_": "Testa Berlin", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.467284099999979, 52.368512899999978 ] } },
+{ "type": "Feature", "properties": { "Nr_": 13, "Adress": "Max-Dohrn-Strasse, 10589 Berlin", "Name_": "berlinbiotechpark", "Type": "TechPark", "Descriptio": "Konzeot aus Büro, -Labor- und Produktionsfläche", "Fls_che": "67.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.3007771, 52.53109460000001 ] } },
+{ "type": "Feature", "properties": { "Nr_": 14, "Adress": "Rudower Ch 44, 12489 Berlin", "Name_": "Am Oktagon", "Type": "TechPark", "Descriptio": "Teil des Adlershofer Gelände", "Fls_che": "85.00 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.521048099999989, 52.4293803 ] } },
+{ "type": "Feature", "properties": { "Nr_": 15, "Adress": "Lietzenburger Str. 75, 10719 Berlin", "Name_": "Office Lab Campus Adlerhof", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.3251558, 52.499812700000021 ] } },
+{ "type": "Feature", "properties": { "Nr_": 18, "Adress": "Nahmitzer Damm 12, 12277 Berlin", "Name_": "Life Science Campus", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.368295, 52.4092456 ] } },
+{ "type": "Feature", "properties": { "Nr_": 19, "Adress": "Am Mühlenberg 9 14476 Potsdam-Golm", "Name_": "H-Lab Büro und Laborgebäude", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 12.970649, 52.412056 ] } },
+{ "type": "Feature", "properties": { "Nr_": 20, "Adress": "Karl Liebknechter Strasse Potsdam", "Name_": "Potsdam Science Park", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.09378609999998, 52.395614700000017 ] } },
+{ "type": "Feature", "properties": { "Nr_": 21, "Adress": "Ostendstraße 25, 12459 Berlin", "Name_": "Technologie- und Gründerzentrum Schönewiede", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.533633500000031, 52.457788699999959 ] } },
+{ "type": "Feature", "properties": { "Nr_": 22, "Adress": "Robert-Rössle-Straße 10, 13125 Berlin", "Name_": "Campus Berlin-Buch GmbH", "Type": "TechPark", "Descriptio": "Biotechnick/Healthcare", "Fls_che": "31.000 qm (+8.000qm neubau BerlinBioCube)" }, "geometry": { "type": "Point", "coordinates": [ 13.50457240000002, 52.627318900000013 ] } },
+{ "type": "Feature", "properties": { "Nr_": 24, "Adress": "Flughafen Tegel 1, 13405 Berlin", "Name_": "Berlin TXL - The Urban Tech Republic", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.29150340000003, 52.5541285 ] } },
+{ "type": "Feature", "properties": { "Nr_": 25, "Adress": "Luxemburgerstrasse Berlin", "Name_": "Wedding Advanced Laboratories", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.3545836, 52.543969399999973 ] } },
+{ "type": "Feature", "properties": { "Nr_": 26, "Adress": "Nonnendammallee 44, Berlin", "Name_": "LUXWERK", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.25071130000001, 52.5376224 ] } },
+{ "type": "Feature", "properties": { "Nr_": 27, "Adress": "Max-Dohrn Strasse 8 - 10, 10589 Berlin", "Name_": "MAX DOHRN LABS", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.297136099999969, 52.5309306 ] } },
+{ "type": "Feature", "properties": { "Nr_": 28, "Adress": "Friedrich Krause Ufer 16-21, 13353 Berlin Tiergarten", "Name_": "Berlin Decks", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.351777, 52.538570400000012 ] } },
+{ "type": "Feature", "properties": { "Nr_": 29, "Adress": "Sonnenallee 221, 12059 Berlin Neukölln", "Name_": "Shed", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.4574642, 52.4745724 ] } },
+{ "type": "Feature", "properties": { "Nr_": 30, "Adress": "Salzufer 15 - 16, Berlin", "Name_": "Lanolinfabrik", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.322529800000019, 52.518501 ] } },
+{ "type": "Feature", "properties": { "Nr_": 31, "Adress": "Komturstrasse 18 - 18a, Berlin", "Name_": "Tempelhof Twins", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.39650269999998, 52.457541499999969 ] } },
+{ "type": "Feature", "properties": { "Nr_": 32, "Adress": "Sickingenstrasse 9-13, 10553 Berlin Moabit", "Name_": "WorkNine13", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.32518, 52.53261 ] } },
+{ "type": "Feature", "properties": { "Nr_": 33, "Adress": "Neuköllnische Allee 9, 12057 Berlin-Neukölln", "Name_": "Hohe Neun", "Type": "TechPark", "Descriptio": "PE welche sich im Bau befindet", "Fls_che": "11.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.4576541, 52.4695273 ] } },
+{ "type": "Feature", "properties": { "Nr_": 38, "Adress": "Potsdam Science Park, Am Mühlenberg 11, 14476 Potsdam", "Name_": "IQ Spaces", "Type": "TechPark", "Descriptio": "sie vermieten Labor und Büroflächen für die Wissenschaft", "Fls_che": "/" }, "geometry": { "type": "Point", "coordinates": [ 12.970176100000019, 52.413087599999983 ] } },
+{ "type": "Feature", "properties": { "Nr_": 39, "Adress": "Köpenickerstr 325, 12555 Berlin", "Name_": "Innovationspark Wuhlheide", "Type": "TechPark", "Descriptio": "Bio-und Medizintechnick", "Fls_che": "45.000qm" }, "geometry": { "type": "Point", "coordinates": [ 13.5660398, 52.469370099999978 ] } },
+{ "type": "Feature", "properties": { "Nr_": 40, "Adress": "Feenstr.40, 13353 Berlin", "Name_": "Bayer Colaborator Berlin", "Type": "TechPark", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.35093040000001, 52.541117100000022 ] } }
+]
+};
+
+	var StartupPoints = { 
+	"type": "FeatureCollection",
+"name": "Startup_Layer",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Nr_": 67, "Adress": "Karl-Liebknechtstr.1, 10178 Berlin", "Name_": "Ada Health GmbH", "Type": "Start-up", "Descriptio": "Konzeption, Entwicklung und Vermarktung von Software und Serviceprodukten in Bezug auf gesundheitsrelevante Informationen und Entscheidungshilfen.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.402637, 52.519224300000033 ] } },
+{ "type": "Feature", "properties": { "Nr_": 68, "Adress": "Alt-Moabit73, 10555 Berlin", "Name_": "Aignostic GmbH", "Type": "Start-up", "Descriptio": "Is a spin off from charite.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.3326447, 52.524019899999978 ] } },
+{ "type": "Feature", "properties": { "Nr_": 69, "Adress": "Torstr. 19, 10119 Berlin", "Name_": "AMBOSS GmbH", "Type": "Start-up", "Descriptio": "Amboss ist ein Nachschlagewerk für Arztinnen und Ärzte.Sie bieten Medizinwissen, auf das man sich verlassen kann.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.413855, 52.528348900000012 ] } },
+{ "type": "Feature", "properties": { "Nr_": 70, "Adress": "Torstr. 59, 10119 Berlin", "Name_": "Cara Care HiDoc", "Type": "Start-up", "Descriptio": "Clue kombiniert Wissenschft und Technologien und verändert damit aktiv die Art und Weise, wie menschen auf Informationen über Zyklus- und Reproduktionsgeschejen zugreifen und sich damit auseinandersetzen.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.40892249999998, 52.529134499999977 ] } },
+{ "type": "Feature", "properties": { "Nr_": 71, "Adress": "Adalbertstr 8, 10999 Berlin", "Name_": "Clue BioWink GmbH", "Type": "Start-up", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.41892360000001, 52.500552700000021 ] } },
+{ "type": "Feature", "properties": { "Nr_": 72, "Adress": "Wilhelmstr. 118, 10963 Berlin", "Name_": "Doctolib GmbH", "Type": "Start-up", "Descriptio": "Bietet Spezialsoftware an, z.B Online Buchung von Terminen", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.3871485, 52.504019099999979 ] } },
+{ "type": "Feature", "properties": { "Nr_": 73, "Adress": "Kottbusser Damm 79, 10967 Berlin", "Name_": "Lindera Gmbh", "Type": "Start-up", "Descriptio": "Auch hier wurde eine App entwickelt, Deep-Tech-Unternehmen, das sich auf App-basierte 3D-Bewegungsanalysen spezialisiert hat .", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.4233498, 52.4914772 ] } },
+{ "type": "Feature", "properties": { "Nr_": 74, "Adress": "Möckernstr.63, 10965 Berlin", "Name_": "Mediaire GmbH", "Type": "Start-up", "Descriptio": "Sie entwickeln tools für die Quantitative Neuro Bildgebung", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.37922340000002, 52.491573599999967 ] } },
+{ "type": "Feature", "properties": { "Nr_": 75, "Adress": "Kastaniealle 29, 10435 Berlin", "Name_": "Selfapy GmbH", "Type": "Start-up", "Descriptio": "Bieten online Kurse bei psychischen Störungen an und bietet somit effektive Hilfe.Die Kosten werden auf Rezeot von allen krankenkassen übernommen.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.4079956, 52.537191399999983 ] } },
+{ "type": "Feature", "properties": { "Nr_": 76, "Adress": "Rudolf-Breitscheidstr.185, 14482 Potsdam", "Name_": "ThinkSono GmbH", "Type": "Start-up", "Descriptio": "ThinkSono AI ermöglicht es jedem medizinischen Fachpersonal, Point-of-Care (POCUS)-Ultraschall über Echtzeit-KI-Anleitung, Schulungsmodule und Expertenfeedback zu erlernen und zu üben.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.1249979, 52.3949227 ] } },
+{ "type": "Feature", "properties": { "Nr_": 77, "Adress": "Robert-Rösslestr.10, 13125 Berlin", "Name_": "T-Knife GmbH", "Type": "Start-up", "Descriptio": "Ist ein biopharmazeutisches UNTERNEHMEN; DAS SICH DER Entwicklung neuartiger Therapeutika zur Bekämpfung von Krebs verschrieben hat.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.50457240000002, 52.627318900000013 ] } },
+{ "type": "Feature", "properties": { "Nr_": 78, "Adress": "Max-Ulrichstr.3, 13355 Berlin", "Name_": "Vara MX Healthcare GmbH", "Type": "Start-up", "Descriptio": "Vara entwickelte eine Screening Plattform für Radiologen um Brustkrebs mit Hilfe von KI früfer zu entdecken", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.38388390000002, 52.539351599999982 ] } },
+{ "type": "Feature", "properties": { "Nr_": 79, "Adress": "Rosenstr.2, 10178 Berlin", "Name_": "Hearteat Medical", "Type": "Start-up", "Descriptio": "Sie entwickeln eine Plattform, die es ermöglicht Ergebnisse zu messen und Gesundheitseinrichtungen, Kostenträger, Medizintechnik und Pharmaunternehmen zu bewerten wie sich die behndlung auf die Lebensqualität von Patienten auswirkt.", "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.404277099999989, 52.521436400000013 ] } }
+]
+};
+
+	var StadtquartierPoints = 
+	{
+"type": "FeatureCollection",
+"name": "Stadtquartier_Layer",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Nr_": 23, "Adress": "Nonnendammallee 72, 13629 Berlin", "Name_": "Siemensstadt", "Type": "Stadtquartier", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.2614605, 52.5355478 ] } },
+{ "type": "Feature", "properties": { "Nr_": 35, "Adress": "Thiemannstraße 1-18, 12059 Berlin-Neukölln", "Name_": "Thiemann-Quartier", "Type": "Stadtquartier", "Descriptio": null, "Fls_che": "Gesamtmietfläche 53.032 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.453069800000019, 52.478816300000027 ] } }
+]
+};
+
+	var RechenzentrumPoints = 
+	{
+"type": "FeatureCollection",
+"name": "Rechenzentrum_Layer",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Nr_": 2, "Adress": "Lankwitzer Str. 45, 12107 Berlin", "Name_": "Rechenzentrum NTT Global Data Centers", "Type": "Rechenzentrum", "Descriptio": null, "Fls_che": null }, "geometry": { "type": "Point", "coordinates": [ 13.3729424, 52.4381222 ] } }
+]
+};
+
+	var ProjektentwicklungPoints = 
+	{
+"type": "FeatureCollection",
+"name": "Projektentwicklung_layer",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Nr_": 8, "Adress": "Fabeckstrasse 62 14195 Berlin", "Name_": "FUHUB", "Type": "Projektentwicklung", "Descriptio": "Nachaltiges Gebäude welches sich noch im Bau befindet", "Fls_che": "6600 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.2995638, 52.4509564 ] } },
+{ "type": "Feature", "properties": { "Nr_": 9, "Adress": "Ballinstraße 12359 Berlin", "Name_": "INK Neukölln", "Type": "Projektentwicklung", "Descriptio": "Nachhaltiges Gebäude mit Green Building Status welches sich noch im Bau befindet", "Fls_che": "25.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.4483259, 52.4628492 ] } },
+{ "type": "Feature", "properties": { "Nr_": 10, "Adress": "Hegauer Weg 24-26, 14163 Berlin", "Name_": "Greenovation Campus Berlin", "Type": "Projektentwicklung", "Descriptio": "Work life Balance meets sustainabilty. Gebäude für Büros, werkstätten und Appartments. Auch hierbei handelt es sich um ein Neubauprojekt", "Fls_che": "12.800 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.246542299999989, 52.4287822 ] } },
+{ "type": "Feature", "properties": { "Nr_": 16, "Adress": "Am Julisturm 13-29, Berlin Spandau", "Name_": "Gewerbecampus in Spandau - The HUB", "Type": "Projektentwicklung", "Descriptio": "Projektentwicklung die bis 2026 fertig gestellt werden soll.", "Fls_che": "Flächenpotential 200.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.22453080000002, 52.5367326 ] } },
+{ "type": "Feature", "properties": { "Nr_": 17, "Adress": "Teilestrasse 3, Berlin", "Name_": "Food Campus", "Type": "Projektentwicklung", "Descriptio": "Projektentwicklung", "Fls_che": "Insgesamt 40.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.40155350000002, 52.458845699999969 ] } },
+{ "type": "Feature", "properties": { "Nr_": 34, "Adress": "Tempelhofer Weg 60, 12347 Berlin-Neukölln", "Name_": "Bellevue Campus", "Type": "Projektentwicklung", "Descriptio": "Hierbei handelt es sich um eine Neubau erweiterung des büro und gewerbeparks", "Fls_che": "9.119 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.430478700000011, 52.454145600000011 ] } },
+{ "type": "Feature", "properties": { "Nr_": 36, "Adress": "Attilastraße, Ecke Röblingstraße, 12105 Berlin", "Name_": "Stadtquartier Marienhöfe", "Type": "Projektentwicklung", "Descriptio": "Hier wird ein ca. 10 ha großes Stadtquartier geplant, PE", "Fls_che": "Insgesamt 40.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.3668362, 52.4496675 ] } },
+{ "type": "Feature", "properties": { "Nr_": 37, "Adress": "Tauenzienstraße 13, 10789 Berlin", "Name_": "Neumann-Park", "Type": "Projektentwicklung", "Descriptio": "Hier wird Freizeit und Bürofläche miteinander verbunde", "Fls_che": "60.000 qm" }, "geometry": { "type": "Point", "coordinates": [ 13.3364787, 52.5039813 ] } }
+]
+};
+
+
+    // Extract data from GeoJSON for heatmap
+	
+	function generateHeatmapData(points, maxCount) {
+    return {
+        max: maxCount,
+        data: points.features.map(function (feature) {
+            return {
+                lat: feature.geometry.coordinates[1],
+                lng: feature.geometry.coordinates[0],
+                count: 1
+            };
+        })
+    };
+}
+
+var corporateHeatmapData = generateHeatmapData(corporatePoints, 16);
+var innovationHubHeatmapData = generateHeatmapData(innovationHubPoints, 8);
+var universityInstituteRDHeatmapData = generateHeatmapData(universityInstituteRDPoints, 30);
+var techParkHeatmapData = generateHeatmapData(techParkPoints, 30);
+var startUpHeatmapData = generateHeatmapData(StartupPoints, 30);
+var StadtquartierHeatmapData = generateHeatmapData(StadtquartierPoints, 30);
+var RechenzentrumHeatmapData = generateHeatmapData(RechenzentrumPoints, 30);
+var ProjektentwicklungHeatmapData = generateHeatmapData(ProjektentwicklungPoints, 30);
+
+
+	
+	
+    var baseLayer = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+            attribution: '...',
+            maxZoom: 18
+        }
+    );
+
+function generateConfig(radius, maxOpacity, scaleRadius, useLocalExtrema) {
+  return {
+    "radius": radius,
+    "maxOpacity": maxOpacity,
+    "scaleRadius": scaleRadius,
+    "useLocalExtrema": useLocalExtrema,
+    "latField": 'lat',
+    "lngField": 'lng',
+    "valueField": 'count'
+  };
+}
+
+var cfgCorporate = generateConfig(0.02, 0.6, true, true);
+var cfgInnovationHub = generateConfig(0.02, 0.8, true, true);
+var cfgUniversityInstituteRD = generateConfig(0.02, 0.8, true, false);
+var cfgTechpark = generateConfig(0.02, 0.8, true, true);
+var cfgStartup = generateConfig(0.02, 0.8, true, true);
+var cfgStadtquartier = generateConfig(0.02, 0.8, true, true);
+var cfgRechenzentrum = generateConfig(0.02, 0.8, true, true);
+var cfgProjektentwicklung = generateConfig(0.02, 0.8, true, true);
+
+function createPointLayer(points, fillColor) {
+    return L.geoJSON(points, {
+        pointToLayer: function (feature, latlng) {
+            return L.circleMarker(latlng, { radius: 8, fillColor: fillColor, color: "#000", weight: 1, opacity: 1, fillOpacity: 0.8 });
+        },
+        onEachFeature: function (feature, layer) {
+            if (feature.properties) {
+                layer.bindPopup(
+                    "<strong>Name: </strong>" + feature.properties.Name_ +
+                    "<br><strong>Address: </strong>" + feature.properties.Adress +
+                    "<br><strong>Type: </strong>" + feature.properties.Type +
+                    "<br><strong>Description: </strong>" + feature.properties.Descriptio
+                );
+            }
+        }
+    });
+}
+
+var corporatePointLayer = createPointLayer(corporatePoints, "blue");
+var innovationHubPointLayer = createPointLayer(innovationHubPoints, "red");
+var universityInstituteRDPointLayer = createPointLayer(universityInstituteRDPoints, "green");
+var techParkPointLayer = createPointLayer(techParkPoints, "orange");
+var StartupPointLayer = createPointLayer(StartupPoints, "purple");
+var StadtquartierPointsLayer = createPointLayer(StadtquartierPoints, "magenta");
+var RechenzentrumPointsLayer = createPointLayer(RechenzentrumPoints, "brown");
+var ProjektentwicklungPointsLayer = createPointLayer(ProjektentwicklungPoints, "pink");
+
+
+    // Create a HeatmapOverlay using the provided testData and configuration
+    var corporateHeatmapLayer = new HeatmapOverlay(cfgCorporate);
+    var innovationHubHeatmapLayer = new HeatmapOverlay(cfgInnovationHub);
+	var universityInstituteRDHeatmapLayer = new HeatmapOverlay(cfgUniversityInstituteRD);
+	var techParkHeatmapLayer = new HeatmapOverlay(cfgTechpark);
+	var startUpHeatmapLayer = new HeatmapOverlay(cfgStartup);
+	var StadtquartierHeatmapLayer = new HeatmapOverlay(cfgStadtquartier);
+	var RechenzentrumHeatmapLayer = new HeatmapOverlay(cfgRechenzentrum);
+	var ProjektentwicklungHeatmapLayer = new HeatmapOverlay(cfgProjektentwicklung);
+
+function toggleHeatmapLayers() {
+    // Add or remove layers as needed
+    corporateHeatmapLayer.addTo(map);
+    innovationHubHeatmapLayer.addTo(map);
+    universityInstituteRDHeatmapLayer.addTo(map);
+	techParkHeatmapLayer.addTo(map);
+	startUpHeatmapLayer.addTo(map);
+	StadtquartierHeatmapLayer.addTo(map);
+	RechenzentrumHeatmapLayer.addTo(map);
+	ProjektentwicklungHeatmapLayer.addTo(map);
+
+    // Uncomment the lines below to hide the heatmap layers by default
+    map.removeLayer(corporateHeatmapLayer);
+    map.removeLayer(innovationHubHeatmapLayer);
+    map.removeLayer(universityInstituteRDHeatmapLayer);
+	map.removeLayer(techParkHeatmapLayer);
+	map.removeLayer(startUpHeatmapLayer);
+	map.removeLayer(StadtquartierHeatmapLayer);
+	map.removeLayer(RechenzentrumHeatmapLayer);
+	map.removeLayer(ProjektentwicklungHeatmapLayer);
+}
+	
+    var map = new L.Map('map', {
+        center: new L.LatLng(52.5200, 13.4050),
+        zoom: 12,
+		layers: [baseLayer, universityInstituteRDPointLayer ]
+    });
+
+toggleHeatmapLayers(); 
+
+    corporateHeatmapLayer.setData(corporateHeatmapData);
+    innovationHubHeatmapLayer.setData(innovationHubHeatmapData);
+	universityInstituteRDHeatmapLayer.setData(universityInstituteRDHeatmapData);
+	techParkHeatmapLayer.setData(techParkHeatmapData);
+	startUpHeatmapLayer.setData(startUpHeatmapData);
+	StadtquartierHeatmapLayer.setData(startUpHeatmapData);
+	RechenzentrumHeatmapLayer.setData(RechenzentrumHeatmapData);
+	ProjektentwicklungHeatmapLayer.setData(ProjektentwicklungHeatmapData);
+
+    // Layer Control
+    var overlayMaps = {
+        "Corporate Type Point Layer": corporatePointLayer,
+		"Corporate Type HeatMap Layer": corporateHeatmapLayer,
+        "Innovation Hub Type Point Layer": innovationHubPointLayer,
+		"Innovation Hub Type HeatMap Layer": innovationHubHeatmapLayer,
+        "Univ/Institute/R&D Type Point Layer": universityInstituteRDPointLayer,
+	    "Univ/Institute/R&D Type HeatMap Layer": universityInstituteRDHeatmapLayer,
+        "Tech Park Type Point Layer": techParkPointLayer,
+		"Tech Park Type HeatMap Layer": techParkHeatmapLayer,
+		"Startup Type Point Layer": StartupPointLayer,
+		"Startup Type HeatMap Layer": startUpHeatmapLayer,
+        "Stadtquartier Type Points Layer": StadtquartierPointsLayer,
+	    "Stadtquartier Type Heatmap Layer": StadtquartierHeatmapLayer,
+        "Rechenzentrum Type Point Layer": RechenzentrumPointsLayer,
+		"Rechenzentrum Type HeatMap Layer": RechenzentrumHeatmapLayer,
+		"Projektentwicklung Type Point Layer": ProjektentwicklungPointsLayer,
+		"Projektentwicklung Type HeatMap Layer": ProjektentwicklungHeatmapLayer
+		
+    };
+
+    L.control.layers(null, overlayMaps, {collapsed:false}).addTo(map);
+
+</script>
+
+</body>
+</html>
