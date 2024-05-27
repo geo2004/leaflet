@@ -31,25 +31,44 @@
 
         // Function to handle location found event
         function onLocationFound(e) {
-            const radius = e.accuracy / 2;
+            const lat = e.latitude;
+            const lng = e.longitude;
 
-            L.marker(e.latlng).addTo(map)
-                .bindPopup(`You are within ${radius} meters from this point`).openPopup();
+            const latlng = [lat, lng];
 
-            L.circle(e.latlng, radius).addTo(map);
+            // Add a blue circle with white stroke to indicate the location
+            L.circleMarker(latlng, {
+                radius: 6,
+                color: '#ffffff',
+                fillColor: '#0000ff',
+                fillOpacity: 1,
+                weight: 2
+            }).addTo(map);
+
+            map.setView(latlng, 16); // Auto zoom to the location
         }
 
         // Function to handle location error event
         function onLocationError(e) {
-            alert(e.message);
+            console.error(e.message);
         }
 
-        // Set up event listeners for location found and error
-        map.on('locationfound', onLocationFound);
-        map.on('locationerror', onLocationError);
-
-        // Request location from the browser
-        map.locate({ setView: true, maxZoom: 16 });
+        // Request location from the browser once
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                onLocationFound({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    accuracy: position.coords.accuracy
+                });
+            }, onLocationError, {
+                enableHighAccuracy: true,
+                timeout: 27000,
+                maximumAge: 0
+            });
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
     </script>
 </body>
 </html>
