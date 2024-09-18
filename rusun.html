@@ -397,82 +397,76 @@ background-color: #2da0e2;
           fillOpacity: 0.8
         });
       },
-      onEachFeature: function (feature, layer) {
-        // Popup with information from GeoJSON properties
+       onEachFeature: function (feature, layer) {
+        // Ensure the stat_srh_t value is treated as a number
+        var statusSerahTerima = parseInt(feature.properties.stat_srh_t, 10) === 1 ? 
+            "Sudah Serah Terima Aset" : "Belum Serah Terima Aset";
+
         var popupContent = "<div style='margin-bottom:10px;'>" +
-                   "<p><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
-                   "<p><b>Alamat:</b> " + feature.properties.alamat + "</p>" +
-                   "<p><b>Jumlah Unit:</b> " + feature.properties.jml_unit + "</p>" +
-                   "<p><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>" +
-                   "<p><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>" +
-                   "<p><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>" +
-                   "<p><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>" +
-                   "<p><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>" +
-                   "<p><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>" +
-                   "<p><b>Status Serah Terima Aset:</b> " + feature.properties.stat_srh_t + "</p>" +
-                   "<p><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>" +
-                   "<p><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Alamat:</b> " + feature.properties.alamat + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit:</b> " + feature.properties.jml_unit + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Status Serah Terima Aset:</b> " + statusSerahTerima + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>" +
                    "</div>" +
                    "<div style='border-top: 1px solid #ccc; padding-top: 10px;'>" +
-                   "<p><b>Foto:</b></p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Foto:</b></p>" +
                    "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" +
                    "</div>";
 
-layer.bindPopup(popupContent);
-
-
-
-      }
-    });
-
-    var geojsonLayer2 = L.geoJSON(geojson_data2, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 8,
-          fillColor: '#FFD326',
-          color: '#C1A32D',
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      },
-      onEachFeature: function (feature, layer) {
-        // Popup with information from GeoJSON properties
-     var popupContent = "<p><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
-                           "<p><b>Alamat:</b> " + feature.properties.alamat + "</p>"
-						   +
-                           "<p><b>Jumlah Unit</b> " + feature.properties.jml_unit + "</p>"
-						   +
-                           "<p><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>"
-						   +
-                           "<p><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>"
-						   +
-                           "<p><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>"
-						   +
-                           "<p><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>"
-						   +
-                           "<p><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>"
-						   +
-                           "<p><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>"
-						   +
-                           "<p><b>Status Serah Terima Aset:</b> " + feature.properties.stat_srh_t + "</p>"
-						   +
-                           "<p><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>"
-						   +
-                           "<p><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>"
-						   ;
         layer.bindPopup(popupContent);
+    }
+});
 
-        // Hover popup showing only Org_name and Address_1
-        layer.on('mouseover', function (e) {
-          this.openPopup();
+	
+var geojsonLayer2 = L.geoJSON(geojson_data2, {
+    pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, {
+            radius: 8,
+            fillColor: '#FFD326',
+            color: '#C1A32D',
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
         });
+    },
+    onEachFeature: function (feature, layer) {
+        // Ensure the stat_srh_t value is treated as a number
+        var statusSerahTerima = parseInt(feature.properties.stat_srh_t, 10) === 1 ? 
+            "Sudah Serah Terima Aset" : "Belum Serah Terima Aset";
 
-        layer.on('mouseout', function (e) {
-          this.closePopup();
-        });
-      }
-    });
+        var popupContent = "<div style='margin-bottom:10px;'>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Alamat:</b> " + feature.properties.alamat + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit:</b> " + feature.properties.jml_unit + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Status Serah Terima Aset:</b> " + statusSerahTerima + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>" +
+                   "</div>" +
+                   "<div style='border-top: 1px solid #ccc; padding-top: 10px;'>" +
+                   "<p style='margin: 2px 0; padding: 0;'><b>Foto:</b></p>" +
+                   "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" +
+                   "</div>";
+
+        layer.bindPopup(popupContent);
+    }
+});
+
+
+     
 
     geojsonLayer.addTo(map);
     geojsonLayer2.addTo(map);
@@ -630,7 +624,14 @@ L.DomUtil.addClass(layerControlElement, 'custom-layer-control');
   legendControl2.onAdd = function (map) {
     var legendDiv = L.DomUtil.create('div', 'legend');
 
-    var legendContent = '<h2>Rumah Susun di Jawa Tengah dan Daerah Istimewa Yogyakarta</h2>';
+var legendContent = `
+    <h2 style="margin: 0; padding: 0; line-height: 1.2;">
+      Rumah Susun di Jawa Tengah dan Daerah Istimewa Yogyakarta
+    </h2>
+    <p style="font-size: smaller; font-style: italic; margin: 0; padding: 0; line-height: 1.2;">
+      Status Update: 31 Desember 2023
+    </p>
+  `;
 
 
     legendDiv.innerHTML = legendContent;
