@@ -383,44 +383,51 @@ background-color: #2da0e2;
 
 ;
     // Define a GeoJSON layer and add it to the map
-    var geojsonLayer = L.geoJSON(geojson_data, {
-      pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, {
-          radius: 8,
-          fillColor: '#2A81CB',
-          color: '#3274A3',
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        });
-      },
-       onEachFeature: function (feature, layer) {
-        // Ensure the stat_srh_t value is treated as a number
-        var statusSerahTerima = parseInt(feature.properties.stat_srh_t, 10) === 1 ? 
-            "Sudah Serah Terima Aset" : "Belum Serah Terima Aset";
+  var geojsonLayer = L.geoJSON(geojson_data, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 8,
+      fillColor: '#2A81CB',
+      color: '#3274A3',
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.8
+    });
+  },
+  onEachFeature: function (feature, layer) {
+    // Ensure the stat_srh_t value is treated as a number
+    var statusSerahTerima = parseInt(feature.properties.stat_srh_t, 10) === 1 ? 
+        "Sudah Serah Terima Aset" : "Belum Serah Terima Aset";
 
-        var popupContent = "<div style='margin-bottom:10px;'>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Alamat:</b> " + feature.properties.alamat + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit:</b> " + feature.properties.jml_unit + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Status Serah Terima Aset:</b> " + statusSerahTerima + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>" +
-                   "</div>" +
-                   "<div style='border-top: 1px solid #ccc; padding-top: 10px;'>" +
-                   "<p style='margin: 2px 0; padding: 0;'><b>Foto:</b></p>" +
-                   "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" +
-                   "</div>";
+    // Check if the 'foto' field is null or empty
+    var fotoUrl = feature.properties.foto ? 
+        "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" : 
+        "<p>Belum ada foto</p>";
 
-        layer.bindPopup(popupContent);
-    }
+    var popupContent = "<div style='margin-bottom:10px;'>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Alamat:</b> " + feature.properties.alamat + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit:</b> " + feature.properties.jml_unit + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Tower:</b> " + feature.properties.tower + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Tipe Unit:</b> " + feature.properties.tipe_unit + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Lantai:</b> " + feature.properties.jml_lantai + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Jumlah Unit Terhuni:</b> " + feature.properties.jml_unit_h + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Profil Pengguna:</b> " + feature.properties.tgt_hunian + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Tahun Selesai Pembangunan:</b> " + feature.properties.thn_selesa + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Status Serah Terima Aset:</b> " + statusSerahTerima + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Tahun Serah Terima Aset:</b> " + feature.properties.thn_serah_ + "</p>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Kontraktor Pembangun:</b> " + feature.properties.nm_kontrak + "</p>" +
+               "</div>" +
+               "<div style='border-top: 1px solid #ccc; padding-top: 10px;'>" +
+               "<p style='margin: 2px 0; padding: 0;'><b>Foto:</b></p>" +
+               fotoUrl +
+               "</div>";
+
+    layer.bindPopup(popupContent);
+  }
 });
+
+
 
 	
 var geojsonLayer2 = L.geoJSON(geojson_data2, {
