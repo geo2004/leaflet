@@ -198,7 +198,7 @@ background-color: #2da0e2;
 
     // Add a base map layer (you can choose a different one if you like)
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap contributors'
+      attribution: '© OpenStreetMap contributors, webmap dev b_marjuki@pu.go.id'
     }).addTo(map);
 
     // Parse the GeoJSON data
@@ -537,12 +537,12 @@ var fotoUrl = (feature.properties.foto && feature.properties.foto.trim() !== "" 
 // Create a layer control with base map and GeoJSON layer
 var baseMaps = {
   "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors'
+    attribution: ''
   }),
   "Google Satellite": L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
     maxZoom: 20,
     subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
-    attribution: '© Google'
+    attribution: 'satellite imagery © Google'
   })
 };
 
