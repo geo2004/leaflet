@@ -399,10 +399,11 @@ background-color: #2da0e2;
     var statusSerahTerima = parseInt(feature.properties.stat_srh_t, 10) === 1 ? 
         "Sudah Serah Terima Aset" : "Belum Serah Terima Aset";
 
-    // Check if the 'foto' field is null or empty
-    var fotoUrl = feature.properties.foto ? 
-        "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" : 
-        "<p>Belum ada foto</p>";
+    // Check if the 'foto' field is null, undefined, empty, or contains 'NULL'
+var fotoUrl = (feature.properties.foto && feature.properties.foto.trim() !== "" && feature.properties.foto !== 'NULL') ? 
+    "<img src='" + feature.properties.foto + "' width='200px' height='auto' style='display:block; margin:auto;' />" : 
+    "<p>Belum ada foto</p>";
+
 
     var popupContent = "<div style='margin-bottom:10px;'>" +
                "<p style='margin: 2px 0; padding: 0;'><b>Nama Rusun:</b> " + feature.properties.nm_perumah + "</p>" +
