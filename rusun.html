@@ -179,6 +179,7 @@ background-color: #2da0e2;
     @media (max-width: 768px) {
       .attribute-table {
         width: 90%;
+	font-size: 10px;
         max-height: 200px;
         padding: 5px;
       }
@@ -632,33 +633,61 @@ L.DomUtil.addClass(layerControlElement, 'custom-layer-control');
       }
     }
 	
-  // Create a legend control
-  var legendControl = L.control({ position: 'bottomleft' });
+  // Define the legend control
+var legendControl = L.control({ position: 'bottomleft' });
 
-  legendControl.onAdd = function (map) {
-    var legendDiv = L.DomUtil.create('div', 'legend');
+legendControl.onAdd = function(map) {
+  var legendDiv = L.DomUtil.create('div', 'legend');
+  var legendContent = `
+    <h4>Legenda</h4>
+    <div><span style="background-color:#2A81CB;width:20px;height:20px;display:inline-block;"></span> Rusun DIY</div>
+    <div><span style="background-color:#FFD326;width:20px;height:20px;display:inline-block;"></span> Rusun Jateng</div>`;
+  legendDiv.innerHTML = legendContent;
+  return legendDiv;
+};
 
-    var legendContent = '<h4>Legenda</h4>';
+// Add the legend control to the map
+legendControl.addTo(map);
 
-    // Legend items
-    var legendItems = [
-      { color: '#2A81CB', label: 'Rusun di Provinsi DI Yogyakarta' },
-      { color: '#FFD326', label: 'Rusun di Provinsi Jawa Tengah' }
-    ];
+// Function to change legend position based on screen size
+function updateLegendPosition() {
+  if (window.innerWidth <= 768) {
+    // If screen width is <= 768px (mobile view), move legend to topleft
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'topleft' });
+    legendControl.onAdd = function(map) {
+      var legendDiv = L.DomUtil.create('div', 'legend');
+      var legendContent = `
+        <h4>Legenda</h4>
+        <div><span style="background-color:#2A81CB;width:20px;height:20px;display:inline-block;"></span> Rusun DIY</div>
+        <div><span style="background-color:#FFD326;width:20px;height:20px;display:inline-block;"></span> Rusun Jateng</div>`;
+      legendDiv.innerHTML = legendContent;
+      return legendDiv;
+    };
+    legendControl.addTo(map);
+  } else {
+    // If screen width is > 768px, keep legend at bottomleft
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'bottomleft' });
+    legendControl.onAdd = function(map) {
+      var legendDiv = L.DomUtil.create('div', 'legend');
+      var legendContent = `
+        <h4>Legenda</h4>
+        <div><span style="background-color:#2A81CB;width:20px;height:20px;display:inline-block;"></span> Rusun DIY</div>
+        <div><span style="background-color:#FFD326;width:20px;height:20px;display:inline-block;"></span> Rusun Jateng</div>`;
+      legendDiv.innerHTML = legendContent;
+      return legendDiv;
+    };
+    legendControl.addTo(map);
+  }
+}
 
-    legendItems.forEach(function (item) {
-      legendContent += '<div class="legend-item">';
-      legendContent += '<div class="legend-color" style="background-color: ' + item.color + '"></div>';
-      legendContent += '<div>' + item.label + '</div>';
-      legendContent += '</div>';
-    });
+// Check screen size on load
+updateLegendPosition();
 
-    legendDiv.innerHTML = legendContent;
+// Check screen size on window resize
+window.addEventListener('resize', updateLegendPosition);
 
-    return legendDiv;
-  };
-
-  legendControl.addTo(map);
   
    // Create a legend control
   var legendControl2 = L.control({ position: 'topleft' });
