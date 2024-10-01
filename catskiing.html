@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>N.A Cat Skiing Operators </title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+        }
+
+        #map {
+            height: 100%; /* Full height for the map */
+            width: 100%;  /* Full width */
+        }
+
+        header {
+            background-color: rgba(0, 0, 128, 0.8); /* Navy color with 80% opacity */
+            height: 50px;
+            width: 100%;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute; /* Positioning header on top of the map */
+            top: 0;
+            z-index: 1000; /* Ensure header is above the map */
+            font-size: 24px; /* Slightly larger font size for the title */
+            font-family: 'Montserrat', sans-serif; /* Modern font */
+            font-weight: bold; /* Bold font weight */
+            letter-spacing: 1px; /* Optional: Add some spacing between letters */
+        }
+
+        /* Adjust positioning of the map controls to avoid overlaying the header */
+        .leaflet-top, .leaflet-control-layers {
+            margin-top: 60px; /* Move controls down below the header */
+        }
+		.custom-icon {
+            background-color: #a69f9f; /* Add white background to improve contrast */
+            border: 2px solid gray; /* Optional: Add a border for better visibility */
+            border-radius: 50%; /* Optional: Round icons */
+            padding: 4px; /* Add padding for better spacing */
+        }
+		/* Style for layer control and popups */
+        .leaflet-control-layers {
+            background-color: rgba(0, 0, 128, 0.9); /* Navy background */
+            color: white; /* White text color */
+        }
+
+        .leaflet-control-layers-toggle {
+  background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+	background-color: #2da0e2;
+  background-size: 20px 20px;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle {
+background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+background-color: #2da0e2;
+}
+
+.leaflet-control-layers-expanded {
+  color: white;
+	background-color: navy;
+}
+
+.leaflet-control-zoom {
+    background-color: navy !important; /* Force navy background */
+}
+
+.leaflet-control-zoom a {
+    color: white !important; /* Force white icons */
+}
+
+.leaflet-control-zoom a {
+    background-color: navy !important; /* Ensure the individual button backgrounds are navy */
+    border: none !important; /* Remove the border if needed */
+}
+
+.leaflet-control-zoom-in, .leaflet-control-zoom-out {
+    background-color: navy !important; /* Ensure each zoom button is navy */
+}
+  /* Change background color of the popup */
+.leaflet-popup-content-wrapper {
+    background-color: navy; /* Replace with your desired background color */
+}
+
+/* Change font color inside the popup */
+.leaflet-popup-content {
+    color: white; /* Replace with your desired font color */
+}
+
+/* Optional: Change border color of the popup */
+.leaflet-popup-tip {
+    border-color: navy; /* Same as background color */
+}
+    </style>
+</head>
+<body>
+    <header>
+        North America's Cat Skiing Operators
+    </header>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        var map = L.map('map', {
+            center: [50.23668609, -116.9763206], 
+            zoom: 7,
+            zoomControl: true
+        });
+
+        // Base layers
+        var cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+        }).addTo(map); // Default basemap
+ var cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://carto.com/">CARTO</a>'
+        }); 
+
+        var googleSatellite = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; <a href="https://www.google.com/earth/">Google Satellite</a>'
+        });
+
+      
+         // Function to create custom icons with standardized size and optional background
+        function createCustomIcon(iconUrl) {
+            return L.divIcon({ // Use L.divIcon for custom HTML content
+                className: 'custom-icon',
+                html: `<img src="${iconUrl}" style="width: 20px; height: 20px;"/>`, // Embed the image inside a div
+                iconSize: [20, 20], // Standardize icon size
+                iconAnchor: [10, 20], // Center anchor for better positioning
+                popupAnchor: [0, -20] // Adjust popup position
+            });
+        }
+
+
+        // Operational layer (GeoJSON)
+        var geojsonLayer = L.geoJSON(null, {
+            pointToLayer: function (feature, latlng) {
+                // Use the icon field from properties to set custom icon
+                return L.marker(latlng, {
+                    icon: createCustomIcon(feature.properties.icon)
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                // Popup content excluding 'icon' field
+               var popupContent = `<strong style="font-size: 18px;">${feature.properties.Company_Name}</strong><br>
+                                    <strong>Location:</strong> ${feature.properties.Location}<br>
+                                    <strong>Website:</strong> <a href="${feature.properties.Website}" target="_blank">${feature.properties.Website}</a><br>
+                                    <strong>Mountains:</strong> ${feature.properties.Mountains}<br>
+                                    <strong>Summary:</strong> ${feature.properties.Summary}`;
+                layer.bindPopup(popupContent);
+            }
+        }).addTo(map);
+
+        // Layer control
+        var baseLayers = {
+            "Carto Light": cartoLight,
+			"Carto Dark": cartoDark,
+            "Google Satellite": googleSatellite
+        };
+
+        var overlays = {
+            "Cat Skiing Resort and Lodges": geojsonLayer
+        };
+
+        L.control.layers(baseLayers, overlays, { collapsed: false }).addTo(map);
+
+        // Add scale bar
+        L.control.scale().addTo(map);
+
+        // Example GeoJSON data (replace with actual data from your file)
+        var exampleGeoJSON ={
+"type": "FeatureCollection",
+"name": "data",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Company_Name": "Great Northern Snowcat Skiing", "Location": "Trout Lake, Revelstok British Columbia, Canada", "Latitude": 50.66373298, "Longitude": -117.5652076, "Website": "http://www.greatnorthernsnowcat.com", "Mountains": "Badshot Range, Selkirk Mountains R", "Summary": "Great Northern operates in the Badshot Range of the Selkirk Mountains, which is renowned for its excellent snow conditions and diverse terrain, including open bowls and tree runs. Founded in 1979.", "icon": "https://images.squarespace-cdn.com/content/v1/54b00cc2e4b062dd784c2acb/1543339550948-3SLGFQTRKVVVIDTXMQEU/logo_GNSS.png" }, "geometry": { "type": "Point", "coordinates": [ -117.5652076, 50.66373298 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Chatter Creek", "Location": "Golden, British Columbia, Canada", "Latitude": 51.4969691, "Longitude": -117.1747782, "Website": "https://chattercreek.ca", "Mountains": "Western slopes of the Canadian Rockies - Golden area", "Summary": "Chatter Creek provides catskiing in the Canadian Rockies with a vast terrain of alpine bowls, ridges, and glades.", "icon": "https://chattercreek.ca/wp-content/themes/chattercreek/assets/images/logo.png" }, "geometry": { "type": "Point", "coordinates": [ -117.1747782, 51.4969691 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Island Lake Lodge", "Location": "Island Lake, Fernie, British Columbia, Canada", "Latitude": 49.50905195, "Longitude": -115.1767399, "Website": "https://www.islandlakelodge.com/catskiing", "Mountains": "Purcell Mountains", "Summary": "Island Lake Lodge is a luxury catskiing destination in the Lizard Range, offering varied terrain and high-end lodging.", "icon": "https://www.islandlakelodge.com/themes/custom/breeze_stack/logo.svg" }, "geometry": { "type": "Point", "coordinates": [ -115.1767399, 49.50905195 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Big Red Cats", "Location": "Rossland, British Columbia, Canada", "Latitude": 49.10483006, "Longitude": -117.8200182, "Website": "https://www.bigredcatskiing.com", "Mountains": "RED Mountain Resort", "Summary": "Big Red Cats offers catskiing just outside of Rossland, BC, catering to different ability levels with dedicated terrain for intermediates to experts.", "icon": "https://www.bigredcatskiing.com/templates/yootheme/cache/15/BRCcatlogoredsmall_1-15884788.webp" }, "geometry": { "type": "Point", "coordinates": [ -117.8200182, 49.10483006 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Monashee Powder", "Location": "Coldstream, British Columbia, Canada via Kelowna", "Latitude": 50.71510847, "Longitude": -118.3792088, "Website": "http://www.monasheepowder.com", "Mountains": "Monashee Mountains", "Summary": "Monashee Powder Snowcats operates in one of the snowiest regions in Canada, with 17,000 acres of terrain and a lodge that offers ski-in/ski-out access, gourmet meals, and amenities like a hot tub under the stars.", "icon": "https://images.squarespace-cdn.com/content/v1/5a0b8e299f8dce5bf2891f91/1510708195181-M4470PGR3VCBPMLWB7VO/MPS_Brandmark-01.png" }, "geometry": { "type": "Point", "coordinates": [ -118.3792088, 50.71510847 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Retallak", "Location": "New Denver, British Columbia, Canada", "Latitude": 50.0421724, "Longitude": -117.149839, "Website": "https://www.retallack.com/catskiing/", "Mountains": "Selkirk Mountains", "Summary": "Retallak Lodge is renowned for its deep powder, steep terrain, and diverse runs in the Selkirk Mountains. They offer a mix of tree skiing, open bowls, and chutes with luxurious accommodations and exceptional service.", "icon": "https://www.retallack.com/wp-content/uploads/2016/05/logo_horizontal.png" }, "geometry": { "type": "Point", "coordinates": [ -117.149839, 50.0421724 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Keefer Lake Lodge", "Location": "Cherryville, British Columbia, Canada", "Latitude": 50.12787647, "Longitude": -118.3536519, "Website": "http://www.keeferlakelodge.com", "Mountains": "Monashee Mountains", "Summary": "Keefer Lake Lodge is a newer catskiing operation located in the Monashee Mountains. The lodge is known for its luxurious timber-frame construction, stunning lakeside views, and top-tier culinary offerings.", "icon": "https://keeferlakelodge.com/assets/templates/gkll/images/keefer-lake-logo-white.png" }, "geometry": { "type": "Point", "coordinates": [ -118.3536519, 50.12787647 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Mustang Powder", "Location": "Revelstoke, British Columbia, Canada", "Latitude": 50.9973936, "Longitude": -118.6978071, "Website": "http://www.mustangpowder.com", "Mountains": "Monashee Mountains", "Summary": "Mustang Powder offers an extensive 30,000+ acre terrain with a focus on providing exclusive and high-intensity skiing experiences. Their lodge offers a luxurious, rustic atmosphere with gourmet meals and a strong emphasis on serving advanced to expert skiers.", "icon": "https://www.mustangpowder.com/wp-content/uploads/2019/06/logo-mustang-powder-250.png" }, "geometry": { "type": "Point", "coordinates": [ -118.6978071, 50.9973936 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Skeena Cat Skiing", "Location": "New Hazelton, British Columbia, Canada, Smithers area", "Latitude": 55.23325666, "Longitude": -127.398681, "Website": "http://www.skeenacatskiing.ca", "Mountains": "Babine Range, Skeena Mountains", "Summary": "Now owened in part by Mustang. Skeena Cat Skiing operates in northern BC, offering access to 32,000 acres of diverse terrain, including tree skiing, glades, and open bowls. Guests stay in a unique backcountry base camp or the Suskwa Lodge, enjoying gourmet meals and a wilderness experience​", "icon": "https://skeenacatskiing.ca/wp-content/uploads/2022/08/Skeena-Cat-Skiing-V2-c.svg" }, "geometry": { "type": "Point", "coordinates": [ -127.398681, 55.23325666 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Baldface Lodge", "Location": "Nelson, British Columbia, Canada", "Latitude": 49.59591798, "Longitude": -117.3321957, "Website": "http://www.baldface.com", "Mountains": "Selkirk Mountains", "Summary": "Baldface Lodge is a premier destination for skiers and snowboarders, offering 32,000 acres of diverse terrain, including open bowls and steep tree runs. The lodge is known for its luxurious timber-frame chalets, gourmet meals, and amenities such as massage services and a wood-burning sauna. Access to the lodge is typically via helicopter from Nelson, adding an extra layer of exclusivity to the experience", "icon": "https://baldface.com/wp-content/uploads/2024/07/Baldface_Logo_White-2.png" }, "geometry": { "type": "Point", "coordinates": [ -117.3321957, 49.59591798 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Baldface Valhalla", "Location": "Nelson, British Columbia", "Latitude": 49.49200627, "Longitude": -117.2960402, "Website": "https://www.baldface.com/valhalla/", "Mountains": "Valhalla Range", "Summary": "Baldface Valhalla provides Single Day adventurous cat-skiing experiences in the Valhalla Range with a reputation for steep terrain and deep snow.", "icon": "https://baldface.com/wp-content/uploads/2024/07/Baldface_Logo_White-2.png" }, "geometry": { "type": "Point", "coordinates": [ -117.2960402, 49.49200627 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "K3 Cat Skiing", "Location": "Revelstoke/Sicamous, British Columbia, Canada", "Latitude": 50.99845685, "Longitude": -118.1961049, "Website": "http://www.k3catski.com", "Mountains": "Monashee Mountains", "Summary": "Offering exclusive on-mountain accommodation and small group guided catskiing packages from lodges.", "icon": "https://www.snow-forecast.com/logos/K3Catski.jpg" }, "geometry": { "type": "Point", "coordinates": [ -118.1961049, 50.99845685 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "White Grizzly Cat Skiing", "Location": "Meadow Creek, British Columbia, Canada", "Latitude": 50.24440151, "Longitude": -116.9672017, "Website": "http://www.whitegrizzly.com", "Mountains": "Selkirk Mountains", "Summary": "Famous for Kootenay Coldsmoke and are the perfect playground for advanced-expert riders who like steep trees, fun features, and good times ripping it up with friends in the backcountry.", "icon": "https://cdn-ikpfpel.nitrocdn.com/aPryAHcedpzdBNHPeOAZisuvkFJSDbYh/assets/images/optimized/rev-6ca84b1/whitegrizzly.com/wp-content/uploads/2022/03/WhiteGrizzly_Logo_badge_green.svg" }, "geometry": { "type": "Point", "coordinates": [ -116.9672017, 50.24440151 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Selkirk Snowcat Skiing", "Location": "Meadow Creek, British Columbia, Canada", "Latitude": 50.23668609, "Longitude": -116.9763206, "Website": "http://www.selkirksnowcatskiing.com", "Mountains": "Selkirk and Purcell Mountains", "Summary": "Selkirk Snowcat Skiing offers spectacular ski terrain in a weather zone known for epic dumps of powder year after year. For more than 40 years, we’ve provided the wilderness ski experience of a lifetime..  Aso offering our Day-Ski option from either Revelstoke or Sicamous.", "icon": "https://selkirksnowcatskiing.com/wp-content/uploads/svgs/SSS-Logo-Hor-Colour.svg" }, "geometry": { "type": "Point", "coordinates": [ -116.9763206, 50.23668609 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Backcountry Snowcats", "Location": "Hurley Mountain Pass, British Columbia", "Latitude": 50.49168543, "Longitude": -122.9707605, "Website": "https://snowcats.ca/", "Mountains": "Hurley Mountain Range", "Summary": "Backcountry Snowcats offers guided cat-skiing in the Hurley Mountain Range with cozy accommodations and a focus on powder skiing.", "icon": "https://snowcats.ca/site/themes/vwtheme/dist/img/icons/logo-paw.svg" }, "geometry": { "type": "Point", "coordinates": [ -122.9707605, 50.49168543 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Cariboo Snowcat Skiing", "Location": "Cariboo Mountains, British Columbia", "Latitude": 52.97733851, "Longitude": -119.4423385, "Website": "https://cariboocatskiing.com/", "Mountains": "Cariboo Mountains", "Summary": "Cariboo Snowcat Skiing offers personalized cat-skiing experiences in the remote Cariboo Mountains, catering to powder enthusiasts of all levels.", "icon": "https://eadn-wc03-3158057.nxedge.io/wp-content/uploads/2019/12/CSS-logo-512-100x100.jpg" }, "geometry": { "type": "Point", "coordinates": [ -119.4423385, 52.97733851 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Chic-Chac Inc", "Location": "Murdochville, Quebec", "Latitude": 48.9614284, "Longitude": -65.4915284, "Website": "https://chic-chac.ca", "Mountains": "Chic-Choc Mountains", "Summary": "Offers a range of ski and snowboard adventures in the Chic-Choc Mountains, known for its backcountry terrain and friendly atmosphere.", "icon": "https://chic-chac.com/wp-content/uploads/2020/09/logo-chic-chac.png" }, "geometry": { "type": "Point", "coordinates": [ -65.4915284, 48.9614284 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Fernie Wilderness Adventure", "Location": "Fernie, British Columbia", "Latitude": 49.5077908, "Longitude": -115.0661188, "Website": "https://ferniewildernessadventures.com/cat-skiing", "Mountains": "Lizard Range", "Summary": "Fernie Wilderness Adventure provides cat-skiing in the Lizard Range with access to diverse terrain and a focus on safety and fun.", "icon": "https://ferniewildernessadventures.com/wp-content/uploads/website-header-360-by-93.png" }, "geometry": { "type": "Point", "coordinates": [ -115.0661188, 49.5077908 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Powder Stagecoach Cat Skiing (Castle Mountain Resort, Alberta)", "Location": "Castle Mountain, Alberta", "Latitude": 49.319119, "Longitude": -114.412583, "Website": "https://www.skicastle.ca/cat-skiing", "Mountains": "Castle Mountain", "Summary": "Powder Stagecoach Cat Skiing offers small group cat-skiing experiences at Castle Mountain Resort, focusing on powder skiing and a friendly, personalized service.", "icon": "https://www.skicastle.ca/wp-content/uploads/2016/07/header_logo.png" }, "geometry": { "type": "Point", "coordinates": [ -114.412583, 49.319119 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Powder Mountain Catskiing", "Location": "Whistler, BC", "Latitude": 50.1142483, "Longitude": -122.9562724, "Website": "https://www.powdermountaincatskiing.com/", "Mountains": "Routt National Forest", "Summary": "Powder Mountain Catskiing offers Single-day Catskiing near Whistler, at Tricouni Mountain or Cypress Peak – Trees for storm days, Alpine for sunshine! On an average day you can expect to do 6-9 runs depending on terrain, group amd conditions.", "icon": "https://www.powdermountaincatskiing.com/images/logo/210-red.png" }, "geometry": { "type": "Point", "coordinates": [ -122.9562724, 50.1142483 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Steamboat Powdercats", "Location": "Steamboat Springs, Colorado, USA", "Latitude": 40.4601099, "Longitude": -106.805984, "Website": "https://www.steamboatpowdercats.com", "Mountains": "Uinta Mountains", "Summary": "Steamboat Powdercats offers guided snowcat skiing in the expansive Routt National Forest, featuring a variety of terrain, including open bowls, gladed trees, and steep pitches. They cater to different skill levels, ensuring a customized experience for each group", "icon": "https://www.steamboatpowdercats.com/wp-content/uploads/2018/02/SteamboatPowdercats-Weblogo.sm_.png" }, "geometry": { "type": "Point", "coordinates": [ -106.805984, 40.4601099 ] } },
+{ "type": "Feature", "properties": { "Company_Name": "Powder Ridge Cat Skiing", "Location": "Calgary, Canada", "Latitude": 51.26366564, "Longitude": -115.9056766, "Website": "https://prcatski.com/", "Mountains": "Wasatch Mountains", "Summary": "Powder Ridge Catskiing offers first descents, a ski-in ski-out remote lodge, amazing home runs and fantastic hospitality.", "icon": "https://prcatski.com/wp-content/uploads/2024/06/logo-color-1.png" }, "geometry": { "type": "Point", "coordinates": [ -115.9056766, 51.26366564 ] } }
+]
+}
+
+;
+
+        // Load the GeoJSON data (replace this with actual data)
+        geojsonLayer.addData(exampleGeoJSON);
+    </script>
+</body>
+</html>
