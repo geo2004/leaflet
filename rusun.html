@@ -174,7 +174,15 @@ background-color: #2da0e2;
 .leaflet-popup-tip {
     border-color: navy; /* Same as background color */
 }
-
+@media only screen and (max-width: 768px) {
+  /* Styles for screens less than 768px wide */
+  .map {
+    height: 80vh; /* Adjust map height for smaller screens */
+  }
+  .attribute-table {
+    width: 100%; /* Make table take full width on small screens */
+  }
+}
   </style>
 </head>
 <body>
