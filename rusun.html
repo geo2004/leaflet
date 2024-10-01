@@ -187,8 +187,12 @@ background-color: #2da0e2;
       .legend {
         font-size: 12px;
 	padding: 5px;
+	}
+	.legend2 {
+        font-size: 12px;
+	padding: 5px;
 	top: 80px;
-      }
+	}
 
       .leaflet-control-layers-expanded {
         font-size: 10px;
@@ -656,7 +660,7 @@ function updateLegendPosition() {
     map.removeControl(legendControl);
     legendControl = L.control({ position: 'topleft' });
     legendControl.onAdd = function(map) {
-      var legendDiv = L.DomUtil.create('div', 'legend');
+      var legendDiv = L.DomUtil.create('div', 'legend2');
       var legendContent = `
         <h4>Legenda</h4>
         <div><span style="background-color:#2A81CB;width:20px;height:20px;display:inline-block;"></span> Rusun DIY</div>
