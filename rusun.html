@@ -117,6 +117,16 @@
     color: white;
 	top: 80px;
 	z-index: 1000;
+}
+.legend3 {
+    position: top-left;
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+    font-size: 14px;
+    color: white;
 	
 }
 .leaflet-control-layers-toggle {
@@ -705,7 +715,7 @@ window.addEventListener('resize', updateLegendPosition);
   var legendControl2 = L.control({ position: 'topleft' });
 
   legendControl2.onAdd = function (map) {
-    var legendDiv = L.DomUtil.create('div', 'legend');
+    var legendDiv = L.DomUtil.create('div', 'legend3');
 
 var legendContent = `
     <h2 style="margin: 0; padding: 0; line-height: 1.2;">
