@@ -204,12 +204,13 @@ top: 80px;
 
 @media (max-width: 768px) and (orientation: landscape) {
     .attribute-table {
+        position: absolute;
+        top: 10px; /* Adjust as needed */
+        left: 50%;
+        transform: translateX(-50%);
         width: 90%; /* Ensure the table fits within the screen in landscape mode */
         max-height: 150px;
-	  
         font-size: 10px; /* Smaller font size for landscape on mobile */
-	    bottom: 1px;
-	    right: 1px;
     }
 	.leaflet-control-layers-expanded {
   color: white;
