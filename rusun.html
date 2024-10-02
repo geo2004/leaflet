@@ -17,6 +17,7 @@
       width: 100%;
 .attribute-table {
     max-height: 400px;
+    max-width: 400px;
     overflow-y: auto;
     padding: 10px;
     width: 400px; /* Set the width of the table container */
@@ -200,6 +201,14 @@ top: 80px;
 }
 
 	     /* Mobile Styles */
+
+@media (max-width: 768px) and (orientation: landscape) {
+    .attribute-table {
+        width: 90%; /* Ensure the table fits within the screen in landscape mode */
+        max-height: 200px;
+        font-size: 10px; /* Smaller font size for landscape on mobile */
+    }
+}
     @media (max-width: 768px) {
       .attribute-table {
         width: 90%;
