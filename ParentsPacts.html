@@ -32,17 +32,17 @@
 	
 }
 .legend2 {
-    position: top-left;
-    background-color: navy;
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
-    font-size: 14px;
-    color: white;
-	top: 80px;
-	 min-width: 200px; 
-	z-index: 1000;
+  position: top-left;
+  background-color: navy;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+  font-size: 14px;
+  color: white;
+  top: 80px;
+  min-width: 80px;
+  z-index: 1000;
 }
 .legend3 {
     position: absolute; /* Changed to absolute */
@@ -439,24 +439,43 @@ legendControl.addTo(map);
 // Function to change legend position based on screen size
 function updateLegendPosition() {
   if (window.innerWidth <= 768) {
-    // If screen width is <= 768px (mobile view), move legend to topleft
     map.removeControl(legendControl);
     legendControl = L.control({ position: 'topleft' });
     legendControl.onAdd = function(map) {
       var legendDiv = L.DomUtil.create('div', 'legend2');
       var legendContent = `
         <h4>Legend</h4>
-        <div style="font-size: 8px;"><span style="background-color:#990000;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 663-738 Signed Pacts</div>           <!-- Class 10: Dark Red -->
-<div style="font-size: 8px;"><span style="background-color:#CC0000;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 333 - 663 Signed Pacts</div>           <!-- Class 9: Red -->
-<div style="font-size: 8px;"><span style="background-color:#FF0000;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 154 - 333 Signed Pacts</div>           <!-- Class 8: Bright Red -->
-<div style="font-size: 8px;"><span style="background-color:#FF3300;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 81 - 154 Signed Pacts</div>        <!-- Class 7: Orange-red -->
-<div style="font-size: 8px;"><span style="background-color:#FF6600;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 44 - 81 Signed Pacts</div>           <!-- Class 6: Orange -->
-<div style="font-size: 8px;"><span style="background-color:#FFCC00;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 28 - 44 Signed Pacts</div>        <!-- Class 5: Yellow-orange -->
-<div style="font-size: 8px;"><span style="background-color:#FFFF00;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 18 - 28 Signed Pacts</div>           <!-- Class 4: Yellow -->
-<div style="font-size: 8px;"><span style="background-color:#CCFF00;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 10 - 18 Signed Pacts</div>        <!-- Class 3: Light Yellow-green -->
-<div style="font-size: 8px;"><span style="background-color:#66FF00;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 4 - 10 Signed Pacts</div>           <!-- Class 2: Light Green -->
-<div style="font-size: 8px;"><span style="background-color:#00FF00;width:10px;height:10px;display:flex; align-items: center; gap: 0; line-height: 1; margin-bottom: 0;"></span> 1 - 4 Signed Pacts</div>        <!-- Class 1: Green -->
-`;
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#990000;width:10px;height:10px;display:inline-block;"></span> 663-738 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#CC0000;width:10px;height:10px;display:inline-block;"></span> 333 - 663 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#FF0000;width:10px;height:10px;display:inline-block;"></span> 154 - 333 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#FF3300;width:10px;height:10px;display:inline-block;"></span> 81 - 154 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#FF6600;width:10px;height:10px;display:inline-block;"></span> 44 - 81 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#FFCC00;width:10px;height:10px;display:inline-block;"></span> 28 - 44 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#FFFF00;width:10px;height:10px;display:inline-block;"></span> 18 - 28 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#CCFF00;width:10px;height:10px;display:inline-block;"></span> 10 - 18 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#66FF00;width:10px;height:10px;display:inline-block;"></span> 4 - 10 Signed Pacts
+        </div>
+        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
+          <span style="background-color:#00FF00;width:10px;height:10px;display:inline-block;"></span> 1 - 4 Signed Pacts
+        </div>
+      `;
       legendDiv.innerHTML = legendContent;
       return legendDiv;
     };
