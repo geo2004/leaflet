@@ -44,6 +44,20 @@
   min-width: 80px;
   z-index: 1000;
 }
+.legend2 div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+	font-size: 8px;
+}
+
+.legend2 span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+	
+}
 .legend3 {
     position: absolute; /* Changed to absolute */
     
@@ -439,42 +453,23 @@ legendControl.addTo(map);
 // Function to change legend position based on screen size
 function updateLegendPosition() {
   if (window.innerWidth <= 768) {
+    // If screen width is <= 768px (mobile view), move legend to topleft
     map.removeControl(legendControl);
     legendControl = L.control({ position: 'topleft' });
     legendControl.onAdd = function(map) {
       var legendDiv = L.DomUtil.create('div', 'legend2');
       var legendContent = `
         <h4>Legend</h4>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#990000;width:10px;height:10px;display:inline-block;"></span> 663-738 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#CC0000;width:10px;height:10px;display:inline-block;"></span> 333 - 663 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#FF0000;width:10px;height:10px;display:inline-block;"></span> 154 - 333 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#FF3300;width:10px;height:10px;display:inline-block;"></span> 81 - 154 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#FF6600;width:10px;height:10px;display:inline-block;"></span> 44 - 81 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#FFCC00;width:10px;height:10px;display:inline-block;"></span> 28 - 44 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#FFFF00;width:10px;height:10px;display:inline-block;"></span> 18 - 28 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#CCFF00;width:10px;height:10px;display:inline-block;"></span> 10 - 18 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#66FF00;width:10px;height:10px;display:inline-block;"></span> 4 - 10 Signed Pacts
-        </div>
-        <div style="font-size: 8px; display: inline-flex; align-items: center; gap: 5px;">
-          <span style="background-color:#00FF00;width:10px;height:10px;display:inline-block;"></span> 1 - 4 Signed Pacts
-        </div>
+        <div><span style="background-color:#990000;"></span> 663-738 Signed Pacts</div>
+        <div><span style="background-color:#CC0000;"></span> 333 - 663 Signed Pacts</div>
+        <div><span style="background-color:#FF0000;"></span> 154 - 333 Signed Pacts</div>
+        <div><span style="background-color:#FF3300;"></span> 81 - 154 Signed Pacts</div>
+        <div><span style="background-color:#FF6600;"></span> 44 - 81 Signed Pacts</div>
+        <div><span style="background-color:#FFCC00;"></span> 28 - 44 Signed Pacts</div>
+        <div><span style="background-color:#FFFF00;"></span> 18 - 28 Signed Pacts</div>
+        <div><span style="background-color:#CCFF00;"></span> 10 - 18 Signed Pacts</div>
+        <div><span style="background-color:#66FF00;"></span> 4 - 10 Signed Pacts</div>
+        <div><span style="background-color:#00FF00;"></span> 1 - 4 Signed Pacts</div>
       `;
       legendDiv.innerHTML = legendContent;
       return legendDiv;
