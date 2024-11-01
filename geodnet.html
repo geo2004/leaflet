@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NMEA Message Request</title>
+</head>
+<body>
+    <h2>NMEA Message Output</h2>
+    <pre id="output">Loading...</pre>
+
+    <script>
+        // API endpoint and credentials
+        const url = "http://rtk.geodnet.com/AUTO";
+        const username = "lakecotest";  // replace with your actual username
+        const password = "lakecotest";  // replace with your actual password
+
+        // Encode credentials in Base64
+        const credentials = btoa(`${username}:${password}`);
+
+        // Set up headers
+        const headers = {
+            "User-Agent": "NTRIP TPA Client/0.0.0",
+            "Authorization": `Basic ${credentials}`,
+            "Connection": "close"
+        };
+
+        // Fetch API request
+        fetch(url, {
+            method: "GET",
+            headers: headers
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.text();
+        })
+        .then(nmeaMessage => {
+            document.getElementById("output").textContent = nmeaMessage;
+        })
+        .catch(error => {
+            document.getElementById("output").textContent = `Error: ${error}`;
+        });
+    </script>
+</body>
+</html>
