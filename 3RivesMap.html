@@ -8,6 +8,10 @@
   <!-- Include Leaflet CSS and JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+  <!-- Include Leaflet MiniMap CSS and JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.0/Control.MiniMap.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-minimap/3.6.0/Control.MiniMap.min.js"></script>
   <style>
     html, body {
       height: 100%;
@@ -69,7 +73,7 @@
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
     font-size: 14px;
     color: #262a47;
-    min-width: 850px; 
+    min-width: 700px; 
 }
 .leaflet-control-layers-toggle {
   background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
@@ -242,8 +246,8 @@ background-color: #2da0e2;
 
   <script>
     var map = L.map('map', {
-      center: [14.83358, -12.32001],
-      zoom: 14,
+      center: [14.82358, -12.32001],
+      zoom: 13,
 	  zoomControl: false, // Disable the default zoom control
     });
 
@@ -407,10 +411,60 @@ var geojsonLayer = L.geoJSON(geojson_data, {
       "<p style='margin: 2px 0; padding: 0;'><b>Area:</b> " + feature.properties.area + " Hectares</p>" +
       "</div>";
     layer.bindPopup(popupContent);
+    
+  }
+});
+var geojson_data_label = {
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "area": "156.726 Hectares" // Updated attribute
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [-12.332593, 14.832383 ]
+            }
+        }
+    ]
+};
+// Add GeoJSON Layer with point and label, with custom styling
+var FarmLabel = L.geoJSON(geojson_data_label, {
+  pointToLayer: function (feature, latlng) {
+    // Create a transparent point using L.circleMarker
+    return L.circleMarker(latlng, {
+      radius: 8, // Adjust the radius to your preference
+      fillColor: 'transparent', // Transparent fill
+      color: 'transparent', // No outline
+      weight: 0, // No outline weight
+      opacity: 0, // Fully transparent circle
+      fillOpacity: 0 // No fill opacity
+    });
+  },
+  onEachFeature: function (feature, layer) {
+    var popupContent = "<div style='margin-bottom:10px;'>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Name:</b> " + (feature.properties.area || "N/A") + " </p>" +
+      "</div>";
+    layer.bindPopup(popupContent);
+
+    // Add labels only if the name is not null or undefined
+    if (feature.properties.area) {
+      // Create label marker but add it to the map directly inside onEachFeature
+      var label = L.marker(layer.getLatLng(), {
+        icon: L.divIcon({
+          className: 'feature-label',
+          html: '<div style=" font-size:12px; color:#FFFFFF; text-shadow: 1px 1px 2px #ffffff;">' + feature.properties.area + '</div>',
+          iconSize: [100, 20],
+          iconAnchor: [20, 10] // Adjust label position
+        })
+      }).addTo(map); // Only one addTo(map) here
+    }
   }
 });
 
-
+// Add geojsonLayer2 to map once, no second addTo(map) here
+FarmLabel.addTo(map);
 
 var geojsonLayer2 = L.geoJSON(geojson_data2, {
   style: {
@@ -537,16 +591,18 @@ var baseMaps = {
 // Create FeatureGroups for each layer type
 var pointGroup = L.featureGroup([geojsonLayer4]);
 var lineGroup = L.featureGroup([geojsonLayer5]);
-var polygonGroup = L.featureGroup([geojsonLayer, geojsonLayer2, geojsonLayer3, geojsonLayer6]);
-
+var polygonGroup = L.featureGroup([geojsonLayer2, geojsonLayer3, geojsonLayer6]);
+var polygonGroup2 = L.featureGroup([geojsonLayer]);
 // Add the groups to the map in the correct order
 polygonGroup.addTo(map);  // Polygons at the bottom
+polygonGroup2.addTo(map); // Polygons First
 lineGroup.addTo(map);      // Lines in the middle
 pointGroup.addTo(map);     // Points on top
 
 // Define a function to reorder layers
 function reorderLayers() {
   polygonGroup.bringToBack();
+  polygonGroup2.bringToFront(); // Polygons First
   lineGroup.bringToFront();    // Ensures lines stay in the middle
   pointGroup.bringToFront();   // Points stay on top
 }
@@ -758,6 +814,18 @@ L.control.zoom({
 // Add scale bar
 L.control.scale().addTo(map);
 
+
+
+// Inset (mini) map layer
+var miniLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+// Create MiniMap and add to the main map
+var miniMap = new L.Control.MiniMap(miniLayer, {
+    toggleDisplay: true, // Optional: Add a toggle button to show/hide
+    minimized: false,     // Optional: Set to true if you want it minimized by default
+    position: 'bottomleft', // Optional: Change position to 'bottomleft' or others
+    zoomLevelFixed: 6,
+}).addTo(map);
   </script>
 
 </body>
