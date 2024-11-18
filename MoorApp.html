@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cammeray Mooring Boat Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <style>
+        /* General reset for body */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Full viewport height */
+            background-color: #f5f5f5;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #3b5998;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            flex: 0 0 auto; /* Header takes minimum space */
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Main content styles */
+        main {
+            flex: 1; /* Flexible height */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 10px 0;
+            gap: 10px;
+        }
+
+        /* Hint text */
+        .hint {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        /* File upload button styles */
+        .upload-container {
+            margin-bottom: 10px;
+        }
+
+        .upload-container label {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-container label:hover {
+            background-color: #0056b3;
+        }
+
+        .upload-container input[type="file"] {
+            display: none;
+        }
+
+        /* Map container styles */
+        #map {
+            flex: 1; /* Take remaining space */
+            width: 90%; /* Ensure proper width */
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #3b5998;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            flex: 0 0 auto; /* Footer takes minimum space */
+        }
+
+        footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+        .boat-label {
+            background-color: rgba(255, 255, 255, 0.8);
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 2px 5px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Stylish Header -->
+    <header>
+        <h1>Cammeray Marina Mooring Boat Viewer</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hint Text -->
+        <div class="hint">
+            Open an Excel file with columns: <strong>Lat_Long</strong> (latitude,longitude). Boat Name column must be formatted as BoatName. Other columns are optional. See this <a href="https://docs.google.com/spreadsheets/d/1CtvIKzLoC9SccX7zjeUU4KCWe2GjBpM0/view?usp=sharing&ouid=108506561556424995294&rtpof=true&sd=true" target="_blank">Excel File Template</a> as Example.  
+        </div>
+
+        <!-- Fancy Upload Button -->
+        <div class="upload-container">
+            <label for="uploadExcel">Open Excel File</label>
+            <input type="file" id="uploadExcel" accept=".xlsx, .xls" />
+        </div>
+
+        <!-- Map -->
+        <div id="map"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        @2024, Cammeray Marina
+    </footer>
+    <script>
+        // Initialize Leaflet map
+        var map = L.map('map').setView([-33.818088, 151.225008], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 24,          // Set the map's maximum zoom level
+        maxNativeZoom: 19,    // Set the maximum zoom level supported by the tile provider
+        noWrap: true          // Prevent wrapping for higher zoom levels
+        }).addTo(map);
+    
+        var markers = L.layerGroup().addTo(map);
+    
+        // Function to load data from localStorage
+        function loadDataFromLocalStorage() {
+            var storedData = localStorage.getItem('uploadedExcelData');
+            if (storedData) {
+                var jsonData = JSON.parse(storedData);
+                plotDataOnMap(jsonData);
+            }
+        }
+    
+        // Function to save data to localStorage
+        function saveDataToLocalStorage(data) {
+            localStorage.setItem('uploadedExcelData', JSON.stringify(data));
+        }
+    
+        // Function to generate a popup with all columns
+        function generatePopupContent(row, headers) {
+            let content = "<table>";
+            headers.forEach((header, index) => {
+                // Skip "Lat_Long" column
+                if (header === "Lat_Long") return;
+    
+                content += `
+                    <tr>
+                        <th style="text-align: left; padding: 2px 5px;">${header}:</th>
+                        <td style="padding: 2px 5px;">${row[index] || 'N/A'}</td>
+                    </tr>`;
+            });
+            content += "</table>";
+            return content;
+        }
+    
+        // Function to create a random color
+        function getRandomColor() {
+            return `#${Math.floor(Math.random() * 16777215).toString(16)}`;
+        }
+    
+        // Function to create a custom boat icon
+        function createBoatIcon(color) {
+            return L.divIcon({
+                html: `<i class="fas fa-ship" style="color: ${color}; font-size: 20px;"></i>`,
+                iconSize: [20, 20],
+                className: 'custom-icon'
+            });
+        }
+    
+        // Function to create a marker with the boatname as a label and custom icon
+        function createMarkerWithLabel(lat, lon, boatname, popupContent) {
+    const color = getRandomColor(); // Assign a random color
+    const icon = createBoatIcon(color); // Create a custom icon with the random color
+
+    const marker = L.marker([lat, lon], { icon }).addTo(markers); // Add the marker with the custom icon
+    marker.bindPopup(popupContent); // Bind popup content
+    marker.bindTooltip(boatname, {
+        permanent: true,            // Keep the label always visible
+        direction: "top",           // Position the label above the icon
+        className: "boat-label",    // Add a custom class for styling
+        offset: [0, -10]            // Move the label 10 pixels up
+    }); 
+}
+
+    
+        // Function to plot data on the map
+        function plotDataOnMap(data) {
+            markers.clearLayers(); // Clear existing markers
+            const headers = data[0]; // First row is the header
+            const locationIndex = headers.indexOf('Lat_Long'); // Get Lat_Long column index
+            const boatnameIndex = headers.indexOf('BoatName'); // Get boatname column index
+    
+            if (locationIndex === -1 || boatnameIndex === -1) {
+                alert('Missing required columns: "Lat_Long" or "boatname".');
+                return;
+            }
+    
+            data.slice(1).forEach(function(row) {
+                const location = row[locationIndex];
+                const boatname = row[boatnameIndex] || "Unnamed Boat";
+    
+                if (location) {
+                    const [lat, lon] = location.split(',').map(parseFloat);
+                    if (!isNaN(lat) && !isNaN(lon)) {
+                        const popupContent = generatePopupContent(row, headers);
+                        createMarkerWithLabel(lat, lon, boatname, popupContent);
+                    }
+                }
+            });
+        }
+    
+        // Event listener for file upload
+        document.getElementById('uploadExcel').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+    
+                // Assuming the first sheet contains the data
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+    
+                // Convert sheet data to JSON (array of arrays)
+                const jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+    
+                // Save data to localStorage
+                saveDataToLocalStorage(jsonData);
+    
+                // Plot data on the map
+                plotDataOnMap(jsonData);
+            };
+    
+            reader.readAsArrayBuffer(file);
+        });
+    
+        // Load data from localStorage on page load
+        window.addEventListener('load', loadDataFromLocalStorage);
+    </script>
+    
+    
+</body>
+</html>
