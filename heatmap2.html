@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Heatmap</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Fullscreen map style */
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+
+        /* Adjust height for smaller screens */
+        @media screen and (max-width: 600px) {
+            #map {
+                height: 90vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Initialize the map and set its view
+            const map = L.map('map').setView([-27.4787372, 153.0043999], 13); // Example: San Francisco coordinates
+
+            // Add CartoDB Positron Dark basemap tile layer (no API key required)
+            L.tileLayer('https://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i{z}!2i{x}!3i{y}!4i256!2m3!1e0!2sm!3i713465939!3m17!2sen!3sUS!5e18!12m4!1e68!2m2!1sset!2sRoadmap!12m3!1e37!2m1!1ssmartmaps!12m4!1e26!2m2!1sstyles!2zcy5lOmwudC5mfHAuYzojZmZmZmZmLHMuZTpsLnQuc3xwLmM6IzAwMDAwMHxwLmw6MTMscy50OjF8cy5lOmcuZnxwLmM6IzAwMDAwMCxzLnQ6MXxzLmU6Zy5zfHAuYzojMTQ0YjUzfHAubDoxNHxwLnc6MS40LHMudDo1fHAuYzojMDgzMDRiLHMudDoyfHMuZTpnfHAuYzojMGM0MTUyfHAubDo1LHMudDo0OXxzLmU6Zy5mfHAuYzojMDAwMDAwLHMudDo0OXxzLmU6Zy5zfHAuYzojMGI0MzRmfHAubDoyNSxzLnQ6NTB8cy5lOmcuZnxwLmM6IzAwMDAwMCxzLnQ6NTB8cy5lOmcuc3xwLmM6IzBiM2Q1MXxwLmw6MTYscy50OjUxfHMuZTpnfHAuYzojMDAwMDAwLHMudDo0fHAuYzojMTQ2NDc0LHMudDo2fHAuYzojMDIxMDE5!4e0', {
+                attribution: '&copy; <a href="https://www.google.com/maps">Google Maps'
+                   
+            }).addTo(map);
+
+            // Heatmap configuration
+            const heatmapConfig = {
+                maxZoom: 18,
+                radius: 25,   // Size of each heat point
+                blur: 15,     // Blur effect
+                max: 1.0,     // Maximum intensity
+                gradient: {
+                    0.0: 'rgba(0, 0, 0, 0)',  // Transparent
+                    0.3: '#2c83ff',           // Blue
+                    0.6: '#6ab8ff',           // Light blue
+                    0.9: '#ffee00',           // Yellow
+                    1.0: '#ff4e00'            // Orange-Red
+                }
+            };
+
+            // Initialize an empty heatmap layer
+            const heatmapLayer = L.heatLayer([], heatmapConfig).addTo(map);
+
+            // Fetch GeoJSON data and populate the heatmap
+            fetch('Brisbane_music_events.geojson') // Replace with your GeoJSON file path
+                .then(response => response.json())
+                .then(data => {
+                    const heatmapData = data.features.map(feature => {
+                        const [lng, lat] = feature.geometry.coordinates;
+                        return [lat, lng, feature.properties.intensity || 1];
+                    });
+                    heatmapLayer.setLatLngs(heatmapData);
+                })
+                .catch(error => console.error('Error loading GeoJSON:', error));
+
+            // Handle map responsiveness on screen resize
+            window.addEventListener("resize", () => {
+                map.invalidateSize();
+            });
+        });
+    </script>
+</body>
+</html>
