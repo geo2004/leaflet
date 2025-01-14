@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Web Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+        .color-picker {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+<div class="color-picker">
+    <label for="color">Choose a color:</label>
+    <input type="color" id="color" name="color" value="#ff0000">
+    <button id="save">Save</button>
+</div>
+
+<script>
+    // Function to set a cookie
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+    }
+
+    // Function to get a cookie
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    // Initialize the map and set its view to London
+    var map = L.map('map').setView([51.505, -0.09], 13);
+
+    // Add Google Satellite as the basemap
+    L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains:['mt0','mt1','mt2','mt3']
+    }).addTo(map);
+
+    // Retrieve saved color from cookies or set default
+    var savedColor = getCookie('polygonColor') || '#ff0000';
+    document.getElementById('color').value = savedColor;
+
+    // Define a random polygon in London with the saved color
+    var polygon = L.polygon([
+        [51.509, -0.08],
+        [51.503, -0.06],
+        [51.51, -0.047]
+    ], {
+        color: savedColor
+    }).addTo(map);
+
+    // Event listener for color picker
+    document.getElementById('color').addEventListener('input', function() {
+        var selectedColor = this.value;
+        polygon.setStyle({color: selectedColor});
+    });
+
+    // Event listener for save button
+    document.getElementById('save').addEventListener('click', function() {
+        var currentColor = document.getElementById('color').value;
+        setCookie('polygonColor', currentColor, 7); // Save for 7 days
+        alert('Polygon color saved as: ' + currentColor);
+    });
+</script>
+
+</body>
+</html>
