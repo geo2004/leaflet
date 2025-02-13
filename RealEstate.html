@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glitters Real Estate Locations</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.css" />
+    <link rel="icon" type="image/png" href="https://glittersrealestate.co.ke/wp-content/uploads/2023/06/cropped-Glitters-logo-32x32.png">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        html, body, #map { height: 100%; margin: 0; font-family: 'Poppins', 'Montserrat', sans-serif;}
+        /* Header bar */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.7); 
+            color: white;
+            display: flex;
+            align-items: center;
+            
+            padding: 0 20px;
+            z-index: 1000;
+        }
+        .logo {
+            width: 120px;
+            height: 120px;
+            background: url('https://glittersrealestate.co.ke/wp-content/uploads/2020/06/Glitters-white.png') no-repeat center center;
+            background-size: contain;
+            margin-right: 15px;
+            border-radius: 5px;
+        }
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+        }
+        /* Adjust Leaflet controls */
+        .leaflet-top.leaflet-left, .leaflet-top.leaflet-right {
+            margin-top: 60px; 
+        }
+        .header .title {
+    flex-grow: 1; /* Pushes the Home button to the right */
+}
+      /* Carousel Container */
+.carousel-container {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 130px; /* Reduce height */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0; /* Remove extra padding */
+    z-index: 1000;
+}
+.carousel-container, .carousel, .carousel-item {
+    margin: 0;
+    padding: 10px;
+}
+
+/* Carousel */
+.carousel {
+    display: flex;
+    gap: 30px; /* Reduce gap for a tighter look */
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    white-space: nowrap;
+    padding: 15px 15px;
+    align-items: center;
+}
+
+/* Hide scrollbar */
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Carousel Item */
+.carousel-item {
+    min-width: 180px; /* Adjust width slightly */
+    height: 110px; /* Reduce height */
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 6px; /* Reduce padding */
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    text-align: center; /* Ensure text is centered */
+}
+/* Hover effect for carousel items */
+.carousel-item:hover {
+    transform: scale(1.1);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 10;
+}
+/* Navigation Buttons */
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 10px;
+    cursor: pointer;
+    font-size: 18px;
+    border-radius: 5px;
+    z-index: 1001;
+}
+
+.prev { left: 5px; }
+.next { right: 25px; }
+.home-button {
+    text-decoration: none;
+    color: white;
+    background: transparent; /* Transparent background */
+   
+    padding: 6px 12px;
+    border-radius: 5px;
+    font-weight: bold;
+    margin-right: 20px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.home-button:hover {
+    color: #ff5733;
+    border-color: #ff5733;
+}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="https://glittersrealestate.co.ke/" class="logo"></a> 
+        <div class="title">Locations</div>
+        <a href="https://glittersrealestate.co.ke/" class="home-button">Home</a>
+    </div>
+    <div id="map"></div>
+
+    <!-- Carousel Gallery -->
+<div class="carousel-container">
+    <button class="carousel-nav prev">&lt;</button>
+    <div class="carousel" id="carousel"></div>
+    <button class="carousel-nav next">&gt;</button>
+</div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.fullscreen@1.6.0/Control.FullScreen.js"></script>
+
+    <script>
+        var map = L.map('map', {
+            fullscreenControl: true,
+            center: [-1.17, 36.95], 
+            zoom: 14
+        });
+
+        var cartoPositron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">Carto</a>',
+            subdomains: 'abcd'
+        }).addTo(map);
+
+        var googleHybrid = L.tileLayer('https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            attribution: '&copy; Google Maps Hybrid'
+        });
+
+        var openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        });
+
+        var baseMaps = {
+            "Carto Positron": cartoPositron,
+            "Google Satellite": googleHybrid,
+            "OpenStreetMap": openStreetMap
+        };
+
+        L.control.layers(baseMaps).addTo(map);
+
+        var geojsonData = {
+"type": "FeatureCollection",
+"name": "RealEstate",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Amalia Gardens" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.9885657, -1.1747897, 0.0 ], [ 36.9883431, -1.175133, 0.0 ], [ 36.9891343, -1.1756478, 0.0 ], [ 36.989357, -1.1752831, 0.0 ], [ 36.9885657, -1.1747897, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "Amalia Green" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.9943271, -1.1756958, 0.0 ], [ 36.993847, -1.176452, 0.0 ], [ 36.9942171, -1.1766934, 0.0 ], [ 36.9946918, -1.1759344, 0.0 ], [ 36.9943271, -1.1756958, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "Amalia Prestige" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.9733133, -1.1616483, 0.0 ], [ 36.9732409, -1.1618012, 0.0 ], [ 36.9730799, -1.1620184, 0.0 ], [ 36.9743647, -1.162729, 0.0 ], [ 36.9746195, -1.1623348, 0.0 ], [ 36.9733133, -1.1616483, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "Woodcreek International \nSchool Projects " }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.8838143, -1.1673159, 0.0 ], [ 36.8848282, -1.1693004, 0.0 ], [ 36.8869042, -1.1671658, 0.0 ], [ 36.8849998, -1.166136, 0.0 ], [ 36.8838143, -1.1673159, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "Amalia Paradise" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.8948774, -1.1625077, 0.0 ], [ 36.8937147, -1.164653, 0.0 ], [ 36.8945515, -1.1650218, 0.0 ], [ 36.8957384, -1.1628375, 0.0 ], [ 36.8948774, -1.1625077, 0.0 ] ] ] } },
+{ "type": "Feature", "properties": { "Name": "Amalia Springs" }, "geometry": { "type": "Polygon", "coordinates": [ [ [ 36.8940218, -1.1621266, 0.0 ], [ 36.8928609, -1.1642658, 0.0 ], [ 36.8937147, -1.164653, 0.0 ], [ 36.8948774, -1.1625077, 0.0 ], [ 36.8940218, -1.1621266, 0.0 ] ] ] } }
+]
+};
+
+// Define a color mapping for each polygon based on its name
+var colorMapping = {
+    "Amalia Gardens": "#d50621ff",
+    "Amalia Green": "#d9830aff",
+    "Amalia Prestige": "#307bc3ff",
+    "Woodcreek International \nSchool Projects ": "#935e29ff",
+    "Amalia Paradise": "#758f12ff",
+    "Amalia Springs": "#0080ffff"
+};
+
+// Create the GeoJSON layer with predefined colors
+var geojsonLayer = L.geoJSON(geojsonData, {
+    style: function(feature) {
+        return {
+            color: "#ff7800", // Border color
+            weight: 3,
+            opacity: 0.9,
+            fillColor: colorMapping[feature.properties.Name] || "#cccccc", // Default gray if not mapped
+            fillOpacity: 0.4
+        };
+    },
+    onEachFeature: function(feature, layer) {
+        layer.bindPopup("<b>" + feature.properties.Name + "</b>");
+    }
+}).addTo(map);
+
+     // Populate Carousel
+var carousel = document.getElementById("carousel");
+var images = [
+    "https://glittersrealestate.co.ke/wp-content/uploads/2023/06/Amalia-Gardens-Hero.jpg", // Replace with your image URLs
+    "https://glittersrealestate.co.ke/wp-content/uploads/2020/06/Amalia-greens-810x500.jpg",
+    "https://glittersrealestate.co.ke/wp-content/uploads/2023/06/Amalia-Prestige-hero.jpg",
+    "https://glittersrealestate.co.ke/wp-content/uploads/2023/06/Headrer-project-810x500.jpg",
+    "https://glittersrealestate.co.ke/wp-content/uploads/2023/06/Amalia-Paradise-hero.jpg",
+    "https://glittersrealestate.co.ke/wp-content/uploads/2023/06/Headrer-project-810x500.jpg"
+];
+
+geojsonData.features.forEach(function(feature, index) {
+    var item = document.createElement("div");
+    item.className = "carousel-item";
+    item.style.backgroundImage = `url(${images[index]})`; // Set background image
+
+    // Add text overlay
+    var text = document.createElement("div");
+    text.className = "text";
+    text.innerText = feature.properties.Name; // Use feature.properties.Name for the title
+    item.appendChild(text);
+
+    // Add click event to fly to the feature
+    item.onclick = function() {
+        var bounds = L.geoJSON(feature).getBounds(); // Get bounds of the feature
+        map.flyToBounds(bounds, { padding: [20, 20] }); // Fly to the selected feature
+    };
+
+    carousel.appendChild(item);
+});
+
+// Scroll Navigation
+document.querySelector(".prev").addEventListener("click", function() {
+    carousel.scrollBy({ left: -210, behavior: 'smooth' }); // Adjust scroll distance
+});
+
+document.querySelector(".next").addEventListener("click", function() {
+    carousel.scrollBy({ left: 210, behavior: 'smooth' }); // Adjust scroll distance
+});
+    </script>
+</body>
+</html>
