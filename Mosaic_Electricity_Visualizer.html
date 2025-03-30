@@ -76,36 +76,39 @@
             </div>
         </div>
 <!-- Legend -->
-<div class="legend-container">
+<div class="legend-container" id="legend-container">
     <div class="legend-title">Legend</div>
     
     <!-- Night Light Intensity Legend -->
-    <div class="legend-subtitle">Night Light Intensity</div>
-    <div style="display: flex; align-items: center;">
-        <div class="legend-gradient" style="background: linear-gradient(to top, #1e1e4c, #265b7c, #3ea646, #fffb00);"></div>
-        <div class="legend-labels">
-            <div>Bright Artificial Lights (Cities, Industrial Zones)</div>
-            <div>Dim Artificial Lights (Small Settlements, Roads)</div>
-            <div>Natural Background Lights (Moon, Airglow)</div>
-            <div>No Detectable Lights</div>
+    <div id="night-light-legend" style="display: none;">
+        <div class="legend-subtitle">Night Light Intensity</div>
+        <div style="display: flex; align-items: center;">
+            <div class="legend-gradient" style="background: linear-gradient(to top, #1e1e4c, #265b7c, #3ea646, #fffb00);"></div>
+            <div class="legend-labels">
+                <div>Bright Artificial Lights (Cities, Industrial Zones)</div>
+                <div>Dim Artificial Lights (Small Settlements, Roads)</div>
+                <div>Natural Background Lights (Moon, Airglow)</div>
+                <div>No Detectable Lights</div>
+            </div>
         </div>
+        <hr>
     </div>
     
-    <hr>
-    
     <!-- Population Density Legend -->
-    <div class="legend-subtitle">Population Headcount per Village</div>
-    <div style="display: flex; flex-direction: column;">
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #FFFFD9; margin-right: 10px;"></div><span>< 2000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #EFF9B5; margin-right: 10px;"></div><span>2000 - 4000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #CFECB3; margin-right: 10px;"></div><span>4000 - 6000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #97D6B9; margin-right: 10px;"></div><span>6000 - 8000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #5DC0C0; margin-right: 10px;"></div><span>8000 - 11000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #31A6C2; margin-right: 10px;"></div><span>11000 - 15000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #1F80B8; margin-right: 10px;"></div><span>15000 - 22000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #2355A4; margin-right: 10px;"></div><span>22000 - 33000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #22318D; margin-right: 10px;"></div><span>33000 - 51000</span></div>
-        <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #081D58; margin-right: 10px;"></div><span>> 51000</span></div>
+    <div id="population-legend" style="display: none;">
+        <div class="legend-subtitle">Population Headcount per Village</div>
+        <div style="display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #FFFFD9; margin-right: 10px;"></div><span>< 2000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #EFF9B5; margin-right: 10px;"></div><span>2000 - 4000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #CFECB3; margin-right: 10px;"></div><span>4000 - 6000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #97D6B9; margin-right: 10px;"></div><span>6000 - 8000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #5DC0C0; margin-right: 10px;"></div><span>8000 - 11000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #31A6C2; margin-right: 10px;"></div><span>11000 - 15000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #1F80B8; margin-right: 10px;"></div><span>15000 - 22000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #2355A4; margin-right: 10px;"></div><span>22000 - 33000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #22318D; margin-right: 10px;"></div><span>33000 - 51000</span></div>
+            <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #081D58; margin-right: 10px;"></div><span>> 51000</span></div>
+        </div>
     </div>
 </div>
         <!-- Load Leaflet -->
@@ -116,24 +119,24 @@
         <script>
             // Initialize map
             const map = L.map('map').setView([-2.923869442014587, 117.53529870695202], 5);
-
+        
             // Basemaps
             const googleSatellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                 attribution: '© Google'
             });
-
+        
             const cartoPositron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 20,
                 attribution: '© OpenStreetMap'
             }).addTo(map);
-
+        
             // Layer groups
             const csvLayer = L.layerGroup();
             let populationLayer, viirsLayer;
             const overlays = { "PLTD Locations": csvLayer };
-  
+        
             // Load CSV (unchanged)
             async function loadCSV() {
                 try {
@@ -156,27 +159,51 @@
                     console.error('Error loading CSV:', error);
                 }
             }
-
-            // Load VIIRS (unchanged)
+        
+            // Function to update legend visibility
+            function updateLegend() {
+                const nightLightLegend = document.getElementById('night-light-legend');
+                const populationLegend = document.getElementById('population-legend');
+                const legendContainer = document.getElementById('legend-container');
+        
+                const isViirsActive = map.hasLayer(viirsLayer);
+                const isPopulationActive = map.hasLayer(populationLayer);
+        
+                nightLightLegend.style.display = isViirsActive ? 'block' : 'none';
+                populationLegend.style.display = isPopulationActive ? 'block' : 'none';
+        
+                // Hide the entire legend container if no layers are active
+                legendContainer.style.display = (isViirsActive || isPopulationActive) ? 'block' : 'none';
+            }
+        
+            // Load VIIRS
             const viirsPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/VIIRS_SE_Asia_2023.pmtiles");
             viirsPmtiles.getHeader().then(() => {
-                viirsLayer = pmtiles.leafletRasterLayer(viirsPmtiles, { maxZoom: 20, minZoom:0, maxNativeZoom: 11, opacity: 0.5 });
+                viirsLayer = pmtiles.leafletRasterLayer(viirsPmtiles, { maxZoom: 20, minZoom: 0, maxNativeZoom: 11, opacity: 0.5 });
                 overlays["VIIRS Night Lights"] = viirsLayer;
                 viirsLayer.addTo(map);
+        
+                // Add event listeners for VIIRS layer
+                viirsLayer.on('add', updateLegend);
+                viirsLayer.on('remove', updateLegend);
             });
-
-            // Load Population (unchanged)
+        
+            // Load Population
             const populationPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/Population_Raster.pmtiles");
             populationPmtiles.getHeader().then(() => {
-                populationLayer = pmtiles.leafletRasterLayer(populationPmtiles, { maxZoom: 20,minZoom:0, maxNativeZoom: 11, opacity: 0.5 });
+                populationLayer = pmtiles.leafletRasterLayer(populationPmtiles, { maxZoom: 20, minZoom: 0, maxNativeZoom: 11, opacity: 0.5 });
                 overlays["Population Headcount"] = populationLayer;
                 populationLayer.addTo(map);
+        
+                // Add event listeners for Population layer
+                populationLayer.on('add', updateLegend);
+                populationLayer.on('remove', updateLegend);
             });
-
+        
             // Layer control and opacity slider
             Promise.all([viirsPmtiles.getHeader(), populationPmtiles.getHeader(), loadCSV()]).then(() => {
                 const layerControl = L.control.layers({ "Satellite": googleSatellite, "Street Map": cartoPositron }, overlays, { collapsed: false }).addTo(map);
-
+        
                 const slider = document.createElement('input');
                 slider.id = 'opacity-slider';
                 slider.type = 'range';
@@ -189,13 +216,15 @@
                     if (viirsLayer) viirsLayer.setOpacity(opacity);
                     if (populationLayer) populationLayer.setOpacity(opacity);
                 });
-
+        
                 const container = document.querySelector('.leaflet-control-layers');
                 const label = document.createElement('div');
                 label.textContent = 'Layers Opacity:';
                 container.appendChild(label);
                 container.appendChild(slider);
-                
+        
+                // Initial legend update
+                updateLegend();
             });
         </script>
     </body>
