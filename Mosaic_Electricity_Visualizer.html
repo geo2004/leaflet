@@ -26,9 +26,9 @@
             /* Legend Styles */
             .legend-container {
                 position: absolute;
-                bottom: 20px;
-                right: 12px;
-                background: rgba(255, 255, 255, 0.9);
+                bottom: 50px;
+                left: 12px;
+                background: rgba(255, 255, 255, 0.7);
                 padding: 10px;
                 border-radius: 3px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
@@ -81,7 +81,7 @@
     
     <!-- Night Light Intensity Legend -->
     <div id="night-light-legend" style="display: none;">
-        <div class="legend-subtitle">Night Light Intensity</div>
+        <div class="legend-subtitle">Load Signal Illumination (LSI)</div>
         <div style="display: flex; align-items: center;">
             <div class="legend-gradient" style="background: linear-gradient(to top, #1e1e4c, #265b7c, #3ea646, #fffb00);"></div>
             <div class="legend-labels">
@@ -96,7 +96,7 @@
     
     <!-- Population Density Legend -->
     <div id="population-legend" style="display: none;">
-        <div class="legend-subtitle">Population Headcount per Village</div>
+        <div class="legend-subtitle">Rural Energy Demand Index (REDI)</div>
         <div style="display: flex; flex-direction: column;">
             <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #FFFFD9; margin-right: 10px;"></div><span>< 2000</span></div>
             <div style="display: flex; align-items: center;"><div style="width: 20px; height: 15px; background: #EFF9B5; margin-right: 10px;"></div><span>2000 - 4000</span></div>
@@ -118,7 +118,7 @@
        
         <script>
             // Initialize map
-            const map = L.map('map').setView([-2.923869442014587, 117.53529870695202], 5);
+            const map = L.map('map').setView([-2.923869442014587, 113.53529870695202], 5);
         
             // Basemaps
             const googleSatellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -129,7 +129,7 @@
         
             const cartoPositron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 20,
-                attribution: '© OpenStreetMap'
+                attribution: '© OpenStreetMap/CARTO'
             }).addTo(map);
         
             // Layer groups
@@ -176,29 +176,54 @@
                 legendContainer.style.display = (isViirsActive || isPopulationActive) ? 'block' : 'none';
             }
         
-            // Load VIIRS
-            const viirsPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/VIIRS_SE_Asia_2023.pmtiles");
-            viirsPmtiles.getHeader().then(() => {
-                viirsLayer = pmtiles.leafletRasterLayer(viirsPmtiles, { maxZoom: 20, minZoom: 0, maxNativeZoom: 11, opacity: 0.5 });
-                overlays["VIIRS Night Lights"] = viirsLayer;
-                viirsLayer.addTo(map);
-        
-                // Add event listeners for VIIRS layer
-                viirsLayer.on('add', updateLegend);
-                viirsLayer.on('remove', updateLegend);
-            });
-        
-            // Load Population
-            const populationPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/Population_Raster.pmtiles");
-            populationPmtiles.getHeader().then(() => {
-                populationLayer = pmtiles.leafletRasterLayer(populationPmtiles, { maxZoom: 20, minZoom: 0, maxNativeZoom: 11, opacity: 0.5 });
-                overlays["Population Headcount"] = populationLayer;
-                populationLayer.addTo(map);
-        
-                // Add event listeners for Population layer
-                populationLayer.on('add', updateLegend);
-                populationLayer.on('remove', updateLegend);
-            });
+           // Load VIIRS
+const viirsPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/VIIRS_SE_Asia_2023.pmtiles");
+viirsPmtiles.getHeader().then((header) => {
+    // Log the header to inspect available zoom levels
+    console.log("VIIRS Header:", header);
+
+    // Use the actual min and max zoom from the PMTiles header
+    const minTileZoom = header.minZoom; // Minimum zoom level with tiles
+    const maxTileZoom = header.maxZoom; // Maximum zoom level with tiles
+
+    viirsLayer = pmtiles.leafletRasterLayer(viirsPmtiles, {
+        minZoom: 0,              // Allow display at all zoom levels from 0
+        maxZoom: 20,             // Allow display up to zoom 20
+        maxNativeZoom: maxTileZoom, // Highest zoom level with actual tiles
+        minNativeZoom: minTileZoom, // Lowest zoom level with actual tiles (optional, Leaflet 1.7+)
+        opacity: 0.5
+    });
+    overlays["LSI"] = viirsLayer;
+    viirsLayer.addTo(map);
+
+    // Add event listeners for VIIRS layer
+    viirsLayer.on('add', updateLegend);
+    viirsLayer.on('remove', updateLegend);
+});
+
+// Load Population
+const populationPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/Population_Raster.pmtiles");
+populationPmtiles.getHeader().then((header) => {
+    // Log the header to inspect available zoom levels
+    console.log("Population Header:", header);
+
+    const minTileZoom = header.minZoom;
+    const maxTileZoom = header.maxZoom;
+
+    populationLayer = pmtiles.leafletRasterLayer(populationPmtiles, {
+        minZoom: 0,              // Allow display at all zoom levels from 0
+        maxZoom: 20,             // Allow display up to zoom 20
+        maxNativeZoom: maxTileZoom, // Highest zoom level with actual tiles
+        minNativeZoom: minTileZoom, // Lowest zoom level with actual tiles (optional)
+        opacity: 0.5
+    });
+    overlays["REDI"] = populationLayer;
+    populationLayer.addTo(map);
+
+    // Add event listeners for Population layer
+    populationLayer.on('add', updateLegend);
+    populationLayer.on('remove', updateLegend);
+});
         
             // Layer control and opacity slider
             Promise.all([viirsPmtiles.getHeader(), populationPmtiles.getHeader(), loadCSV()]).then(() => {
