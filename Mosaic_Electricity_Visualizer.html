@@ -140,7 +140,7 @@
             // Load CSV (unchanged)
             async function loadCSV() {
                 try {
-                    const response = await fetch('https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/DATA_54_FIXED.csv');
+                    const response = await fetch('https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/data_with_radiance.csv');
                     const csvText = await response.text();
                     const rows = csvText.split('\n').map(row => row.split(','));
                     const headers = rows[0];
@@ -151,7 +151,8 @@
                         if (isNaN(lat) || isNaN(lon)) return;
                         const marker = L.marker([lat, lon]);
                         const maxLoadKW = parseFloat(row[4]).toFixed(2);
-                        marker.bindPopup(`<b>${row[2]}</b><br>Region: ${row[1]}<br>Maximum Load (kW): ${maxLoadKW}<br>Population Density: ${row[8]}<br>Headcount (5km): ${row[9]}`);
+                        const maxLSI = parseFloat(row[10]).toFixed(2);
+                        marker.bindPopup(`<b>${row[2]}</b><br>Region: ${row[1]}<br>Maximum Load (kWH): ${maxLoadKW}<br>LSI: ${maxLSI}<br>REDI: ${row[9]}`);
                         marker.addTo(csvLayer);
                     });
                     csvLayer.addTo(map);
