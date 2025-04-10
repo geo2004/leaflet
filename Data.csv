@@ -1,0 +1,19 @@
+﻿Rank,Name,Capacity_MW,Location,Indicative_Hazard_Factors,Tier,Tier_Level,lat,lon
+1,Suralaya Coal-fired,"3,400",Banten,Subsidence + Flooding ,1,Critical,-5.892883769,106.03002
+2,Tanjung Priok ,"2,821",Jakarta,Extreme subsidence + Flooding,1,Critical,-6.110227958,106.8671261
+3,Muara Karang,"2,129",Jakarta,Extreme subsidence + Flooding,1,Critical,-6.109680095,106.7879146
+4,Unit Pembangkit Gresik,"2,219",East Java,Riverine flooding,2,Severe,-7.164392258,112.6616638
+5,"Tambak Lorok, Semarang","1,036",Semarang,Extreme subsidence (3-4cm/yr) + Flooding,1,Critical,-6.95132648,110.43123
+6,Pelabuhan Ratu Coal,"1,050",Sukabumi,Sea Level Rise,2,Severe,-7.024401824,106.5465126
+7,Labuan Coal-fired,945,Banten,Sea Level Rise,2,Severe,-6.391743856,105.8283524
+8,Indramayu Coal-fired,990,West Java,General earthquake,3,Monitor,-6.27396874,107.9699251
+9,Paiton Coal-fired,800,East Java,Regional flooding,2,Severe,-7.713875604,113.5822703
+10,Cirebon Coal-fired,660,West Java,Coastal flooding + Erosion + Sea Level Rise,3,Monitor,-6.770341232,108.615017
+11,Cilacap Adipala,660,Central Java,Earthquake + coastal erosion,3,Monitor,-7.683223262,109.13709
+12,Suralaya Baru Coal,625,Banten,Subsidence + Flooding ,2,Severe,-5.886914694,106.0374964
+13,Labuan Angin Coal-fired,600,North Sumatra,Sea Level Rise,2,Severe,1.752072194,98.73052202
+14,Palembang UPIK,441,South Sumatra,Subsidence + River floods,2,Severe,-3.031534606,104.7447888
+15,Pacitan Coal-fired,630,East Java,Earthquake risk,3,Monitor,-8.258489176,111.3738238
+16,Rembang Coal-fired,630,Central Java,River floods,2,Severe,-6.635618662,111.4749946
+17,Tarahan Coal-fired,200,Lampung,Earthquake risk,3,Monitor,-5.521116122,105.353002
+18,Jaitbarang Coal-fired,230,Central Java,Earthquake risk,3,Monitor,-6.274549823,107.9704245
