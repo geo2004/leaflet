@@ -1,0 +1,282 @@
+<html>
+    <head>
+        <title>PLNE Hazard Monitoring</title>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <style>
+            html, body { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; }
+            .header { background: linear-gradient(135deg, #2c3e50, #3498db); padding: 10px 20px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: fixed; width: 100%; top: 0; z-index: 1000; height: 50px; box-sizing: border-box; display: flex; align-items: center; }
+            .header-title { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+            #map { position: absolute; top: 50px; left: 0; width: 100%; height: calc(100vh - 50px); z-index: 1; }
+            .leaflet-top { margin-top: 10px; }
+            #opacity-slider { width: 200px; margin-top: 10px; }
+            .logo-container { position: absolute; bottom: 20px; right: 10px; z-index: 1001; pointer-events: none; }
+            .logo-container img { width: 100px; height: auto; opacity: 0.8; }
+            .info.legend { 
+                background: white; 
+                padding: 10px 15px; 
+                border: 1px solid #ccc; 
+                border-radius: 5px;
+                box-shadow: 0 1px 5px rgba(0,0,0,0.2); 
+                font-size: 10px;
+                line-height: 1.5;
+                width: 220px;
+            }
+            .legend-container {
+                position: absolute;
+                bottom: 50px;
+                left: 12px;
+                background: rgba(255, 255, 255, 0.7);
+                padding: 13px; /* Increased by 30% from 10px */
+                border-radius: 3px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                font-size: 9px; /* Increased by 30% from 7px */
+                width: 350px; /* Increased by 30% from 220px */
+                z-index: 1000;
+            }
+            .legend-title { font-weight: bold; font-size: 18px; /* Increased by 30% from 16px */ margin-bottom: 6.5px; /* Increased by 30% from 5px */ }
+            .legend-subtitle { font-size: 11px; /* Increased by 30% from 10px */ margin-bottom: 13px; /* Increased by 30% from 10px */ }
+            .legend-gradient { width: 26px; /* Increased by 30% from 20px */ height: 130px; /* Increased by 30% from 100px */ float: left; margin-right: 13px; /* Increased by 30% from 10px */ border-radius: 3px; }
+            .legend-labels { display: flex; flex-direction: column; justify-content: space-between; height: 130px; /* Increased by 30% from 100px */ font-size: 11.7px; /* Increased by 30% from 9px */ }
+            .tier-legend div { display: flex; align-items: center; margin-bottom: 6.5px; /* Increased by 30% from 5px */ }
+            .tier-legend span { font-size: 11px; /* Increased by 30% from 10px */ }
+            .tier-circle { width: 13px; /* Increased by 30% from 10px */ height: 13px; /* Increased by 30% from 10px */ border-radius: 50%; margin-right: 6.5px; /* Increased by 30% from 5px */ border: 1px solid white; }
+            .pulse-critical-legend {
+                animation: pulse-legend 1.5s infinite;
+            }
+            @keyframes pulse-legend {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.3); }
+                100% { transform: scale(1); }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1 class="header-title">PowerPlant Hazard Monitoring App</h1>
+        </div>
+        <div id="map">
+            <div class="logo-container">
+                <img src="https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/logo_mosaic.png" alt="Mosaic Risk Analytics PTE Ltd" />
+            </div>
+        </div>
+        <!-- Legend -->
+        <div class="legend-container" id="legend-container">
+            <div class="legend-title">Legend</div>
+            <!-- Tier Legend -->
+            <div id="tier-legend" style="display: none;">
+                <div class="legend-subtitle">PowerPlant Tier Level</div>
+                <div class="tier-legend">
+                    <div><div class="tier-circle pulse-critical-legend" style="background-color: rgb(255,0,0);"></div><span>Tier 1 - Critical: > 1,000MW + High/Very High Hazard Risk</span></div>
+                    <div><div class="tier-circle" style="background-color: rgb(1,132,144);"></div><span>Tier 2 - Severe: 500 - 1,000MW + Moderate-High Hazard Risk</span></div>
+                    <div><div class="tier-circle" style="background-color: rgb(190,235,228);"></div><span>Tier 3 - Monitor: < 500MW or Lower Hazard Risk</span></div>
+                </div>
+                <hr>
+            </div>
+            <!-- Risk Legend -->
+            <div id="risk-legend" style="display: none;">
+                <div class="legend-subtitle">Multi-Hazard Risk Index</div>
+                <div style="display: flex; align-items: center;">
+                    <div class="legend-gradient" style="background: linear-gradient(to top, #008000, #FFFF00, #FF0000);"></div>
+                    <div class="legend-labels">
+                        <div>High Risk</div>
+                        <div>Medium Risk</div>
+                        <div>Low Risk</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Load Leaflet -->
+        <script src="https://unpkg.com/leaflet@1.9.0/dist/leaflet.js"></script>
+        <!-- Load Esri Leaflet -->
+        <script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
+
+        <script>
+            // Initialize map
+            const map = L.map('map').setView([-2.923869442014587, 113.53529870695202], 5);
+
+            // Basemaps
+            const googleSatellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+                maxZoom: 20,
+                subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                attribution: 'Satellite Imagery © Google'
+            });
+
+            const cartoPositron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                maxZoom: 20,
+                attribution: 'Basemap © OpenStreetMap/CARTO'
+            }).addTo(map);
+
+            // Layer groups
+            const csvLayer = L.layerGroup();
+            let riskLayer;
+            const overlays = { "PowerPlant Locations": csvLayer };
+
+            // Array to store Tier 1 markers for animation control
+            const tier1Markers = [];
+
+            // Function to animate Tier 1 markers
+            function pulseMarker(marker) {
+                let growing = true;
+                const minRadius = 8;
+                const maxRadius = 12;
+                const step = 0.2;
+                let isAnimating = true;
+
+                marker.pulseState = { growing, currentRadius: minRadius, isAnimating };
+
+                function animate() {
+                    if (!marker.pulseState.isAnimating) {
+                        return;
+                    }
+
+                    let currentRadius = marker.pulseState.currentRadius;
+                    if (marker.pulseState.growing) {
+                        currentRadius += step;
+                        if (currentRadius >= maxRadius) marker.pulseState.growing = false;
+                    } else {
+                        currentRadius -= step;
+                        if (currentRadius <= minRadius) marker.pulseState.growing = true;
+                    }
+                    marker.pulseState.currentRadius = currentRadius;
+                    marker.setRadius(currentRadius);
+                    requestAnimationFrame(animate);
+                }
+                animate();
+            }
+
+            // Load CSV with tier-based circle markers
+            async function loadCSV() {
+                try {
+                    const response = await fetch('https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/Data.csv');
+                    const csvText = await response.text();
+                    const rows = csvText.trim().split('\n').map(row => row.split(','));
+                    const headers = rows[0];
+
+                    rows.slice(1).forEach(row => {
+                        if (row.length < headers.length) return;
+
+                        const lat = parseFloat(row[7]);
+                        const lon = parseFloat(row[8]);
+                        if (isNaN(lat) || isNaN(lon)) return;
+
+                        const name = row[1];
+                        const location = row[3];
+                        const capacityStr = row[2].replace(/"/g, '').replace(',', '');
+                        const capacity = parseFloat(capacityStr).toLocaleString();
+                        const hazard = row[4];
+                        const tier = row[5];
+                        const tierLevel = row[6];
+
+                        let fillColor;
+                        switch (tier) {
+                            case '1': fillColor = 'rgb(255,0,0)'; break;   // Tier 1 - Critical
+                            case '2': fillColor = 'rgb(1,132,144)'; break; // Tier 2 - Severe
+                            case '3': fillColor = 'rgb(190,235,228)'; break; // Tier 3 - Monitor
+                            default: fillColor = '#808080'; // Fallback color (grey)
+                        }
+
+                        const marker = L.circleMarker([lat, lon], {
+                            radius: 8,
+                            fillColor: fillColor,
+                            fillOpacity: 0.8,
+                            color: '#ffffff', // White outline
+                            weight: 2,        // Outline thickness
+                            opacity: 1
+                        });
+                        marker.bindPopup(
+                            `<b>${name}</b><br>` +
+                            `Location: ${location}<br>` +
+                            `Capacity: ${capacity} MW<br>` +
+                            `Hazard: ${hazard}<br>` +
+                            `Tier ${tier}: ${tierLevel}`
+                        );
+                        marker.addTo(csvLayer);
+
+                        if (tier === '1') {
+                            tier1Markers.push(marker);
+                            pulseMarker(marker);
+                        }
+                    });
+
+                    csvLayer.addTo(map);
+                } catch (error) {
+                    console.error('Error loading CSV:', error);
+                }
+            }
+
+            // Function to update legend visibility
+            function updateLegend() {
+                const tierLegend = document.getElementById('tier-legend');
+                const riskLegend = document.getElementById('risk-legend');
+                const legendContainer = document.getElementById('legend-container');
+
+                const isCsvActive = map.hasLayer(csvLayer);
+                const isRiskActive = map.hasLayer(riskLayer);
+
+                tierLegend.style.display = isCsvActive ? 'block' : 'none';
+                riskLegend.style.display = isRiskActive ? 'block' : 'none';
+                legendContainer.style.display = (isCsvActive || isRiskActive) ? 'block' : 'none';
+            }
+
+            // Load ArcGIS ImageServer Layer
+            riskLayer = L.esri.imageMapLayer({
+                url: 'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_risiko_multi/ImageServer',
+                opacity: 0.5,
+                maxZoom: 20,
+                attribution: 'Multi-hazard Risk © BNPB Indonesia'
+            });
+            overlays["Multi-Hazard Risk"] = riskLayer;
+            riskLayer.addTo(map);
+
+            // Add event listeners for layer changes
+            riskLayer.on('add', updateLegend);
+            riskLayer.on('remove', updateLegend);
+            csvLayer.on('add', updateLegend);
+            csvLayer.on('remove', updateLegend);
+
+            // Zoom event handlers to control pulsing
+            map.on('zoomstart', () => {
+                tier1Markers.forEach(marker => {
+                    marker.pulseState.isAnimating = false;
+                    marker.setRadius(8);
+                });
+            });
+
+            map.on('zoomend', () => {
+                tier1Markers.forEach(marker => {
+                    marker.pulseState.isAnimating = true;
+                    pulseMarker(marker);
+                });
+            });
+
+            // Layer control and opacity slider
+            Promise.all([loadCSV()]).then(() => {
+                const layerControl = L.control.layers({ "Satellite Imagery": googleSatellite, "Street Map": cartoPositron }, overlays, { collapsed: false }).addTo(map);
+
+                const slider = document.createElement('input');
+                slider.id = 'opacity-slider';
+                slider.type = 'range';
+                slider.min = 0;
+                slider.max = 1;
+                slider.step = 0.1;
+                slider.value = 0.5;
+                slider.addEventListener('input', (e) => {
+                    const opacity = parseFloat(e.target.value);
+                    if (riskLayer) riskLayer.setOpacity(opacity);
+                });
+
+                const container = document.querySelector('.leaflet-control-layers');
+                const label = document.createElement('div');
+                label.textContent = 'Layers Opacity:';
+                container.appendChild(label);
+                container.appendChild(slider);
+
+                // Initial legend update
+                updateLegend();
+            });
+        </script>
+    </body>
+</html>
