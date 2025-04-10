@@ -1,10 +1,10 @@
 ﻿Rank,Name,Capacity_MW,Location,Indicative_Hazard_Factors,Tier,Tier_Level,lat,lon
-1,Suralaya Coal-fired,"3400",Banten,Subsidence + Flooding ,1,Critical,-5.892883769,106.03002
-2,Tanjung Priok ,"2821",Jakarta,Extreme subsidence + Flooding,1,Critical,-6.110227958,106.8671261
-3,Muara Karang,"2129",Jakarta,Extreme subsidence + Flooding,1,Critical,-6.109680095,106.7879146
-4,Unit Pembangkit Gresik,"2219",East Java,Riverine flooding,2,Severe,-7.164392258,112.6616638
-5,Tambak Lorok, Semarang","1036",Semarang,Extreme subsidence (3-4cm/yr) + Flooding,1,Critical,-6.95132648,110.43123
-6,Pelabuhan Ratu Coal,"1050",Sukabumi,Sea Level Rise,2,Severe,-7.024401824,106.5465126
+1,Suralaya Coal-fired,3400,Banten,Subsidence + Flooding ,1,Critical,-5.892883769,106.03002
+2,Tanjung Priok,2821,Jakarta,Extreme subsidence + Flooding,1,Critical,-6.110227958,106.8671261
+3,Muara Karang,2129,Jakarta,Extreme subsidence + Flooding,1,Critical,-6.109680095,106.7879146
+4,Unit Pembangkit Gresik,2219,East Java,Riverine flooding,2,Severe,-7.164392258,112.6616638
+5,Tambak Lorok, Semarang,1036,Semarang,Extreme subsidence (3-4cm/yr) + Flooding,1,Critical,-6.95132648,110.43123
+6,Pelabuhan Ratu Coal,1050,Sukabumi,Sea Level Rise,2,Severe,-7.024401824,106.5465126
 7,Labuan Coal-fired,945,Banten,Sea Level Rise,2,Severe,-6.391743856,105.8283524
 8,Indramayu Coal-fired,990,West Java,General earthquake,3,Monitor,-6.27396874,107.9699251
 9,Paiton Coal-fired,800,East Java,Regional flooding,2,Severe,-7.713875604,113.5822703
