@@ -4,7 +4,6 @@
         <meta charset="utf-8"/>
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
         <style>
-            /* Your existing styles unchanged */
             html, body { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; }
             .header { background: linear-gradient(135deg, #2c3e50, #3498db); padding: 10px 20px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: fixed; width: 100%; top: 0; z-index: 1000; height: 50px; box-sizing: border-box; display: flex; align-items: center; }
             .header-title { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
@@ -15,63 +14,62 @@
             .logo-container img { width: 100px; height: auto; opacity: 0.8; }
             .info.legend { 
     background: white; 
-    padding: 15.6px 23.4px;        /* 13px * 1.2, 19.5px * 1.2 */
+    padding: 15.6px 23.4px;
     border: 1px solid #ccc; 
-    border-radius: 7.8px;          /* 6.5px * 1.2 */
-    box-shadow: 0 1.6px 7.8px rgba(0,0,0,0.2);  /* 1.3px * 1.2, 6.5px * 1.2 */
-    font-size: 21.8px;            /* 18.2px * 1.2 */
+    border-radius: 7.8px;
+    box-shadow: 0 1.6px 7.8px rgba(0,0,0,0.2);
+    font-size: 21.8px;
     line-height: 1.5;
-    width: 343.2px;              /* 286px * 1.2 */
+    width: 343.2px;
 }
 
-/* Legend Styles */
 .legend-container {
     position: absolute;
-    bottom: 78px;                /* 65px * 1.2 */
-    left: 18.7px;               /* 15.6px * 1.2 */
+    bottom: 78px;
+    left: 18.7px;
     background: rgba(255, 255, 255, 0.7);
-    padding: 15.6px;            /* 13px * 1.2 */
-    border-radius: 4.7px;       /* 3.9px * 1.2 */
-    box-shadow: 0 3.1px 7.8px rgba(0, 0, 0, 0.2);  /* 2.6px * 1.2, 6.5px * 1.2 */
-    font-size: 10.9px;          /* 9.1px * 1.2 */
-    width: 343.2px;             /* 286px * 1.2 */
+    padding: 15.6px;
+    border-radius: 4.7px;
+    box-shadow: 0 3.1px 7.8px rgba(0, 0, 0, 0.2);
+    font-size: 10.9px;
+    width: 343.2px;
     z-index: 1000;
 }
 
 .legend-title {
     font-weight: bold;
-    font-size: 25px;           /* 20.8px * 1.2 */
-    margin-bottom: 7.8px;      /* 6.5px * 1.2 */
+    font-size: 25px;
+    margin-bottom: 7.8px;
 }
 
 .legend-subtitle {
-    font-size: 15.6px;         /* 13px * 1.2 */
-    margin-bottom: 15.6px;     /* 13px * 1.2 */
+    font-size: 15.6px;
+    margin-bottom: 15.6px;
 }
 
 .legend-gradient {
-    width: 31.2px;            /* 26px * 1.2 */
-    height: 156px;            /* 130px * 1.2 */
+    width: 31.2px;
+    height: 156px;
     background: linear-gradient(to top, #1e1e4c, #265b7c, #3ea646, #fffb00);
     float: left;
-    margin-right: 15.6px;     /* 13px * 1.2 */
-    border-radius: 4.7px;     /* 3.9px * 1.2 */
+    margin-right: 15.6px;
+    border-radius: 4.7px;
 }
 
 .legend-labels {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 156px;           /* 130px * 1.2 */
-    font-size: 14px;         /* 11.7px * 1.2 */
+    height: 156px;
+    font-size: 14px;
 }
-/* Minimal styling for the opacity slider control */
+
 .leaflet-control-opacity {
     background: #fff;
     border: 2px solid rgba(0,0,0,0.2);
     border-radius: 3px;
     padding: 5px;
-    margin-top: 5px; /* Small space below the layer control */
+    margin-top: 5px;
 }
 
 .leaflet-control-opacity label {
@@ -80,7 +78,7 @@
 }
 
 #opacity-slider {
-    width: 150px; /* Matches Leaflet’s default control width reasonably */
+    width: 150px;
 }
         </style>
     </head>
@@ -93,11 +91,8 @@
                 <img src="https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/logo_mosaic.png" alt="Mosaic Risk Analytics PTE Ltd" />
             </div>
         </div>
-<!-- Legend -->
 <div class="legend-container" id="legend-container">
     <div class="legend-title">Legend</div>
-    
-    <!-- Night Light Intensity Legend -->
     <div id="night-light-legend" style="display: none;">
         <div class="legend-subtitle">Load Signal Illumination (LSI)</div>
         <div style="display: flex; align-items: center;">
@@ -111,8 +106,6 @@
         </div>
         <hr>
     </div>
-    
-    <!-- Population Density Legend -->
     <div id="population-legend" style="display: none;">
         <div class="legend-subtitle">Rural Energy Demand Index (REDI)</div>
         <div style="display: flex; flex-direction: column;">
@@ -129,33 +122,22 @@
         </div>
     </div>
 </div>
-        <!-- Load Leaflet -->
         <script src="https://unpkg.com/leaflet@1.9.0/dist/leaflet.js"></script>
-        <!-- Load PMTiles -->
         <script src="https://unpkg.com/pmtiles@2.7.2/dist/index.js"></script>
-       
         <script>
-            // Initialize map
             const map = L.map('map').setView([-2.923869442014587, 113.53529870695202], 5);
-        
-            // Basemaps
             const googleSatellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
                 attribution: '© Google'
             });
-        
             const cartoPositron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
                 maxZoom: 20,
                 attribution: '© OpenStreetMap/CARTO'
             }).addTo(map);
-        
-            // Layer groups and overlays
             const csvLayer = L.layerGroup();
             let populationLayer, viirsLayer;
             const overlays = { "PLTD Locations": csvLayer };
-        
-            // Load CSV
             async function loadCSV() {
                 try {
                     const response = await fetch('https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/data_with_radiance.csv');
@@ -175,32 +157,22 @@
                     });
                     csvLayer.addTo(map);
                 } catch (error) {
-                    console.error('Error loading CSV:', error);
                 }
             }
-        
-            // Function to update legend visibility
             function updateLegend() {
                 const nightLightLegend = document.getElementById('night-light-legend');
                 const populationLegend = document.getElementById('population-legend');
                 const legendContainer = document.getElementById('legend-container');
-        
                 const isViirsActive = map.hasLayer(viirsLayer);
                 const isPopulationActive = map.hasLayer(populationLayer);
-        
                 nightLightLegend.style.display = isViirsActive ? 'block' : 'none';
                 populationLegend.style.display = isPopulationActive ? 'block' : 'none';
-        
                 legendContainer.style.display = (isViirsActive || isPopulationActive) ? 'block' : 'none';
             }
-        
-            // Load VIIRS
             const viirsPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/VIIRS_SE_Asia_2023.pmtiles");
             const viirsPromise = viirsPmtiles.getHeader().then((header) => {
-                console.log("VIIRS Header:", header);
                 const minTileZoom = header.minZoom;
                 const maxTileZoom = header.maxZoom;
-        
                 viirsLayer = pmtiles.leafletRasterLayer(viirsPmtiles, {
                     minZoom: 0,
                     maxZoom: 20,
@@ -210,18 +182,13 @@
                 });
                 overlays["LSI"] = viirsLayer;
                 viirsLayer.addTo(map);
-        
                 viirsLayer.on('add', updateLegend);
                 viirsLayer.on('remove', updateLegend);
             });
-        
-            // Load Population
             const populationPmtiles = new pmtiles.PMTiles("https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/Population_Raster.pmtiles");
             const populationPromise = populationPmtiles.getHeader().then((header) => {
-                console.log("Population Header:", header);
                 const minTileZoom = header.minZoom;
                 const maxTileZoom = header.maxZoom;
-        
                 populationLayer = pmtiles.leafletRasterLayer(populationPmtiles, {
                     minZoom: 0,
                     maxZoom: 20,
@@ -231,17 +198,13 @@
                 });
                 overlays["REDI"] = populationLayer;
                 populationLayer.addTo(map);
-        
                 populationLayer.on('add', updateLegend);
                 populationLayer.on('remove', updateLegend);
             });
-        
-            // Custom Opacity Slider Control
             L.Control.OpacitySlider = L.Control.extend({
                 options: {
                     position: 'topright'
                 },
-        
                 onAdd: function (map) {
                     this._map = map;
                     const container = L.DomUtil.create('div', 'leaflet-control leaflet-control-opacity');
@@ -254,61 +217,41 @@
                     this._slider.max = 1;
                     this._slider.step = 0.1;
                     this._slider.value = 0.5;
-        
                     L.DomEvent.on(this._slider, 'input', this._updateOpacity, this);
-        
-                    // Prevent map clicks from propagating
                     L.DomEvent.disableClickPropagation(container);
                     L.DomEvent.disableScrollPropagation(container);
-        
                     return container;
                 },
-        
                 _updateOpacity: function () {
                     const opacity = parseFloat(this._slider.value);
-                    console.log(`Updating opacity to: ${opacity}`);
                     if (viirsLayer) viirsLayer.setOpacity(opacity);
                     if (populationLayer) populationLayer.setOpacity(opacity);
                 }
             });
-        
             L.control.opacitySlider = function (options) {
                 return new L.Control.OpacitySlider(options);
             };
-        
-            // Wait for all layers to load, then add the controls
             Promise.all([viirsPromise, populationPromise, loadCSV()]).then(() => {
                 const baseLayers = {
                     "Satellite": googleSatellite,
                     "Street Map": cartoPositron
                 };
-        
-                // Add default Leaflet layer control with click-only expand/collapse
                 const layerControl = L.control.layers(baseLayers, overlays, { collapsed: true }).addTo(map);
-        
-                // Override default collapse/expand behavior to use click only
                 const container = layerControl._container;
-                layerControl._map.off('click', layerControl.collapse, layerControl); // Remove map click collapse
-                L.DomEvent.off(container, 'mouseover', layerControl.expand, layerControl); // Remove mouseover expand
-                L.DomEvent.off(container, 'mouseout', layerControl.collapse, layerControl); // Remove mouseout collapse
-        
-                // Add click toggle
+                layerControl._map.off('click', layerControl.collapse, layerControl);
+                L.DomEvent.off(container, 'mouseover', layerControl.expand, layerControl);
+                L.DomEvent.off(container, 'mouseout', layerControl.collapse, layerControl);
                 L.DomEvent.on(container, 'click', function (e) {
                     if (L.DomUtil.hasClass(container, 'leaflet-control-layers-expanded')) {
                         layerControl.collapse();
                     } else {
                         layerControl.expand();
                     }
-                    L.DomEvent.stopPropagation(e); // Prevent map click from bubbling
+                    L.DomEvent.stopPropagation(e);
                 }, layerControl);
-        
-                // Add separate opacity slider control
                 L.control.opacitySlider({ position: 'topright' }).addTo(map);
-        
-                // Initial legend update
                 updateLegend();
             }).catch((error) => {
-                console.error('Error initializing map layers or control:', error);
             });
         </script>
     </body>
