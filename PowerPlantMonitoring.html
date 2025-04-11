@@ -6,13 +6,42 @@
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
         <style>
             html, body { margin: 0; padding: 0; height: 100vh; overflow: hidden; font-family: 'Arial', sans-serif; }
-            .header { background: linear-gradient(135deg, #52515D, #52515D); padding: 10px 20px; color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); position: fixed; width: 100%; top: 0; z-index: 1000; height: 50px; box-sizing: border-box; display: flex; align-items: center; }
-            .header-title { margin: 0; font-size: 20px; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+            .header {
+    background: linear-gradient(135deg, #52515D, #52515D);
+    padding: 10px 20px;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    height: 50px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+            .logo-container {
+    margin-right: 10px; 
+    pointer-events: auto;
+}
+
+.logo-container img {
+    height: 30px; 
+    width: auto;
+    opacity: 0.8;
+}
+
+.header-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
             #map { position: absolute; top: 50px; left: 0; width: 100%; height: calc(100vh - 50px); z-index: 1; }
             .leaflet-top { margin-top: 10px; }
             #opacity-slider { width: 200px; margin-top: 10px; }
-            .logo-container { position: absolute; bottom: 20px; right: 10px; z-index: 1001; pointer-events: none; }
-            .logo-container img { width: 100px; height: auto; opacity: 0.8; }
+            
             .info.legend { 
                 background: white; 
                 padding: 10px 15px; 
@@ -67,37 +96,37 @@
         </style>
     </head>
     <body>
-        <div class="header">
-            <h1 class="header-title">Critical Power Plants</h1>
+         <div class="header">
+        <div class="logo-container">
+            <img src="https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/logo_mosaic.png" alt="Mosaic Risk Analytics PTE Ltd" />
         </div>
-        <div id="map">
-            <div class="logo-container">
-                <img src="https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/logo_mosaic.png" alt="Mosaic Risk Analytics PTE Ltd" />
+        <h1 class="header-title">Critical Power Plants</h1>
+    </div>
+    <div id="map">
+    </div>
+    <div class="legend-container" id="legend-container">
+        <div class="legend-title">Legend</div>
+        <div id="tier-legend" style="display: none;">
+            <div class="legend-subtitle">Power Plant Priority Level</div>
+            <div class="tier-legend">
+                <div><div class="tier-circle pulse-critical-legend" style="background-color: rgb(255,0,0);"></div><span>Tier 1 Critical Priority</span></div>
+                <div><div class="tier-circle" style="background-color: rgb(1,132,144);"></div><span>Tier 2 Severe Priority</span></div>
+                <div><div class="tier-circle" style="background-color: rgb(190,235,228);"></div><span>Tier 3 Low Priority</span></div>
             </div>
+            <hr>
         </div>
-        <div class="legend-container" id="legend-container">
-            <div class="legend-title">Legend</div>
-            <div id="tier-legend" style="display: none;">
-                <div class="legend-subtitle">Power Plant Priority Level</div>
-                <div class="tier-legend">
-                    <div><div class="tier-circle pulse-critical-legend" style="background-color: rgb(255,0,0);"></div><span>Tier 1 Critical Priority</span></div>
-                    <div><div class="tier-circle" style="background-color: rgb(1,132,144);"></div><span>Tier 2 Severe Priority</span></div>
-                    <div><div class="tier-circle" style="background-color: rgb(190,235,228);"></div><span>Tier 3 Low Priority</span></div>
+        <div id="risk-legend" style="display: none;">
+            <div class="legend-subtitle">Multi-Hazard Risk Index</div>
+            <div style="display: flex; align-items: center;">
+                <div class="legend-gradient" style="background: linear-gradient(to top, #008000, #FFFF00, #FF0000);"></div>
+                <div class="legend-labels">
+                    <div>High Risk</div>
+                    <div>Medium Risk</div>
+                    <div>Low Risk</div>
                 </div>
-                <hr>
-            </div>
-            <div id="risk-legend" style="display: none;">
-                <div class="legend-subtitle">Multi-Hazard Risk Index</div>
-                <div style="display: flex; align-items: center;">
-                    <div class="legend-gradient" style="background: linear-gradient(to top, #008000, #FFFF00, #FF0000);"></div>
-                    <div class="legend-labels">
-                        <div>High Risk</div>
-                        <div>Medium Risk</div>
-                        <div>Low Risk</div>
-                    </div>
-                </div>
             </div>
         </div>
+    </div>
         <script src="https://unpkg.com/leaflet@1.9.0/dist/leaflet.js"></script>
         <script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
         <script>
