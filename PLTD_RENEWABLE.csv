@@ -1,45 +1,45 @@
-No,Study_Regi,PLTD,latitude,longitude,Number_of_Sites,Low_Suitability,Medium_Suitability,High_Suitability,Constrains
-1,Riau & Kepulauan Riau,PLTD Sungai Bela,-0.388574,103.588314999999994,4,0,3,1,Sensitivity to Mangrove
-2,Riau & Kepulauan Riau,PLTD Sungai Buluh,-0.417166,103.592370000000003,2,0,1,1,Mangrove and State Forestry Overlap
-3,Riau & Kepulauan Riau,PLTD Tanjung Pasir,-0.447148,103.393382000000003,3,1,0,2,Mangrove and State Forestry Overlap
-4,Riau & Kepulauan Riau,PLTD Sungai Laut,-0.506229,103.506527000000006,3,0,0,3,-
-5,Riau & Kepulauan Riau,PLTD Alai,0.653826,103.482624000000001,3,0,1,2,Disputed Lands
-6,Riau & Kepulauan Riau,PLTD Penarah,0.81375,103.512219999999999,3,0,1,2,Disputed Lands
-7,Riau & Kepulauan Riau,PLTD Teluk Lanus,0.739359,102.844130000000007,4,1,2,1,Disputed Lands and Forest Moratorium Overlap
-8,Riau & Kepulauan Riau,PLTD Pangkil,0.820208,104.358069000000000,2,0,0,2,-
-9,Riau & Kepulauan Riau,PLTD Bukit,0.446808,104.430822000000006,3,0,0,3,-
-10,Riau & Kepulauan Riau,PLTD Duyung,0.36052,104.473190000000002,3,1,0,2,Forest Moratorium Overlap
-11,Riau & Kepulauan Riau,PLTD Daek Lingga,-0.21138,104.606160000000003,6,0,0,6,-
-12,Riau & Kepulauan Riau,PLTD Penuba,-0.32378,104.451859999999996,4,0,0,4,-
-13,Riau & Kepulauan Riau,PLTD Buluh Patah,0.7795,103.939409999999995,4,0,0,4,Sites present Flood Drainage Issues and Impacts
-14,Riau & Kepulauan Riau,PLTD Ngal,0.67911,103.586600000000004,4,0,1,3,Flood Impact in Sand Mines area
-15,Riau & Kepulauan Riau,PLTD Sanglar,0.61926,103.703329999999994,6,0,1,5,-
-16,Riau & Kepulauan Riau,PLTD Tarempa,3.228530000000000,106.233170000000001,3,0,1,2,-
-17,Riau & Kepulauan Riau,PLTD Ladan,3.330350000000000,106.261899999999997,4,0,2,2,-
-18,Riau & Kepulauan Riau,PLTD Mubur,3.301040000000000,106.215689999999995,3,0,1,2,-
-19,Riau & Kepulauan Riau,PLTD Impol,3.088250000000000,105.724180000000004,5,0,2,3,-
-20,Nusa Tenggara Timur,PLTD Waibalun,-8.339429,122.947198999999998,5,0,3,2,Gently Sloping Terrain
-21,Nusa Tenggara Timur,PLTD Pemana,-8.352055,122.319568000000004,6,3,3,0,Conservation Forest and Forest Moratorium Overlap
-22,Sulawesi Utara & Tengah,PLTD Siladen,1.611130000000000,124.776840000000007,2,0,0,2,Tsunami Zone
-23,Sulawesi Utara & Tengah,PLTD Makalehi,2.733990000000000,125.163139999999999,2,1,0,1,Very Close to Water Body
-24,Sulawesi Utara & Tengah,PLTD Siau,2.738002096000000,125.360861499999999,7,0,5,2,State Forestry and Forest Moratorium Overlap
-25,Sulawesi Utara & Tengah,PLTD Mahengetang,3.144057789000000,125.451443299999994,5,0,0,5,-
-26,Sulawesi Utara & Tengah,PLTD Kalama,3.233240642000000,125.454650299999997,7,0,0,7,-
-27,Sulawesi Utara & Tengah,PLTD Salingkere,3.096284041000000,125.490953000000005,2,0,0,2,-
-28,Sulawesi Utara & Tengah,PLTD Bebalang,3.339596113000000,125.572953999999996,3,0,0,3,-
-29,Maluku & Maluku Utara,PLTD Saparua,-3.571863,128.643795000000011,4,0,0,4,-
-30,Maluku & Maluku Utara,PLTD Lonthohir,-4.54627,129.895700000000005,5,0,0,5,May have a Natural Forest Habitat
-31,Maluku & Maluku Utara,PLTD Wahai,-2.797162,129.495478600000013,8,0,0,8,-
-32,Maluku & Maluku Utara,PLTD Kedi,1.668910000000000,127.587630000000004,5,0,1,4,-
-33,Maluku & Maluku Utara,PLTD Dagasuli,2.189626800000000,127.746647899999999,4,0,2,2,Impacted by State Forestry and Forest Moratorium Overlap
-34,Maluku & Maluku Utara,PLTD Dama,2.224897100000000,127.791944900000004,8,0,8,0,Impacted by State Forestry
-35,Kalimantan Timur & Utara,PLTD Labang,4.217326600000000,116.553196099999994,3,0,2,1,Very Close to River
-36,Kalimantan Timur & Utara,PLTD Sei Menggaris,4.160850000000000,117.264700000000005,3,0,0,3,-
-37,Kalimantan Timur & Utara,PLTD Long Layu,3.612920000000000,115.699219999999997,7,1,2,4,Leas Favourable Terrain
-38,Papua,PLTD Jefman,-0.9243,131.117840000000001,1,1,0,0,Inside Forest Moratorium and State Forestry
-39,Riau & Kepulauan Riau,PLTD Nyamuk,3.087699, 106.334406,3,0,0,3,-
-40,Kalimantan Timur & Utara,PLTD Tanah Merah,3.7275278,117.5681111,6,0,1,5,-
-41,Kalimantan Timur & Utara,PLTD Kayan Hulu,1.784859,114.906796,3,2,0,1,Impacted by State Forest
-42,Kalimantan Barat,PLTD Jongkong,0.662378,112.282984,4,0,1,3,-
-43,Kalimantan Timur & Utara,PLTD Pa Upan,3.5992222,115.8406667,6,0,4,2,Impacted by Forest Moratorium
-44,Sulawesi Utara & Tengah,PLTD Bangkurung,-1.91584265,123.0754215,8,0,1,7,-
+No,Study_Regi,PLTD,latitude,longitude,Number_of_Sites,Low_Suitability,Medium_Suitability,High_Suitability,Constrains,Hazards
+1,Riau & Kepulauan Riau,PLTD Sungai Bela,-0.388574,103.588315,4,0,3,1,Sensitivity to Mangrove,Verify local flood patterns for site selection
+2,Riau & Kepulauan Riau,PLTD Sungai Buluh,-0.417166,103.59237,2,0,1,1,Mangrove and State Forestry Overlap,No significant hazards identified. 
+3,Riau & Kepulauan Riau,PLTD Tanjung Pasir,-0.447148,103.393382,3,1,0,2,Mangrove and State Forestry Overlap,Verify local flood patterns for site selection
+4,Riau & Kepulauan Riau,PLTD Sungai Laut,-0.506229,103.506527,3,0,0,3,-,No significant hazards identified. 
+5,Riau & Kepulauan Riau,PLTD Alai,0.653826,103.482624,3,0,1,2,Disputed Lands,No significant hazards identified. 
+6,Riau & Kepulauan Riau,PLTD Penarah,0.81375,103.51222,3,0,1,2,Disputed Lands,No significant hazards identified. 
+7,Riau & Kepulauan Riau,PLTD Teluk Lanus,0.739359,102.84413,4,1,2,1,Disputed Lands and Forest Moratorium Overlap,Verify burn areas and flood patterns for site selection
+8,Riau & Kepulauan Riau,PLTD Pangkil,0.820208,104.358069,2,0,0,2,-,Isolated areas of Fire + Flood
+9,Riau & Kepulauan Riau,PLTD Bukit,0.446808,104.430822,3,0,0,3,-,N/A
+10,Riau & Kepulauan Riau,PLTD Duyung,0.36052,104.47319,3,1,0,2,Forest Moratorium Overlap,Fire potential at boundary areas  
+11,Riau & Kepulauan Riau,PLTD Daek Lingga,-0.21138,104.60616,6,0,0,6,-,Isolated burn areas at some sites 
+12,Riau & Kepulauan Riau,PLTD Penuba,-0.32378,104.45186,4,0,0,4,-,Isolated burn areas
+13,Riau & Kepulauan Riau,PLTD Buluh Patah,0.7795,103.93941,4,0,0,4,Sites present Flood Drainage Issues and Impacts,Fire + Flood all sites around PLTD 
+14,Riau & Kepulauan Riau,PLTD Ngal,0.67911,103.5866,4,0,1,3,Flood Impact in Sand Mines area,High Flood impact in sand mine areas
+15,Riau & Kepulauan Riau,PLTD Sanglar,0.61926,103.70333,6,0,1,5,-,N/A 
+16,Riau & Kepulauan Riau,PLTD Tarempa,3.22853,106.23317,3,0,1,2,-,N/A
+17,Riau & Kepulauan Riau,PLTD Ladan,3.33035,106.2619,4,0,2,2,-,Very isolated burn areas
+18,Riau & Kepulauan Riau,PLTD Mubur,3.30104,106.21569,3,0,1,2,-,N/A 
+19,Riau & Kepulauan Riau,PLTD Impol,3.08825,105.72418,5,0,2,3,-,N/A
+20,Nusa Tenggara Timur,PLTD Waibalun,-8.339429,122.947199,5,0,3,2,Gently Sloping Terrain,No significant hazards identified. 
+21,Nusa Tenggara Timur,PLTD Pemana,-8.352055,122.319568,6,3,3,0,Conservation Forest and Forest Moratorium Overlap,Medium Tsumani hazard setting  
+22,Sulawesi Utara & Tengah,PLTD Siladen,1.61113,124.77684,2,0,0,2,Tsunami Zone,High Tsunami hazard setting  
+23,Sulawesi Utara & Tengah,PLTD Makalehi,2.73399,125.16314,2,1,0,1,Very Close to Water Body,Proximity to coastal area cant be avioded
+24,Sulawesi Utara & Tengah,PLTD Siau,2.738002096,125.3608615,7,0,5,2,State Forestry and Forest Moratorium Overlap,Active Volcano and debris flow channel
+25,Sulawesi Utara & Tengah,PLTD Mahengetang,3.144057789,125.4514433,5,0,0,5,-,Proximity to coastal area cant be avioded
+26,Sulawesi Utara & Tengah,PLTD Kalama,3.233240642,125.4546503,7,0,0,7,-,Proximity to coastal area cant be avioded
+27,Sulawesi Utara & Tengah,PLTD Salingkere,3.096284041,125.490953,2,0,0,2,-,Proximity to coastal area cant be avioded
+28,Sulawesi Utara & Tengah,PLTD Bebalang,3.339596113,125.572954,3,0,0,3,-,Proximity to coastal area cant be avioded
+29,Maluku & Maluku Utara,PLTD Saparua,-3.571863,128.643795,4,0,0,4,-,N/A
+30,Maluku & Maluku Utara,PLTD Lonthohir,-4.54627,129.8957,5,0,0,5,May have a Natural Forest Habitat,In proximity to Banda volcano  
+31,Maluku & Maluku Utara,PLTD Wahai,-2.797162,129.4954786,8,0,0,8,-,N/A
+32,Maluku & Maluku Utara,PLTD Kedi,1.66891,127.58763,5,0,1,4,-,Proximity to coastal area cant be avioded
+33,Maluku & Maluku Utara,PLTD Dagasuli,2.1896268,127.7466479,4,0,2,2,Impacted by State Forestry and Forest Moratorium Overlap,Proximity to coastal area cant be avioded
+34,Maluku & Maluku Utara,PLTD Dama,2.2248971,127.7919449,8,0,8,0,Impacted by State Forestry,Proximity to coastal area cant be avioded
+35,Kalimantan Timur & Utara,PLTD Labang,4.2173266,116.5531961,3,0,2,1,Very Close to River,Maximize distance to river
+36,Kalimantan Timur & Utara,PLTD Sei Menggaris,4.16085,117.2647,3,0,0,3,-,N/A
+37,Kalimantan Timur & Utara,PLTD Long Layu,3.61292,115.69922,7,1,2,4,Leas Favourable Terrain,Maximize distance to river
+38,Papua,PLTD Jefman,-0.9243,131.11784,1,1,0,0,Inside Forest Moratorium and State Forestry,Proximity to coastal area cant be avioded
+39,Riau & Kepulauan Riau,PLTD Nyamuk,3.087699,106.334406,3,0,0,3,-,N/A
+40,Kalimantan Timur & Utara,PLTD Tanah Merah,3.7275278,117.5681111,6,0,1,5,-,N/A
+41,Kalimantan Timur & Utara,PLTD Kayan Hulu,1.784859,114.906796,3,2,0,1,Impacted by State Forest,Maximize distance to river
+42,Kalimantan Barat,PLTD Jongkong,0.662378,112.282984,4,0,1,3,-,Maximize distance to river
+43,Kalimantan Timur & Utara,PLTD Pa Upan,3.5992222,115.8406667,6,0,4,2,Impacted by Forest Moratorium,Avoid river APP-02 impacted by floods
+44,Sulawesi Utara & Tengah,PLTD Bangkurung,-1.91584265,123.0754215,8,0,1,7,-,Proximity to coastal area cant be avioded
