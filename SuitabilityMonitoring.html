@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Suitability Monitoring App</title>
+        <title>Renewable Energy Siting Analytics</title>
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
@@ -54,18 +54,23 @@
             .legend-subtitle { font-size: 11px; margin-bottom: 13px; }
             .legend-gradient { width: 26px; height: 130px; float: left; margin-right: 13px; border-radius: 3px; }
             .legend-labels { display: flex; flex-direction: column; justify-content: space-between; height: 130px; font-size: 11.7px; }
-            /* Enhance popup readability */
-            .leaflet-popup-content b,
-            .leaflet-popup-content span {
-                text-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
-                font-weight: bold;
+            .forest-legend div { display: flex; align-items: center; margin-bottom: 6.5px; }
+            .forest-legend span { font-size: 11px; }
+            .forest-square { width: 13px; height: 13px; margin-right: 6.5px; }
+            .leaflet-control-opacity {
+                background: #fff;
+                border: 2px solid rgba(0,0,0,0.2);
+                border-radius: 3px;
+                padding: 5px;
+                margin-top: 5px;
             }
-            /* Optional: Light gray background for popup */
-            /*
-            .leaflet-popup-content-wrapper {
-                background-color: #F5F5F5;
+            .leaflet-control-opacity label {
+                display: block;
+                font-size: 12px;
             }
-            */
+            #opacity-slider {
+                width: 150px;
+            }
         </style>
     </head>
     <body>
@@ -73,7 +78,7 @@
             <div class="logo-container">
                 <img src="https://raw.githubusercontent.com/geo2004/leaflet/refs/heads/master/logo_mosaic.png" alt="Mosaic Risk Analytics PTE Ltd" />
             </div>
-            <h1 class="header-title">Power Plants Suitability Monitoring</h1>
+            <h1 class="header-title">Renewable Energy Siting Analytics</h1>
         </div>
         <div id="map"></div>
         <div class="legend-container" id="legend-container">
@@ -88,9 +93,30 @@
                         <div>Low</div>
                     </div>
                 </div>
+                <hr>
+            </div>
+            <div id="risk-legend" style="display: none;">
+                <div class="legend-subtitle">Multi-Hazard Risk Index</div>
+                <div style="display: flex; align-items: center;">
+                    <div class="legend-gradient" style="background: linear-gradient(to top, #008000, #FFFF00, #FF0000);"></div>
+                    <div class="legend-labels">
+                        <div>High Risk</div>
+                        <div>Medium Risk</div>
+                        <div>Low Risk</div>
+                    </div>
+                </div>
+                <hr>
+            </div>
+            <div id="forest-legend" style="display: none;">
+                <div class="legend-subtitle">Forest Area Functions</div>
+                <div class="forest-legend">
+                    <div><div class="forest-square" style="background-color: rgb(173,63,255);"></div><span>Kawasan Konservasi</span></div>
+                    <!-- Add more forest function categories if available -->
+                </div>
             </div>
         </div>
         <script src="https://unpkg.com/leaflet@1.9.0/dist/leaflet.js"></script>
+        <script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
         <script>
             const map = L.map('map').setView([-2.923869442014587, 113.53529870695202], 5);
             const googleSatellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
@@ -103,7 +129,13 @@
                 attribution: 'Basemap © OpenStreetMap/CARTO'
             }).addTo(map);
             const csvLayer = L.layerGroup();
-            const overlays = { "PLTD Locations": csvLayer };
+            let riskLayer;
+            let forestLayer;
+            const overlays = { 
+                "PLTD Locations": csvLayer,
+                "Multi-Hazard Risk": riskLayer,
+                "Forest Areas": forestLayer
+            };
 
             function interpolateColor(value, minVal, maxVal) {
                 const colors = [
@@ -141,12 +173,10 @@
                     const rows = csvText.trim().split('\n').map(row => row.split(','));
                     const headers = rows[0];
                     
-                    // Find min and max Number_of_Sites for color scaling
                     const siteCounts = rows.slice(1).map(row => parseInt(row[5])).filter(n => !isNaN(n));
                     const minSites = Math.min(...siteCounts);
                     const maxSites = Math.max(...siteCounts);
 
-                    // Update legend labels dynamically
                     const legendLabels = document.getElementById('legend-labels');
                     if (legendLabels) {
                         legendLabels.children[0].textContent = maxSites;
@@ -165,23 +195,24 @@
                         const lowSuit = parseInt(row[6]);
                         const medSuit = parseInt(row[7]);
                         const highSuit = parseInt(row[8]);
+                        const constrains = row[9]; 
 
                         if (isNaN(numSites)) return;
 
                         const fillColor = interpolateColor(numSites, minSites, maxSites);
 
-                        // Build popup content, omitting suitability classes with 0 values
-                        let popupContent = `<b>${name}</b><br>`;
-                        popupContent += `<span style="color: ${fillColor};">${numSites} Proposed Sites</span><br>`;
+                        let popupContent = `<b style="color: black;">${name}</b><br>`;
+                        popupContent += `<span style="color: black;">${numSites} Proposed Sites</span><br>`;
                         if (lowSuit !== 0) {
-                            popupContent += `<span style="color: #FFCCFF;">${lowSuit} Low Suitability</span><br>`;
+                            popupContent += `<span style="color: black;">${lowSuit} Low Suitability</span><br>`;
                         }
                         if (medSuit !== 0) {
-                            popupContent += `<span style="color: #FFFFCC;">${medSuit} Medium Suitability</span><br>`;
+                            popupContent += `<span style="color: black;">${medSuit} Medium Suitability</span><br>`;
                         }
                         if (highSuit !== 0) {
-                            popupContent += `<span style="color: #BDFFBD;">${highSuit} High Suitability</span><br>`;
+                            popupContent += `<span style="color: black;">${highSuit} High Suitability</span><br>`;
                         }
+                        popupContent += `<span style="color: black;">Constraints: ${constrains}</span><br>`;
 
                         const marker = L.circleMarker([lat, lon], {
                             radius: 8,
@@ -203,11 +234,78 @@
 
             function updateLegend() {
                 const tierLegend = document.getElementById('tier-legend');
+                const riskLegend = document.getElementById('risk-legend');
+                const forestLegend = document.getElementById('forest-legend');
                 const legendContainer = document.getElementById('legend-container');
                 const isCsvActive = map.hasLayer(csvLayer);
+                const isRiskActive = map.hasLayer(riskLayer);
+                const isForestActive = map.hasLayer(forestLayer);
                 tierLegend.style.display = isCsvActive ? 'block' : 'none';
-                legendContainer.style.display = isCsvActive ? 'block' : 'none';
+                riskLegend.style.display = isRiskActive ? 'block' : 'none';
+                forestLegend.style.display = isForestActive ? 'block' : 'none';
+                legendContainer.style.display = (isCsvActive || isRiskActive || isForestActive) ? 'block' : 'none';
             }
+
+            // Initialize Multi-Hazard Risk Layer
+            riskLayer = L.esri.imageMapLayer({
+                url: 'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_risiko_multi/ImageServer',
+                opacity: 0.5,
+                maxZoom: 20,
+                attribution: 'Multi-hazard Risk © BNPB Indonesia'
+            });
+            overlays["Multi-Hazard Risk"] = riskLayer;
+            riskLayer.addTo(map);
+
+            // Initialize Forest Area Layer
+            forestLayer = L.esri.featureLayer({
+                url: 'https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/0',
+                opacity: 0.5,
+                maxZoom: 20,
+                attribution: 'Forest Areas © Kementerian Lingkungan Hidup dan Kehutanan'
+            });
+            overlays["Forest Areas"] = forestLayer;
+            forestLayer.addTo(map);
+
+            // Add event listeners for legend updates
+            riskLayer.on('add', updateLegend);
+            riskLayer.on('remove', updateLegend);
+            csvLayer.on('add', updateLegend);
+            csvLayer.on('remove', updateLegend);
+            forestLayer.on('add', updateLegend);
+            forestLayer.on('remove', updateLegend);
+
+            // Opacity Slider Control
+            L.Control.OpacitySlider = L.Control.extend({
+                options: {
+                    position: 'topright'
+                },
+                onAdd: function (map) {
+                    this._map = map;
+                    const container = L.DomUtil.create('div', 'leaflet-control leaflet-control-opacity');
+                    const sliderLabel = L.DomUtil.create('label', '', container);
+                    sliderLabel.innerHTML = 'Layers Opacity:';
+                    this._slider = L.DomUtil.create('input', '', container);
+                    this._slider.id = 'opacity-slider';
+                    this._slider.type = 'range';
+                    this._slider.min = 0;
+                    this._slider.max = 1;
+                    this._slider.step = 0.1;
+                    this._slider.value = 0.5;
+                    L.DomEvent.on(this._slider, 'input', this._updateOpacity, this);
+                    L.DomEvent.disableClickPropagation(container);
+                    L.DomEvent.disableScrollPropagation(container);
+                    return container;
+                },
+                _updateOpacity: function () {
+                    const opacity = parseFloat(this._slider.value);
+                    if (riskLayer) riskLayer.setOpacity(opacity);
+                    if (forestLayer) forestLayer.setOpacity(opacity);
+                }
+            });
+
+            L.control.opacitySlider = function (options) {
+                return new L.Control.OpacitySlider(options);
+            };
 
             Promise.all([loadCSV()]).then(() => {
                 const baseLayers = {
@@ -227,6 +325,7 @@
                     }
                     L.DomEvent.stopPropagation(e);
                 }, layerControl);
+                L.control.opacitySlider({ position: 'topright' }).addTo(map);
                 updateLegend();
             }).catch((error) => {
                 console.error('Error in initialization:', error);
