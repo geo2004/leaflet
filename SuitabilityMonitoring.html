@@ -43,7 +43,7 @@
                 bottom: 15px;
                 left: 12px;
                 background: rgba(255, 255, 255, 0.7);
-                padding: 13px;
+                padding: 8px 13px; /* Reduced top/bottom padding from 13px to 8px */
                 border-radius: 3px;
                 box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
                 font-size: 9px;
@@ -51,10 +51,10 @@
                 z-index: 1000;
             }
             .legend-title { font-weight: bold; font-size: 18px; margin-bottom: 6.5px; }
-            .legend-subtitle { font-size: 11px; margin-bottom: 13px; }
-            .legend-gradient { width: 26px; height: 130px; float: left; margin-right: 13px; border-radius: 3px; }
-            .legend-labels { display: flex; flex-direction: column; justify-content: space-between; height: 130px; font-size: 11.7px; }
-            .forest-legend div { display: flex; align-items: center; margin-bottom: 6.5px; }
+            .legend-subtitle { font-size: 11px; margin-bottom: 8px; } /* Reduced from 13px to 8px */
+            .legend-gradient { width: 26px; height: 80px; float: left; margin-right: 13px; border-radius: 3px; } /* Reduced height from 130px to 80px */
+            .legend-labels { display: flex; flex-direction: column; justify-content: space-between; height: 80px; font-size: 11.7px; } /* Reduced height from 130px to 80px */
+            .forest-legend div { display: flex; align-items: center; margin-bottom: 3px; } /* Reduced from 6.5px to 3px */
             .forest-legend span { font-size: 11px; }
             .forest-square { width: 13px; height: 13px; margin-right: 6.5px; }
             .leaflet-control-opacity {
@@ -108,10 +108,20 @@
                 <hr>
             </div>
             <div id="forest-legend" style="display: none;">
-                <div class="legend-subtitle">Forest Area Functions</div>
-                <div class="forest-legend">
-                    <div><div class="forest-square" style="background-color: rgb(173,63,255);"></div><span>Kawasan Konservasi</span></div>
-                    <!-- Add more forest function categories if available -->
+                <div class="legend-subtitle">Forest Area</div>
+                <div class="forest-legend" id="forest-legend-content">
+                    <div><div class="forest-square" style="background-color: rgb(173,64,255);"></div><span>Conservation Area</span></div>
+                    <div>
+                        <div class="forest-square" style="border: 0.5px solid rgb(207,43,255); background-color: transparent;"></div>
+                        <span>Marine Conservation Area</span>
+                      </div>
+                    <div><div class="forest-square" style="background-color: rgb(75,230,0);"></div><span>Protected Forest</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(255,255,155);"></div><span>Permanent Production Forest</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(163,255,115);"></div><span>Limited Production Forest</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(245,122,122);"></div><span>Convertible Production Forest</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(255,255,255);"></div><span>Other Use Area</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(0,197,255);"></div><span>Water Body</span></div>
+                    <div><div class="forest-square" style="background-color: rgb(255,0,0);"></div><span>Undefined</span></div>
                 </div>
             </div>
         </div>
@@ -129,8 +139,17 @@
                 attribution: 'Basemap © OpenStreetMap/CARTO'
             }).addTo(map);
             const csvLayer = L.layerGroup();
-            let riskLayer;
-            let forestLayer;
+            let riskLayer = L.esri.imageMapLayer({
+                url: 'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_risiko_multi/ImageServer',
+                opacity: 0.5,
+                maxZoom: 20,
+                attribution: 'Multi-hazard Risk © BNPB Indonesia'
+            });
+            let forestLayer = L.tileLayer('https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/tile/{z}/{y}/{x}', {
+                opacity: 0.5,
+                maxZoom: 20,
+                attribution: 'Forest Areas © Kementerian Lingkungan Hidup dan Kehutanan'
+            });
             const overlays = { 
                 "PLTD Locations": csvLayer,
                 "Multi-Hazard Risk": riskLayer,
@@ -246,27 +265,9 @@
                 legendContainer.style.display = (isCsvActive || isRiskActive || isForestActive) ? 'block' : 'none';
             }
 
-            // Initialize Multi-Hazard Risk Layer
-            riskLayer = L.esri.imageMapLayer({
-                url: 'https://gis.bnpb.go.id/server/rest/services/inarisk/layer_risiko_multi/ImageServer',
-                opacity: 0.5,
-                maxZoom: 20,
-                attribution: 'Multi-hazard Risk © BNPB Indonesia'
-            });
-            overlays["Multi-Hazard Risk"] = riskLayer;
             riskLayer.addTo(map);
-
-            // Initialize Forest Area Layer
-            forestLayer = L.esri.featureLayer({
-                url: 'https://geoportal.menlhk.go.id/server/rest/services/jsdgejawfvrdtasdt/KWS_HUTAN/MapServer/0',
-                opacity: 0.5,
-                maxZoom: 20,
-                attribution: 'Forest Areas © Kementerian Lingkungan Hidup dan Kehutanan'
-            });
-            overlays["Forest Areas"] = forestLayer;
             forestLayer.addTo(map);
 
-            // Add event listeners for legend updates
             riskLayer.on('add', updateLegend);
             riskLayer.on('remove', updateLegend);
             csvLayer.on('add', updateLegend);
@@ -274,7 +275,6 @@
             forestLayer.on('add', updateLegend);
             forestLayer.on('remove', updateLegend);
 
-            // Opacity Slider Control
             L.Control.OpacitySlider = L.Control.extend({
                 options: {
                     position: 'topright'
@@ -298,8 +298,16 @@
                 },
                 _updateOpacity: function () {
                     const opacity = parseFloat(this._slider.value);
-                    if (riskLayer) riskLayer.setOpacity(opacity);
-                    if (forestLayer) forestLayer.setOpacity(opacity);
+                    if (riskLayer) {
+                        riskLayer.setOpacity(opacity);
+                    }
+                    if (forestLayer) {
+                        forestLayer.setOpacity(opacity);
+                        const tileContainer = forestLayer.getContainer();
+                        if (tileContainer) {
+                            tileContainer.style.opacity = opacity;
+                        }
+                    }
                 }
             });
 
