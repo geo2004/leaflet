@@ -21,22 +21,22 @@ No,Study_Regi,PLTD,latitude,longitude,Number_of_Sites,Low_Suitability,Medium_Sui
 20,Nusa Tenggara Timur,PLTD Waibalun,-8.339429,122.947199,5,0,3,2,Gently Sloping Terrain,No significant hazards identified. 
 21,Nusa Tenggara Timur,PLTD Pemana,-8.352055,122.319568,6,3,3,0,Conservation Forest and Forest Moratorium Overlap,Medium Tsumani hazard setting  
 22,Sulawesi Utara & Tengah,PLTD Siladen,1.61113,124.77684,2,0,0,2,Tsunami Zone,High Tsunami hazard setting  
-23,Sulawesi Utara & Tengah,PLTD Makalehi,2.73399,125.16314,2,1,0,1,Very Close to Water Body,Proximity to coastal area cant be avioded
+23,Sulawesi Utara & Tengah,PLTD Makalehi,2.73399,125.16314,2,1,0,1,Very Close to Water Body,Proximity to coastal area cant be avoided
 24,Sulawesi Utara & Tengah,PLTD Siau,2.738002096,125.3608615,7,0,5,2,State Forestry and Forest Moratorium Overlap,Active Volcano and debris flow channel
-25,Sulawesi Utara & Tengah,PLTD Mahengetang,3.144057789,125.4514433,5,0,0,5,-,Proximity to coastal area cant be avioded
-26,Sulawesi Utara & Tengah,PLTD Kalama,3.233240642,125.4546503,7,0,0,7,-,Proximity to coastal area cant be avioded
-27,Sulawesi Utara & Tengah,PLTD Salingkere,3.096284041,125.490953,2,0,0,2,-,Proximity to coastal area cant be avioded
-28,Sulawesi Utara & Tengah,PLTD Bebalang,3.339596113,125.572954,3,0,0,3,-,Proximity to coastal area cant be avioded
+25,Sulawesi Utara & Tengah,PLTD Mahengetang,3.144057789,125.4514433,5,0,0,5,-,Proximity to coastal area cant be avoided
+26,Sulawesi Utara & Tengah,PLTD Kalama,3.233240642,125.4546503,7,0,0,7,-,Proximity to coastal area cant be avoided
+27,Sulawesi Utara & Tengah,PLTD Salingkere,3.096284041,125.490953,2,0,0,2,-,Proximity to coastal area cant be avoided
+28,Sulawesi Utara & Tengah,PLTD Bebalang,3.339596113,125.572954,3,0,0,3,-,Proximity to coastal area cant be avoided
 29,Maluku & Maluku Utara,PLTD Saparua,-3.571863,128.643795,4,0,0,4,-,N/A
 30,Maluku & Maluku Utara,PLTD Lonthohir,-4.54627,129.8957,5,0,0,5,May have a Natural Forest Habitat,In proximity to Banda volcano  
 31,Maluku & Maluku Utara,PLTD Wahai,-2.797162,129.4954786,8,0,0,8,-,N/A
-32,Maluku & Maluku Utara,PLTD Kedi,1.66891,127.58763,5,0,1,4,-,Proximity to coastal area cant be avioded
-33,Maluku & Maluku Utara,PLTD Dagasuli,2.1896268,127.7466479,4,0,2,2,Impacted by State Forestry and Forest Moratorium Overlap,Proximity to coastal area cant be avioded
-34,Maluku & Maluku Utara,PLTD Dama,2.2248971,127.7919449,8,0,8,0,Impacted by State Forestry,Proximity to coastal area cant be avioded
+32,Maluku & Maluku Utara,PLTD Kedi,1.66891,127.58763,5,0,1,4,-,Proximity to coastal area cant be avoided
+33,Maluku & Maluku Utara,PLTD Dagasuli,2.1896268,127.7466479,4,0,2,2,Impacted by State Forestry and Forest Moratorium Overlap,Proximity to coastal area cant be avoided
+34,Maluku & Maluku Utara,PLTD Dama,2.2248971,127.7919449,8,0,8,0,Impacted by State Forestry,Proximity to coastal area cant be avoided
 35,Kalimantan Timur & Utara,PLTD Labang,4.2173266,116.5531961,3,0,2,1,Very Close to River,Maximize distance to river
 36,Kalimantan Timur & Utara,PLTD Sei Menggaris,4.16085,117.2647,3,0,0,3,-,N/A
 37,Kalimantan Timur & Utara,PLTD Long Layu,3.61292,115.69922,7,1,2,4,Leas Favourable Terrain,Maximize distance to river
-38,Papua,PLTD Jefman,-0.9243,131.11784,1,1,0,0,Inside Forest Moratorium and State Forestry,Proximity to coastal area cant be avioded
+38,Papua,PLTD Jefman,-0.9243,131.11784,1,1,0,0,Inside Forest Moratorium and State Forestry,Proximity to coastal area cant be avoided
 39,Riau & Kepulauan Riau,PLTD Nyamuk,3.087699,106.334406,3,0,0,3,-,N/A
 40,Kalimantan Timur & Utara,PLTD Tanah Merah,3.7275278,117.5681111,6,0,1,5,-,N/A
 41,Kalimantan Timur & Utara,PLTD Kayan Hulu,1.784859,114.906796,3,2,0,1,Impacted by State Forest,Maximize distance to river
