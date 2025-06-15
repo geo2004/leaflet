@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NEE SOON CENTRAL VISTA HDB ESTATE</title>
+  <!-- Include Leaflet CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  #map {
+    height: 100vh;
+    width: 100%;
+  }
+  .no-scroll-map {
+    pointer-events: none;
+  }
+  .legend {
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+  }
+  .legend2 {
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+   box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+    top: 80px;
+    min-width: 80px;
+    z-index: 1000;
+  }
+  .legend2 div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 8px;
+  }
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF; /* White outline for legend markers */
+  }
+  .legend3 {
+    position: absolute;
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+    min-width: 500px;
+  }
+  .leaflet-control-layers-toggle {
+    background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+    background-color: #2da0e2;
+    background-size: 20px 20px;
+  }
+  .leaflet-touch .leaflet-control-layers-toggle {
+    background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+    background-color: #2da0e2;
+  }
+  .leaflet-control-layers-expanded {
+    color: white;
+    background-color: navy;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important;
+    border-radius: 5px;
+  }
+  .leaflet-control-zoom {
+    background-color: navy !important;
+    top: 80px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4)!important;
+    border-radius: 5px;
+  }
+  .leaflet-control-zoom a {
+    color: white !important;
+    background-color: navy !important;
+    border: none !important;
+  }
+  .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+    background-color: navy !important;
+  }
+  .legend h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .leaflet-popup-content-wrapper {
+    background-color: navy;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  }
+  .leaflet-popup-content {
+    color: white;
+  }
+  .leaflet-popup-tip {
+    border-color: navy;
+  }
+  @media (max-width: 768px) and (orientation: landscape) {
+    .leaflet-control-layers-expanded {
+      color: white;
+      background-color: navy;
+      position: absolute;
+      top: 1px;
+    }
+    .legend2 h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 10px;
+    }
+    .legend2-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 768px) {
+    .attribute-table {
+      width: 80%;
+      font-size: 8px;
+      max-height: 200px;
+      min-width: 100px;
+      padding: 5px;
+    }
+    .legend3 {
+      font-size: 8px;
+      padding: 5px;
+      top: 20px;
+      min-width: 250px;
+    }
+    .legend2 h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 8px;
+    }
+    .legend2-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 8px;
+    }
+    .leaflet-control-layers-expanded {
+      font-size: 8px;
+      top: 20px;
+    }
+    .leaflet-control-zoom {
+      font-size: 8px;
+    }
+    .leaflet-popup-content-wrapper {
+      font-size: 8px;
+      max-width: 250px;
+    }
+    .leaflet-popup-content img {
+      width: 70%;
+      height: auto;
+    }
+  }
+ 
+
+.leaflet-control-basemap-gallery {
+  background-color: navy;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 14px;
+  padding: 10px; /* Increased padding to cover thumbnails */
+  display: inline-block; /* Fit content width */
+}
+.leaflet-control-basemap-gallery {
+  transform: scale(0.6);
+  transform-origin: top left;
+  right: -50px;
+
+}
+.basemap-gallery {
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  flex-wrap: nowrap; /* Prevent wrapping */
+  gap: 10px; /* Space between thumbnails */
+  overflow-x: auto; /* Scroll if thumbnails overflow */
+  padding: 5px; /* Inner padding */
+}
+
+.basemap-item {
+  cursor: pointer;
+  text-align: center;
+  flex: 0 0 auto; /* Fixed width items */
+}
+
+.basemap-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.basemap-item.active img {
+  border: 2px solid #FFFFFF !important; /* Highlight active basemap */
+}
+
+.basemap-item:hover img {
+  opacity: 0.8;
+}
+
+.basemap-toggle {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .leaflet-control-basemap-gallery {
+    font-size: 12px;
+    top: 120px; /* Avoid overlap with legend2 */
+    padding: 5px; /* Reduced padding for mobile */
+  }
+  .basemap-gallery {
+    gap: 5px; /* Smaller gap for mobile */
+  }
+  .basemap-item img {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .basemap-item div {
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Create a container for the map -->
+  <div id="map"></div>
+
+  <script>
+    var map = L.map('map', {
+      center: [1.4293988,103.8308514],
+      zoom: 18,
+	  zoomControl: false, // Disable the default zoom control
+    });
+
+  // Enable scroll wheel zoom when the map is loaded
+  map.on('load', function () {
+    map.scrollWheelZoom.enable();
+  });
+  
+    // Add a base map layer (you can choose a different one if you like)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Parse the GeoJSON data
+    var geojson_data = {
+"type": "FeatureCollection",
+"name": "NeeSoon",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Name": "Clare's Enrichment Corner", "Primary_Category": "Institution/Service", "Secondary_Category": "Physical Space", "Seats": "20", "Latitude": 1.428312, "Longitude": 103.831093, "Notes": "Main Place", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.831093, 1.428312 ] } },
+{ "type": "Feature", "properties": { "Name": "ACE Mart", "Primary_Category": "Local Enterprise", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.428021, "Longitude": 103.831403, "Notes": "24-Hour Market", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.831403, 1.428021 ] } },
+{ "type": "Feature", "properties": { "Name": "POM Trading & Distribution", "Primary_Category": "Local Enterprise", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.428131, "Longitude": 103.831266, "Notes": "Sells sports apparel/equipment", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.831266, 1.428131 ] } },
+{ "type": "Feature", "properties": { "Name": "Fun Kidz Learning Centre", "Primary_Category": "Local Enterprise", "Secondary_Category": "Physical Space", "Seats": "15", "Latitude": 1.428214, "Longitude": 103.831181, "Notes": "Dual Category; potential to partner and host activities together", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.831181, 1.428214 ] } },
+{ "type": "Feature", "properties": { "Name": "Rizqi Cooking Lab", "Primary_Category": "Local Enterprise", "Secondary_Category": "Physical Space", "Seats": "10", "Latitude": 1.428269, "Longitude": 103.831135, "Notes": "Dual Category; offers cooking classes, can partner as well", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.831135, 1.428269 ] } },
+{ "type": "Feature", "properties": { "Name": "Out of Box Academy", "Primary_Category": "Local Enterprise", "Secondary_Category": "Physical Space", "Seats": "30", "Latitude": 1.4283945, "Longitude": 103.8309479, "Notes": "After-school tution centre, potential collaboration for homework clinic", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.8309479, 1.4283945 ] } },
+{ "type": "Feature", "properties": { "Name": "Active Express Mart", "Primary_Category": "Local Enterprise", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.4284998, "Longitude": 103.8308514, "Notes": "24-Hour Market", "Additional_Comments": "Possible to make a cluster pin for 24-Hour Markets? " }, "geometry": { "type": "Point", "coordinates": [ 103.8308514, 1.4284998 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 731/732 Seating Plaza", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "16", "Latitude": 1.4287046, "Longitude": 103.830614, "Notes": "Open paved area, good for group games", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.830614, 1.4287046 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 732/735 Open Area Playground", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "40", "Latitude": 1.4289412, "Longitude": 103.8308349, "Notes": "Open-air playground, good for parties, have been used before", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8308349, 1.4289412 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 732/735 Sheltered Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "8", "Latitude": 1.4290515, "Longitude": 103.8310029, "Notes": "Closed-air table, chess table ontop, free to use ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8310029, 1.4290515 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 732 Hawker Centre", "Primary_Category": "Local Enterprise", "Secondary_Category": "Physical Space", "Seats": "100", "Latitude": 1.428969, "Longitude": 103.8303049, "Notes": "Closed-air hawker centre spanning the whole block, 10 stalls serving different foods", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.8303049, 1.428969 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 732 Community Plaza", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "50", "Latitude": 1.4292589, "Longitude": 103.8299998, "Notes": "Open-air pavilion, good for arts and craft or board games session", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8299998, 1.4292589 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 733 Void Deck", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "500", "Latitude": 1.4296394, "Longitude": 103.8306193, "Notes": "Sheltered void deck, consists of the whole block throughout ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8306193, 1.4296394 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 733 Open Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "4", "Latitude": 1.4296316, "Longitude": 103.8309228, "Notes": "Clean sheltered table with lighting, good for night-time studies", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8309228, 1.4296316 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 733 Elderly Fitness Corner", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "10", "Latitude": 1.4297453, "Longitude": 103.8314337, "Notes": "Elderly fitness corner, many potted plants, potentially encourage responsibility by planting flower pots", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8314337, 1.4297453 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 734 Open Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "4", "Latitude": 1.4291664, "Longitude": 103.8307581, "Notes": "Clean sheltered table with lighting, good for night-time studies", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8307581, 1.4291664 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 734 Open Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "4", "Latitude": 1.4292268, "Longitude": 103.8313804, "Notes": "Clean sheltered table with lighting, good for night-time studies", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8313804, 1.4292268 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 734 Shop N Pick Locker", "Primary_Category": "Institution/Service", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.4292462, "Longitude": 103.8309687, "Notes": "Shopee Locker, asset as it saves costs", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8309687, 1.4292462 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 734 Unrented Shop Unit", "Primary_Category": "Physical Space", "Secondary_Category": "Local Enterprise", "Seats": "5", "Latitude": 1.4292268, "Longitude": 103.8311648, "Notes": "Unrented unit, can be used as an expansion or another pop up shop to sell items ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8311648, 1.4292268 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 734 Void Deck", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "200", "Latitude": 1.4292274, "Longitude": 103.8310217, "Notes": "Sheltered void deck, consists of the whole block throughout ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8310217, 1.4292274 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 735 Shared Bike Parking Lot", "Primary_Category": "Local Enterprise", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.4289204, "Longitude": 103.831129, "Notes": "Specific lot for shared bicycles, acts as a mode of easy transport ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.831129, 1.4289204 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 735 Open Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "4", "Latitude": 1.4289077, "Longitude": 103.8314629, "Notes": "Clean sheltered table with lighting, good for night-time studies", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8314629, 1.4289077 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 735 Void Deck", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "200", "Latitude": 1.4288946, "Longitude": 103.8312862, "Notes": "Sheltered void deck, consists of the whole block throughout ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8312862, 1.4288946 ] } },
+{ "type": "Feature", "properties": { "Name": "Nee Soon Central Zone RC 1 Centre", "Primary_Category": "Institution/Service", "Secondary_Category": "Not Applicable", "Seats": "0", "Latitude": 1.4290089, "Longitude": 103.8317482, "Notes": "Residents Centre for Nee Soon Central Vista by the GRC. Place for seniors to seek help and to touch base with the staff running the area, providing feedback. ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8317482, 1.4290089 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 736 Open Table", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "4", "Latitude": 1.4283171, "Longitude": 103.8316265, "Notes": "Clean sheltered table with lighting, good for night-time studies", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8316265, 1.4283171 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 736 Seating Plaza", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "12", "Latitude": 1.4283325, "Longitude": 103.8317942, "Notes": "Sheltered area, roundtable and benches present, good for group games", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8317942, 1.4283325 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 731/736 Seating Plaza", "Primary_Category": "Physical Space", "Secondary_Category": "Not Applicable", "Seats": "16", "Latitude": 1.4281793, "Longitude": 103.8315142, "Notes": "Open paved area with benches, good for group games", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.8315142, 1.4281793 ] } },
+{ "type": "Feature", "properties": { "Name": "Block 736 Void Deck", "Primary_Category": "Institution/Service", "Secondary_Category": "Not Applicable", "Seats": "150", "Latitude": 1.4285041, "Longitude": 103.831705, "Notes": "Sheltered void deck, consists of the whole block throughout ", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.831705, 1.4285041 ] } },
+{ "type": "Feature", "properties": { "Name": "Caltex Petrol Station", "Primary_Category": "Local Enterprise", "Secondary_Category": "Not Applicable", "Seats": "-", "Latitude": 1.429584, "Longitude": 103.830114, "Notes": "24hr petrol station + convenience mart, possible space for teenagers to find employment nearby", "Additional_Comments": null }, "geometry": { "type": "Point", "coordinates": [ 103.830114, 1.429584 ] } },
+{ "type": "Feature", "properties": { "Name": "Yishun Christian Church", "Primary_Category": "Institution/Service", "Secondary_Category": "Physical Space", "Seats": "150", "Latitude": 1.430197, "Longitude": 103.830289, "Notes": "Has multi-purpose hall, religious institution. Often lends space for catholic community events", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.830289, 1.430197 ] } },
+{ "type": "Feature", "properties": { "Name": "SREE Narayana Mission Home For The Aged Sick", "Primary_Category": "Institution/Service", "Secondary_Category": "Physical Space", "Seats": "20", "Latitude": 1.430174, "Longitude": 103.831194, "Notes": "Nursing home, place for students (or volunteers themselves) to visit and partake in service volunteering as well", "Additional_Comments": "Dual Category" }, "geometry": { "type": "Point", "coordinates": [ 103.831194, 1.430174 ] } }
+]
+};
+    
+// Define color mapping based on Primary_Category
+function getColor(category) {
+  return category === 'Institution/Service' ? '#FF0000' : // Red
+         category === 'Local Enterprise'    ? '#00FF00' : // Green
+         category === 'Physical Space'      ? '#FFA500' : // Orange
+                                              '#808080';  // Fallback: Gray
+}
+
+// Define the GeoJSON layer with circle markers
+var geojsonLayer = L.geoJSON(geojson_data, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 6, // Size of the circle
+      fillColor: getColor(feature.properties.Primary_Category), // Fill color based on category
+      color: '#FFFFFF', // Outline color (white)
+      weight: 1, // Outline thickness
+      opacity: 1, // Outline opacity
+      fillOpacity: 0.7 // Fill opacity
+    });
+  },
+  onEachFeature: function (feature, layer) {
+    var popupContent = "<div style='margin-bottom:10px;'>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Name:</b> " + feature.properties.Name + "</p>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Primary Category:</b> " + feature.properties.Primary_Category + "</p>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Secondary Category:</b> " + feature.properties.Secondary_Category + "</p>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Seats:</b> " + feature.properties.Seats + "</p>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Notes:</b> " + feature.properties.Notes + "</p>" +
+      "<p style='margin: 2px 0; padding: 0;'><b>Additional Comments:</b> " + 
+      (feature.properties.Additional_Comments || "None") + "</p>" 
+      "</div>";
+    layer.bindPopup(popupContent);
+  }
+});
+
+// Add the GeoJSON layer to the map
+geojsonLayer.addTo(map);
+
+// Define basemaps with thumbnails
+var baseMaps = {
+  "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '',
+    thumbnail: 'https://a.tile.openstreetmap.org/17/103339/65015.png' // OSM tile example
+  }),
+  "Google Satellite": L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    attribution: 'satellite imagery © Google',
+    thumbnail: 'http://mt2.google.com/vt/lyrs=s&x=103339&y=65015&z=17' // Google tile example
+  }),
+  "CartoDB Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CartoDB <a href="https://carto.com/attributions">Attribution</a>',
+    thumbnail: 'https://a.basemaps.cartocdn.com/light_all/17/103339/65015@2x.png' // Example CartoDB Positron tile
+  }),
+  "CartoDB Dark": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CartoDB <a href="https://carto.com/attributions">Attribution</a>',
+    maxZoom: 20,
+    subdomains: 'abcd',
+    thumbnail: 'https://c.basemaps.cartocdn.com/dark_all/17/103339/65015@2x.png' // Example CartoDB Dark Matter tile
+  })
+};
+
+// Ensure one basemap is added initially
+baseMaps["OpenStreetMap"].addTo(map);
+// Custom Basemap Gallery Control
+L.Control.BasemapGallery = L.Control.extend({
+  options: {
+    position: 'topright',
+    basemaps: {}
+  },
+
+  initialize: function(options) {
+    L.setOptions(this, options);
+    this._currentBasemap = null;
+  },
+
+  onAdd: function(map) {
+    this._map = map;
+    this._container = L.DomUtil.create('div', 'leaflet-control-basemap-gallery leaflet-control');
+    
+    // Create gallery container (always visible)
+    this._gallery = L.DomUtil.create('div', 'basemap-gallery', this._container);
+    this._gallery.style.display = 'block';
+
+    // Populate gallery
+    this._updateGallery();
+
+    return this._container;
+  },
+
+  _updateGallery: function() {
+    this._gallery.innerHTML = '';
+
+    for (var name in this.options.basemaps) {
+      var basemap = this.options.basemaps[name];
+      var thumbnail = basemap.options.thumbnail || 'https://via.placeholder.com/100'; // Fallback placeholder
+      var isActive = this._currentBasemap === basemap;
+
+      // Create thumbnail item
+      var item = L.DomUtil.create('div', 'basemap-item' + (isActive ? ' active' : ''), this._gallery);
+      item.innerHTML = `
+        <img src="${thumbnail}" alt="${name}" style="width: 100px; height: 100px; object-fit: cover; border: ${isActive ? '5px solid #FFD700' : 'none'}; border-radius: 3px;">
+        <div style="text-align: center; font-size: 12px; color: white;">${name}</div>
+      `;
+
+      // Add click event to switch basemap
+      L.DomEvent.on(item, 'click', (function(basemap, name, item) {
+  return function() {
+    if (this._currentBasemap) {
+      this._map.removeLayer(this._currentBasemap);
+    }
+    this._map.addLayer(basemap);
+    this._currentBasemap = basemap;
+
+    // Update active state
+    var items = this._gallery.getElementsByClassName('basemap-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('active');
+      items[i].querySelector('img').style.border = 'none';
+    }
+    item.classList.add('active');
+    item.querySelector('img').style.border = '5px solid #FF7F50';
+  };
+})(basemap, name, item), this);
+
+    }
+  },
+  setCurrentBasemap: function(basemap) {
+    this._currentBasemap = basemap;
+    this._updateGallery();
+  }
+});
+
+L.control.basemapGallery = function(options) {
+  return new L.Control.BasemapGallery(options);
+};
+
+// Overlay maps (unchanged)
+var overlayMaps = {
+  "NeeSoon Central Vista HBD Estate": geojsonLayer
+};
+
+// Add layer control for overlays only
+var layerControl = L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
+
+// Add custom basemap gallery control
+var basemapGallery = L.control.basemapGallery({
+  position: 'topright',
+  basemaps: baseMaps
+}).addTo(map);
+
+// Set initial basemap
+basemapGallery.setCurrentBasemap(baseMaps["OpenStreetMap"]);
+
+// Define the legend control
+var legendControl = L.control({ position: 'bottomright' });
+
+legendControl.onAdd = function(map) {
+  var legendDiv = L.DomUtil.create('div', 'legend');
+  var legendContent = `
+    <h4>Legend</h4>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FF0000;"></span>
+      Institution/Service
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#00FF00;"></span>
+      Local Enterprise
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FFA500;"></span>
+      Physical Space
+    </div>
+  `;
+  legendDiv.innerHTML = legendContent;
+  return legendDiv;
+};
+
+// Add the legend control to the map
+legendControl.addTo(map);
+
+// Function to change legend position based on screen size
+function updateLegendPosition() {
+  if (window.innerWidth <= 768) {
+    // If screen width is <= 768px (mobile view), move legend to topleft
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'topleft' });
+    legendControl.onAdd = function(map) {
+      var legendDiv = L.DomUtil.create('div', 'legend2');
+      var legendContent = `
+        <h4>Legend</h4>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FF0000;"></span>
+          Institution/Service
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#00FF00;"></span>
+          Local Enterprise
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FFA500;"></span>
+          Physical Space
+        </div>
+      `;
+      legendDiv.innerHTML = legendContent;
+      return legendDiv;
+    };
+    legendControl.addTo(map);
+  } else {
+    // If screen width is > 768px, keep legend at bottomright
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'bottomright' });
+    legendControl.onAdd = function(map) {
+      var legendDiv = L.DomUtil.create('div', 'legend');
+      var legendContent = `
+        <h4>Legend</h4>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FF0000;"></span>
+          Institution/Service
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#00FF00;"></span>
+          Local Enterprise
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FFA500;"></span>
+          Physical Space
+        </div>
+      `;
+      legendDiv.innerHTML = legendContent;
+      return legendDiv;
+    };
+    legendControl.addTo(map);
+  }
+}
+
+// Check screen size on load
+updateLegendPosition();
+
+// Check screen size on window resize
+window.addEventListener('resize', updateLegendPosition);
+
+   // Create a legend control
+  var legendControl2 = L.control({ position: 'topleft' });
+
+  legendControl2.onAdd = function (map) {
+    var legendDiv = L.DomUtil.create('div', 'legend3');
+
+var legendContent = `
+    <h2 style="margin: 0; padding: 0; line-height: 1.2;">
+      NEE SOON CENTRAL VISTA HDB ESTATE
+    </h2>
+    <p style="font-size: smaller; font-style: italic; margin: 0; padding: 0; line-height: 1.2;">
+      Yishun Ave 5, Singapore
+    </p>
+  `;
+    legendDiv.innerHTML = legendContent;
+
+    return legendDiv;
+  };
+
+  legendControl2.addTo(map);
+  // Set zoom control in the bottom left
+L.control.zoom({
+    position: 'topleft'
+}).addTo(map);
+
+  </script>
+
+</body>
+</html>
