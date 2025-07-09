@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STORES DISTRIBUTION AND PERFORMANCES</title>
+  <!-- Include Leaflet CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+  #map {
+    height: 100vh;
+    width: 100%;
+  }
+  .no-scroll-map {
+    pointer-events: none;
+  }
+  .legend {
+    background-color: #000080;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+  }
+  .legend2 {
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+   box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+    top: 80px;
+    min-width: 80px;
+    z-index: 1000;
+  }
+  .legend2 div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    font-size: 8px;
+  }
+  .legend-color {
+    width: 12px;
+    height: 12px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 50%;
+    border: 2px solid #FFFFFF; /* White outline for legend markers */
+  }
+  .legend3 {
+    position: absolute;
+    background-color: navy;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    color: white;
+    min-width: 500px;
+  }
+  .leaflet-control-layers-toggle {
+    background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+    background-color: #2da0e2;
+    background-size: 20px 20px;
+  }
+  .leaflet-touch .leaflet-control-layers-toggle {
+    background-image: url(https://i.stack.imgur.com/3keSg.png) !important;
+    background-color: #2da0e2;
+  }
+  .leaflet-control-layers-expanded {
+    color: white;
+    background-color: navy;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4) !important;
+    border-radius: 5px;
+  }
+  .leaflet-control-zoom {
+    background-color: navy !important;
+    top: 80px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4)!important;
+    border-radius: 5px;
+  }
+  .leaflet-control-zoom a {
+    color: white !important;
+    background-color: navy !important;
+    border: none !important;
+  }
+  .leaflet-control-zoom-in, .leaflet-control-zoom-out {
+    background-color: navy !important;
+  }
+  .legend h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .leaflet-popup-content-wrapper {
+    background-color: navy;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  }
+  .leaflet-popup-content {
+    color: white;
+  }
+  .leaflet-popup-tip {
+    border-color: navy;
+  }
+  @media (max-width: 768px) and (orientation: landscape) {
+    .leaflet-control-layers-expanded {
+      color: white;
+      background-color: navy;
+      position: absolute;
+      top: 1px;
+    }
+    .legend2 h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 10px;
+    }
+    .legend2-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 10px;
+    }
+  }
+  @media (max-width: 768px) {
+    .attribute-table {
+      width: 80%;
+      font-size: 8px;
+      max-height: 200px;
+      min-width: 100px;
+      padding: 5px;
+    }
+    .legend3 {
+      font-size: 8px;
+      padding: 5px;
+      top: 20px;
+      min-width: 250px;
+    }
+    .legend2 h4 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 8px;
+    }
+    .legend2-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 8px;
+    }
+    .leaflet-control-layers-expanded {
+      font-size: 8px;
+      top: 20px;
+    }
+    .leaflet-control-zoom {
+      font-size: 8px;
+    }
+    .leaflet-popup-content-wrapper {
+      font-size: 8px;
+      max-width: 250px;
+    }
+    .leaflet-popup-content img {
+      width: 70%;
+      height: auto;
+    }
+  }
+ 
+
+.leaflet-control-basemap-gallery {
+  background-color: navy;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+  color: white;
+  font-size: 14px;
+  padding: 10px; /* Increased padding to cover thumbnails */
+  display: inline-block; /* Fit content width */
+}
+.leaflet-control-basemap-gallery {
+  transform: scale(0.6);
+  transform-origin: top left;
+  right: -50px;
+
+}
+.basemap-gallery {
+  display: flex;
+  flex-direction: row; /* Horizontal layout */
+  flex-wrap: nowrap; /* Prevent wrapping */
+  gap: 10px; /* Space between thumbnails */
+  overflow-x: auto; /* Scroll if thumbnails overflow */
+  padding: 5px; /* Inner padding */
+}
+
+.basemap-item {
+  cursor: pointer;
+  text-align: center;
+  flex: 0 0 auto; /* Fixed width items */
+}
+
+.basemap-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+
+.basemap-item.active img {
+  border: 2px solid #FFFFFF !important; /* Highlight active basemap */
+}
+
+.basemap-item:hover img {
+  opacity: 0.8;
+}
+
+.basemap-toggle {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .leaflet-control-basemap-gallery {
+    font-size: 12px;
+    top: 120px; /* Avoid overlap with legend2 */
+    padding: 5px; /* Reduced padding for mobile */
+  }
+  .basemap-gallery {
+    gap: 5px; /* Smaller gap for mobile */
+  }
+  .basemap-item img {
+    width: 60px !important;
+    height: 60px !important;
+  }
+  .basemap-item div {
+    font-size: 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+  <!-- Create a container for the map -->
+  <div id="map"></div>
+
+  <script>
+    var map = L.map('map', {
+      center: [47.222997,-1.5355474],
+      zoom: 12,
+	  zoomControl: false, // Disable the default zoom control
+    });
+
+  // Enable scroll wheel zoom when the map is loaded
+  map.on('load', function () {
+    map.scrollWheelZoom.enable();
+  });
+  
+    // Add a base map layer (you can choose a different one if you like)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Parse the GeoJSON data
+    var geojson_data = {
+"type": "FeatureCollection",
+"name": "data2",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "Stores": "LECLERC ATLANTIS SAINT HERBLAIN", "Longitude": 47.22564316, "Latitude": -1.631035924, "Nb Articles Carburants": 3479169, "Prix Moyen Article Carburants": 3.6, "CA TTC Carburants\n(en €)": "12,525,833", "Rang \nCA TTC Carburants": 1, "Evol \nN vs N-1 (Carburants)\n(en %)": "+5.66%", "Marge (Carburants)\n(en €)": "3,073,260", "Rang \nTx Marge (Carburants)\n(en %)": 29, "Tx Marge (PGC)\n(en %)": "27.22%", "Nb Articles (PGC)": 1491067, "Prix Moyen Article (PGC)": 2.82, "CA TTC (PGC)": "4,201,366", "Evol \nN vs N-1 (PGC)\n(en %)": "+5.87%", "Marge (PGC)": "795,504", "Tx Marge (PGC)": "21.15%", "Nb Articles (Bazar)": 173329, "Prix Moyen Article (Bazar)": 6.42, "CA TTC (Bazar)": "1,112,169", "Evol \nN vs N-1 (Bazar)\n(en %)": "+7.76%", "Marge (Bazar)": "274,847", "Tx Marge (Bazar)": "29.50%", "Nb Articles (Bazar Technique)": 73042, "Prix Moyen Article  (Bazar Technique)": 21.2, "CA TTC  (Bazar Technique)": "1,548,810", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "+12.03%", "Marge  (Bazar Technique)": "322,709", "Tx Marge  (Bazar Technique)": "24.22%", "Nb Articles (Produits frais)": 1646118, "Prix Moyen Article (Produits frais)": 2.93, "CA TTC (Produits frais)": "4,815,447", "Evol \nN vs N-1 (Produits frais)\n(en %)": "+4.07%", "Marge (Produits frais)": "1,394,964", "Tx Marge (Produits frais)": "30.61%", "Nb Articles (Textile)": 81885, "Prix Moyen Article (Textile)": 9.25, "CA TTC (Textile)": "757,744", "Evol \nN vs N-1 (Textile)\n(en %)": "-0.56%", "Marge (Textile)": "219,328", "Tx Marge (Textile)": "34.73%", "Nb Articles (Services)": 13728, "Prix Moyen Article (Services)": 6.58, "CA TTC (Services)": "90,298", "Evol \nN vs N-1 (Services)\n(en %)": "+8.19%", "Marge (Services)": "65,907", "Tx Marge (Services)": "87.59%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.631035924, 47.22564316 ] } },
+{ "type": "Feature", "properties": { "Stores": "LECLERC PARIDIS", "Longitude": 47.248997, "Latitude": -1.5155474, "Nb Articles Carburants": 3684699, "Prix Moyen Article Carburants": 3.3, "CA TTC Carburants\n(en €)": "12,174,395", "Rang \nCA TTC Carburants": 2, "Evol \nN vs N-1 (Carburants)\n(en %)": "+2.56%", "Marge (Carburants)\n(en €)": "2,974,088", "Rang \nTx Marge (Carburants)\n(en %)": 34, "Tx Marge (PGC)\n(en %)": "26.93%", "Nb Articles (PGC)": 1507583, "Prix Moyen Article (PGC)": 2.76, "CA TTC (PGC)": "4,165,961", "Evol \nN vs N-1 (PGC)\n(en %)": "+2.75%", "Marge (PGC)": "763,877", "Tx Marge (PGC)": "20.45%", "Nb Articles (Bazar)": 128963, "Prix Moyen Article (Bazar)": 7.04, "CA TTC (Bazar)": "908,088", "Evol \nN vs N-1 (Bazar)\n(en %)": "+0.91%", "Marge (Bazar)": "230,508", "Tx Marge (Bazar)": "30.24%", "Nb Articles (Bazar Technique)": 113303, "Prix Moyen Article  (Bazar Technique)": 10.36, "CA TTC  (Bazar Technique)": "1,174,108", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "+11.03%", "Marge  (Bazar Technique)": "286,595", "Tx Marge  (Bazar Technique)": "28.33%", "Nb Articles (Produits frais)": 1834346, "Prix Moyen Article (Produits frais)": 2.85, "CA TTC (Produits frais)": "5,235,943", "Evol \nN vs N-1 (Produits frais)\n(en %)": "+1.48%", "Marge (Produits frais)": "1,470,043", "Tx Marge (Produits frais)": "29.67%", "Nb Articles (Textile)": 73234, "Prix Moyen Article (Textile)": 8.95, "CA TTC (Textile)": "655,576", "Evol \nN vs N-1 (Textile)\n(en %)": "-0.99%", "Marge (Textile)": "216,247", "Tx Marge (Textile)": "39.58%", "Nb Articles (Services)": 27270, "Prix Moyen Article (Services)": 1.27, "CA TTC (Services)": "34,720", "Evol \nN vs N-1 (Services)\n(en %)": "-5.27%", "Marge (Services)": "6,818", "Tx Marge (Services)": "21.76%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.5155474, 47.248997 ] } },
+{ "type": "Feature", "properties": { "Stores": "LECLERC ORVAULT ", "Longitude": 47.26241976, "Latitude": -1.589371058, "Nb Articles Carburants": 2905124, "Prix Moyen Article Carburants": 3.24, "CA TTC Carburants\n(en €)": "9,413,030", "Rang \nCA TTC Carburants": 6, "Evol \nN vs N-1 (Carburants)\n(en %)": "-1.57%", "Marge (Carburants)\n(en €)": "2,355,340", "Rang \nTx Marge (Carburants)\n(en %)": 25, "Tx Marge (PGC)\n(en %)": "27.41%", "Nb Articles (PGC)": 1208712, "Prix Moyen Article (PGC)": 2.82, "CA TTC (PGC)": "3,412,459", "Evol \nN vs N-1 (PGC)\n(en %)": "-0.66%", "Marge (PGC)": "665,700", "Tx Marge (PGC)": "21.77%", "Nb Articles (Bazar)": 94946, "Prix Moyen Article (Bazar)": 5.47, "CA TTC (Bazar)": "519,293", "Evol \nN vs N-1 (Bazar)\n(en %)": "+1.83%", "Marge (Bazar)": "143,982", "Tx Marge (Bazar)": "33.12%", "Nb Articles (Bazar Technique)": 26321, "Prix Moyen Article  (Bazar Technique)": 22.49, "CA TTC  (Bazar Technique)": "592,026", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "-4.01%", "Marge  (Bazar Technique)": "120,838", "Tx Marge  (Bazar Technique)": "23.57%", "Nb Articles (Produits frais)": 1540148, "Prix Moyen Article (Produits frais)": 2.94, "CA TTC (Produits frais)": "4,531,668", "Evol \nN vs N-1 (Produits frais)\n(en %)": "-1.80%", "Marge (Produits frais)": "1,309,948", "Tx Marge (Produits frais)": "30.53%", "Nb Articles (Textile)": 34923, "Prix Moyen Article (Textile)": 10.22, "CA TTC (Textile)": "356,852", "Evol \nN vs N-1 (Textile)\n(en %)": "-7.54%", "Marge (Textile)": "114,632", "Tx Marge (Textile)": "38.54%", "Nb Articles (Services)": 74, "Prix Moyen Article (Services)": 9.9, "CA TTC (Services)": "733", "Evol \nN vs N-1 (Services)\n(en %)": "+19.35%", "Marge (Services)": "241", "Tx Marge (Services)": "39.39%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.589371058, 47.26241976 ] } },
+{ "type": "Feature", "properties": { "Stores": "LECLERC LAURY CHALLONGE", "Longitude": 47.18782116, "Latitude": -1.468614828, "Nb Articles Carburants": 2536408, "Prix Moyen Article Carburants": 3.64, "CA TTC Carburants\n(en €)": "9,238,657", "Rang \nCA TTC Carburants": 7, "Evol \nN vs N-1 (Carburants)\n(en %)": "+1.78%", "Marge (Carburants)\n(en €)": "2,589,114", "Rang \nTx Marge (Carburants)\n(en %)": 1, "Tx Marge (PGC)\n(en %)": "30.82%", "Nb Articles (PGC)": 1082296, "Prix Moyen Article (PGC)": 3.05, "CA TTC (PGC)": "3,298,943", "Evol \nN vs N-1 (PGC)\n(en %)": "+2.24%", "Marge (PGC)": "675,644", "Tx Marge (PGC)": "22.92%", "Nb Articles (Bazar)": 72863, "Prix Moyen Article (Bazar)": 7.23, "CA TTC (Bazar)": "527,001", "Evol \nN vs N-1 (Bazar)\n(en %)": "+5.90%", "Marge (Bazar)": "144,651", "Tx Marge (Bazar)": "32.75%", "Nb Articles (Bazar Technique)": 42558, "Prix Moyen Article  (Bazar Technique)": 19.19, "CA TTC  (Bazar Technique)": "816,677", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "+7.63%", "Marge  (Bazar Technique)": "190,137", "Tx Marge  (Bazar Technique)": "26.78%", "Nb Articles (Produits frais)": 1297522, "Prix Moyen Article (Produits frais)": 3.2, "CA TTC (Produits frais)": "4,150,568", "Evol \nN vs N-1 (Produits frais)\n(en %)": "-0.07%", "Marge (Produits frais)": "1,438,644", "Tx Marge (Produits frais)": "36.61%", "Nb Articles (Textile)": 40908, "Prix Moyen Article (Textile)": 10.53, "CA TTC (Textile)": "430,734", "Evol \nN vs N-1 (Textile)\n(en %)": "+0.57%", "Marge (Textile)": "136,039", "Tx Marge (Textile)": "37.89%", "Nb Articles (Services)": 261, "Prix Moyen Article (Services)": 56.45, "CA TTC (Services)": "14,734", "Evol \nN vs N-1 (Services)\n(en %)": "+18.31%", "Marge (Services)": "3,999", "Tx Marge (Services)": "32.57%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.468614828, 47.18782116 ] } },
+{ "type": "Feature", "properties": { "Stores": "LECLERC REZE ATOUT SUD", "Longitude": 47.19316096, "Latitude": -1.574905973, "Nb Articles Carburants": 2370169, "Prix Moyen Article Carburants": 3.44, "CA TTC Carburants\n(en €)": "8,162,711", "Rang \nCA TTC Carburants": 10, "Evol \nN vs N-1 (Carburants)\n(en %)": "+5.81%", "Marge (Carburants)\n(en €)": "2,034,412", "Rang \nTx Marge (Carburants)\n(en %)": 22, "Tx Marge (PGC)\n(en %)": "27.56%", "Nb Articles (PGC)": 1068018, "Prix Moyen Article (PGC)": 2.82, "CA TTC (PGC)": "3,011,235", "Evol \nN vs N-1 (PGC)\n(en %)": "+8.26%", "Marge (PGC)": "591,891", "Tx Marge (PGC)": "21.99%", "Nb Articles (Bazar)": 110002, "Prix Moyen Article (Bazar)": 6.65, "CA TTC (Bazar)": "731,909", "Evol \nN vs N-1 (Bazar)\n(en %)": "+4.31%", "Marge (Bazar)": "204,312", "Tx Marge (Bazar)": "33.35%", "Nb Articles (Bazar Technique)": 32962, "Prix Moyen Article  (Bazar Technique)": 21.92, "CA TTC  (Bazar Technique)": "722,497", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "+17.29%", "Marge  (Bazar Technique)": "139,017", "Tx Marge  (Bazar Technique)": "22.41%", "Nb Articles (Produits frais)": 1125498, "Prix Moyen Article (Produits frais)": 2.95, "CA TTC (Produits frais)": "3,320,350", "Evol \nN vs N-1 (Produits frais)\n(en %)": "+2.59%", "Marge (Produits frais)": "944,669", "Tx Marge (Produits frais)": "30.06%", "Nb Articles (Textile)": 32845, "Prix Moyen Article (Textile)": 8.97, "CA TTC (Textile)": "294,516", "Evol \nN vs N-1 (Textile)\n(en %)": "+3.28%", "Marge (Textile)": "101,999", "Tx Marge (Textile)": "41.55%", "Nb Articles (Services)": 844, "Prix Moyen Article (Services)": 97.4, "CA TTC (Services)": "82,203", "Evol \nN vs N-1 (Services)\n(en %)": "-12.39%", "Marge (Services)": "52,524", "Tx Marge (Services)": "76.62%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.574905973, 47.19316096 ] } },
+{ "type": "Feature", "properties": { "Stores": "LECLERC REZE OCEANE", "Longitude": 47.1609225, "Latitude": -1.5475271, "Nb Articles Carburants": 1851110, "Prix Moyen Article Carburants": 3.54, "CA TTC Carburants\n(en €)": "6,559,655", "Rang \nCA TTC Carburants": 15, "Evol \nN vs N-1 (Carburants)\n(en %)": "-1.63%", "Marge (Carburants)\n(en €)": "1,657,036", "Rang \nTx Marge (Carburants)\n(en %)": 16, "Tx Marge (PGC)\n(en %)": "27.84%", "Nb Articles (PGC)": 784867, "Prix Moyen Article (PGC)": 3.01, "CA TTC (PGC)": "2,361,628", "Evol \nN vs N-1 (PGC)\n(en %)": "-2.45%", "Marge (PGC)": "464,932", "Tx Marge (PGC)": "22.02%", "Nb Articles (Bazar)": 61411, "Prix Moyen Article (Bazar)": 7.3, "CA TTC (Bazar)": "448,101", "Evol \nN vs N-1 (Bazar)\n(en %)": "+0.82%", "Marge (Bazar)": "130,191", "Tx Marge (Bazar)": "34.73%", "Nb Articles (Bazar Technique)": 25457, "Prix Moyen Article  (Bazar Technique)": 22.52, "CA TTC  (Bazar Technique)": "573,174", "Evol \nN vs N-1  (Bazar Technique)\n(en %)": "+11.84%", "Marge  (Bazar Technique)": "121,681", "Tx Marge  (Bazar Technique)": "24.51%", "Nb Articles (Produits frais)": 939266, "Prix Moyen Article (Produits frais)": 2.99, "CA TTC (Produits frais)": "2,812,109", "Evol \nN vs N-1 (Produits frais)\n(en %)": "-3.19%", "Marge (Produits frais)": "834,470", "Tx Marge (Produits frais)": "31.35%", "Nb Articles (Textile)": 28147, "Prix Moyen Article (Textile)": 10.03, "CA TTC (Textile)": "282,291", "Evol \nN vs N-1 (Textile)\n(en %)": "-3.53%", "Marge (Textile)": "89,803", "Tx Marge (Textile)": "38.16%", "Nb Articles (Services)": 11962, "Prix Moyen Article (Services)": 6.88, "CA TTC (Services)": "82,352", "Evol \nN vs N-1 (Services)\n(en %)": "-11.62%", "Marge (Services)": "15,959", "Tx Marge (Services)": "21.96%\r" }, "geometry": { "type": "Point", "coordinates": [ -1.5475271, 47.1609225 ] } }
+]
+}
+;
+    
+// Define color mapping based on Stores
+function getColor(store) {
+  const storeColors = {
+    'LECLERC ATLANTIS SAINT HERBLAIN': '#FF0000', // Red
+    'LECLERC PARIDIS': '#00FF00',                // Green
+    'LECLERC ORVAULT': '#FFA500',               // Orange
+    'LECLERC LAURY CHALLONGE': '#0000FF',       // Blue
+    'LECLERC REZE ATOUT SUD': '#FF00FF',        // Magenta
+    'LECLERC REZE OCEANE': '#FFFF00'            // Yellow
+  };
+  // Trim the store name to handle leading/trailing spaces
+  return storeColors[store.trim()] || '#808080'; // Fallback: Gray
+}
+
+// Define the GeoJSON layer with circle markers
+var geojsonLayer = L.geoJSON(geojson_data, {
+  pointToLayer: function (feature, latlng) {
+    return L.circleMarker(latlng, {
+      radius: 10,
+      fillColor: getColor(feature.properties.Stores),
+      color: '#000080',
+      weight: 5,
+      opacity: 1,
+      fillOpacity: 0.7
+    });
+  },
+  onEachFeature: function (feature, layer) {
+  var props = feature.properties;
+  
+  // Define grouped properties for collapsible sections
+  var sections = [
+    {
+      title: "Store Information",
+      properties: [
+        { label: "Store", key: "Stores" }
+      ]
+    },
+    {
+      title: "Carburants",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles Carburants" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article Carburants" },
+        { label: "CA TTC (€)", key: "CA TTC Carburants\n(en €)" },
+        { label: "Rang CA TTC", key: "Rang \nCA TTC Carburants" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (Carburants)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (Carburants)\n(en €)" },
+        { label: "Rang Tx Marge (%)", key: "Rang \nTx Marge (Carburants)\n(en %)" }
+      ]
+    },
+    {
+      title: "PGC",
+      properties: [
+        { label: "Tx Marge (%)", key: "Tx Marge (PGC)\n(en %)" },
+        { label: "Nb Articles", key: "Nb Articles (PGC)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article (PGC)" },
+        { label: "CA TTC (€)", key: "CA TTC (PGC)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (PGC)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (PGC)" },
+        { label: "Tx Marge", key: "Tx Marge (PGC)" }
+      ]
+    },
+    {
+      title: "Bazar",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles (Bazar)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article (Bazar)" },
+        { label: "CA TTC (€)", key: "CA TTC (Bazar)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (Bazar)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (Bazar)" },
+        { label: "Tx Marge", key: "Tx Marge (Bazar)" }
+      ]
+    },
+    {
+      title: "Bazar Technique",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles (Bazar Technique)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article  (Bazar Technique)" },
+        { label: "CA TTC (€)", key: "CA TTC  (Bazar Technique)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1  (Bazar Technique)\n(en %)" },
+        { label: "Marge (€)", key: "Marge  (Bazar Technique)" },
+        { label: "Tx Marge", key: "Tx Marge  (Bazar Technique)" }
+      ]
+    },
+    {
+      title: "Produits frais",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles (Produits frais)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article (Produits frais)" },
+        { label: "CA TTC (€)", key: "CA TTC (Produits frais)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (Produits frais)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (Produits frais)" },
+        { label: "Tx Marge", key: "Tx Marge (Produits frais)" }
+      ]
+    },
+    {
+      title: "Textile",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles (Textile)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article (Textile)" },
+        { label: "CA TTC (€)", key: "CA TTC (Textile)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (Textile)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (Textile)" },
+        { label: "Tx Marge", key: "Tx Marge (Textile)" }
+      ]
+    },
+    {
+      title: "Services",
+      properties: [
+        { label: "Nb Articles", key: "Nb Articles (Services)" },
+        { label: "Prix Moyen Article", key: "Prix Moyen Article (Services)" },
+        { label: "CA TTC (€)", key: "CA TTC (Services)" },
+        { label: "Evol N vs N-1 (%)", key: "Evol \nN vs N-1 (Services)\n(en %)" },
+        { label: "Marge (€)", key: "Marge (Services)" },
+        { label: "Tx Marge", key: "Tx Marge (Services)" }
+      ]
+    }
+  ];
+
+  // Generate popup content with collapsible sections
+  var popupContent = `
+    <style>
+      .collapsible {
+        background-color: #1a2a6c; /* Slightly lighter navy for contrast */
+        color: white;
+        cursor: pointer;
+        padding: 8px;
+        width: 100%;
+        border: none;
+        text-align: left;
+        outline: none;
+        font-weight: bold;
+        margin: 2px 0;
+      }
+      .collapsible:hover {
+        background-color: #2c3e50; /* Darker shade for hover effect */
+      }
+      .content {
+        padding: 0 10px;
+        display: none;
+        overflow: hidden;
+        background-color: navy; /* Matches .leaflet-popup-content-wrapper */
+        color: white; /* Matches .leaflet-popup-content */
+      }
+      .content p {
+        margin: 4px 0;
+        padding: 0;
+        font-size: 12px;
+      }
+      .popup-container {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 10px;
+      }
+    </style>
+    <div class="popup-container">
+  `;
+
+  sections.forEach((section, index) => {
+    popupContent += `
+      <button type="button" class="collapsible">${section.title}</button>
+      <div class="content">
+        ${section.properties.map(prop => {
+          const value = props[prop.key] || "N/A";
+          return `<p><b>${prop.label}:</b> ${value}</p>`;
+        }).join('')}
+      </div>
+    `;
+  });
+
+  popupContent += `</div>`;
+
+  // Bind popup and add event listeners for collapsible sections
+  layer.bindPopup(popupContent);
+
+  // Add event listeners after popup is opened
+  layer.on('popupopen', function () {
+    var coll = document.getElementsByClassName("collapsible");
+    for (var i = 0; i < coll.length; i++) {
+      coll[i].addEventListener("click", function () {
+        this.classList.toggle("active");
+        var content = this.nextElementSibling;
+        if (content.style.display === "block") {
+          content.style.display = "none";
+        } else {
+          content.style.display = "block";
+        }
+      });
+    }
+  });
+}
+});
+
+// Add the GeoJSON layer to the map
+geojsonLayer.addTo(map);
+
+// Define basemaps with thumbnails
+var baseMaps = {
+  "OpenStreetMap": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '',
+    thumbnail: 'https://a.tile.openstreetmap.org/17/103339/65015.png' // OSM tile example
+  }),
+  "Google Satellite": L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+    maxZoom: 20,
+    subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+    attribution: 'satellite imagery © Google',
+    thumbnail: 'http://mt2.google.com/vt/lyrs=s&x=103339&y=65015&z=17' // Google tile example
+  }),
+  "CartoDB Light": L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CartoDB <a href="https://carto.com/attributions">Attribution</a>',
+    thumbnail: 'https://a.basemaps.cartocdn.com/light_all/17/103339/65015@2x.png' // Example CartoDB Positron tile
+  }),
+  "CartoDB Dark": L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© CartoDB <a href="https://carto.com/attributions">Attribution</a>',
+    maxZoom: 20,
+    subdomains: 'abcd',
+    thumbnail: 'https://c.basemaps.cartocdn.com/dark_all/17/103339/65015@2x.png' // Example CartoDB Dark Matter tile
+  })
+};
+
+// Ensure one basemap is added initially
+baseMaps["OpenStreetMap"].addTo(map);
+// Custom Basemap Gallery Control
+L.Control.BasemapGallery = L.Control.extend({
+  options: {
+    position: 'topright',
+    basemaps: {}
+  },
+
+  initialize: function(options) {
+    L.setOptions(this, options);
+    this._currentBasemap = null;
+  },
+
+  onAdd: function(map) {
+    this._map = map;
+    this._container = L.DomUtil.create('div', 'leaflet-control-basemap-gallery leaflet-control');
+    
+    // Create gallery container (always visible)
+    this._gallery = L.DomUtil.create('div', 'basemap-gallery', this._container);
+    this._gallery.style.display = 'block';
+
+    // Populate gallery
+    this._updateGallery();
+
+    return this._container;
+  },
+
+  _updateGallery: function() {
+    this._gallery.innerHTML = '';
+
+    for (var name in this.options.basemaps) {
+      var basemap = this.options.basemaps[name];
+      var thumbnail = basemap.options.thumbnail || 'https://via.placeholder.com/100'; // Fallback placeholder
+      var isActive = this._currentBasemap === basemap;
+
+      // Create thumbnail item
+      var item = L.DomUtil.create('div', 'basemap-item' + (isActive ? ' active' : ''), this._gallery);
+      item.innerHTML = `
+        <img src="${thumbnail}" alt="${name}" style="width: 100px; height: 100px; object-fit: cover; border: ${isActive ? '5px solid #FFD700' : 'none'}; border-radius: 3px;">
+        <div style="text-align: center; font-size: 12px; color: white;">${name}</div>
+      `;
+
+      // Add click event to switch basemap
+      L.DomEvent.on(item, 'click', (function(basemap, name, item) {
+  return function() {
+    if (this._currentBasemap) {
+      this._map.removeLayer(this._currentBasemap);
+    }
+    this._map.addLayer(basemap);
+    this._currentBasemap = basemap;
+
+    // Update active state
+    var items = this._gallery.getElementsByClassName('basemap-item');
+    for (var i = 0; i < items.length; i++) {
+      items[i].classList.remove('active');
+      items[i].querySelector('img').style.border = 'none';
+    }
+    item.classList.add('active');
+    item.querySelector('img').style.border = '5px solid #FF7F50';
+  };
+})(basemap, name, item), this);
+
+    }
+  },
+  setCurrentBasemap: function(basemap) {
+    this._currentBasemap = basemap;
+    this._updateGallery();
+  }
+});
+
+L.control.basemapGallery = function(options) {
+  return new L.Control.BasemapGallery(options);
+};
+
+// Overlay maps (unchanged)
+var overlayMaps = {
+  "Stores": geojsonLayer
+};
+
+// Add layer control for overlays only
+var layerControl = L.control.layers(null, overlayMaps, { collapsed: false }).addTo(map);
+
+// Add custom basemap gallery control
+var basemapGallery = L.control.basemapGallery({
+  position: 'topright',
+  basemaps: baseMaps
+}).addTo(map);
+
+// Set initial basemap
+basemapGallery.setCurrentBasemap(baseMaps["OpenStreetMap"]);
+
+// Define the legend control
+var legendControl = L.control({ position: 'bottomright' });
+
+legendControl.onAdd = function(map) {
+  var legendDiv = L.DomUtil.create('div', 'legend');
+  var legendContent = `
+    <h4>Legend</h4>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FF0000;"></span>
+      Institution/Service
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#00FF00;"></span>
+      Local Enterprise
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FFA500;"></span>
+      Physical Space
+    </div>
+  `;
+  legendDiv.innerHTML = legendContent;
+  return legendDiv;
+};
+
+// Add the legend control to the map
+legendControl.addTo(map);
+
+// Function to change legend position based on screen size
+function updateLegendPosition() {
+  if (window.innerWidth <= 768) {
+    // If screen width is <= 768px (mobile view), move legend to topleft
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'topleft' });
+    legendControl.onAdd = function(map) {
+      var legendDiv = L.DomUtil.create('div', 'legend2');
+      var legendContent = `
+        <h4>Legend</h4>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FF0000;"></span>
+          Institution/Service
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#00FF00;"></span>
+          Local Enterprise
+        </div>
+        <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+          <span class="legend-color" style="background-color:#FFA500;"></span>
+          Physical Space
+        </div>
+      `;
+      legendDiv.innerHTML = legendContent;
+      return legendDiv;
+    };
+    legendControl.addTo(map);
+  } else {
+    // If screen width is > 768px, keep legend at bottomright
+    map.removeControl(legendControl);
+    legendControl = L.control({ position: 'bottomright' });
+    legendControl.onAdd = function(map) {
+  var legendDiv = L.DomUtil.create('div', 'legend');
+  var legendContent = `
+    <h4>Legend</h4>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FF0000;"></span>
+      LECLERC ATLANTIS SAINT HERBLAIN
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#00FF00;"></span>
+      LECLERC PARIDIS
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FFA500;"></span>
+      LECLERC ORVAULT
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#0000FF;"></span>
+      LECLERC LAURY CHALLONGE
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FF00FF;"></span>
+      LECLERC REZE ATOUT SUD
+    </div>
+    <div style="display: flex; align-items: center; gap: 5px; line-height: 1.5; margin-bottom: 5px;">
+      <span class="legend-color" style="background-color:#FFFF00;"></span>
+      LECLERC REZE OCEANE
+    </div>
+  `;
+  legendDiv.innerHTML = legendContent;
+  return legendDiv;
+};
+    legendControl.addTo(map);
+  }
+}
+
+// Check screen size on load
+updateLegendPosition();
+
+// Check screen size on window resize
+window.addEventListener('resize', updateLegendPosition);
+
+   // Create a legend control
+  var legendControl2 = L.control({ position: 'topleft' });
+
+  legendControl2.onAdd = function (map) {
+    var legendDiv = L.DomUtil.create('div', 'legend3');
+
+var legendContent = `
+    <h2 style="margin: 0; padding: 0; line-height: 1.2;">
+      STORE DISTRIBUTION AND PERFORMANCES
+    </h2>
+    <p style="font-size: smaller; font-style: italic; margin: 0; padding: 0; line-height: 1.2;">
+      Nantes City, France
+    </p>
+  `;
+    legendDiv.innerHTML = legendContent;
+
+    return legendDiv;
+  };
+
+  legendControl2.addTo(map);
+  // Set zoom control in the bottom left
+L.control.zoom({
+    position: 'topleft'
+}).addTo(map);
+
+  </script>
+
+</body>
+</html>
