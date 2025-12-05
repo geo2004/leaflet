@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Leaflet Webmap with Popups & Styling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // Initialize map
+       var map = L.map('map').setView([23.8859, 45.0792], 6);
+
+        // Base map
+        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Function to auto-create popup content
+        function createPopupContent(props) {
+            let html = "<b>Attributes</b><br><table>";
+            for (let key in props) {
+                html += `<tr><td><b>${key}</b></td><td>${props[key]}</td></tr>`;
+            }
+            html += "</table>";
+            return html;
+        }
+
+        // Color function for school cluster_category
+        function schoolColor(category) {
+            return {
+                "1": "red",
+                "2": "blue",
+                "3": "green",
+
+            }[category] || "gray"; // default if unknown
+        }
+
+        // Cluster zones (outline only)
+        var clusterZonesLayer = L.geoJSON(null, {
+    style: function (feature) {
+        let category = feature.properties.cluster_category;
+        let color = schoolColor(category);
+
+        return {
+            color: color,      // outline uses schoolColor()
+            weight: 2,
+            fillOpacity: 0     // outline only
+        };
+    },
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(createPopupContent(feature.properties));
+    }
+});
+
+        // Schools (color by cluster_category)
+        var schoolsLayer = L.geoJSON(null, {
+            pointToLayer: function (feature, latlng) {
+                let color = schoolColor(feature.properties.cluster_category);
+
+                return L.circleMarker(latlng, {
+                    radius: 5,
+                    color: color,
+                    fillColor: color,
+                    fillOpacity: 0.8,
+                    weight: 1
+                });
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(createPopupContent(feature.properties));
+            }
+        });
+
+        // Radius polygon
+        var radiusLayer = L.geoJSON(null, {
+            style: {
+                color: "purple",
+                weight: 2,
+                fillOpacity: 0
+            },
+            onEachFeature: function (feature, layer) {
+                layer.bindPopup(createPopupContent(feature.properties));
+            }
+        });
+
+        // Load layers
+        fetch("Cluster_Zones.geojson")
+            .then(res => res.json())
+            .then(data => {
+                clusterZonesLayer.addData(data);
+                map.fitBounds(clusterZonesLayer.getBounds());
+            });
+
+        fetch("Schools.geojson")
+            .then(res => res.json())
+            .then(data => schoolsLayer.addData(data));
+
+        fetch("Radius_70km.geojson")
+            .then(res => res.json())
+            .then(data => radiusLayer.addData(data));
+
+        // Layer control
+        L.control.layers(
+            { "OpenStreetMap": osm },
+            {
+                "Cluster Zones": clusterZonesLayer,
+                "Schools": schoolsLayer,
+                "70 km Radius": radiusLayer
+            },
+            { collapsed: false }
+        ).addTo(map);
+
+        // Add all by default
+        clusterZonesLayer.addTo(map);
+        schoolsLayer.addTo(map);
+       
+
+    </script>
+</body>
+</html>
