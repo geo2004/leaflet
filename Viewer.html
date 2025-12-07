@@ -1,162 +1,147 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8">
-    <title>Leaflet Webmap with Popups & Styling</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
-    <style>
-        html, body {
-            height: 100%;
-            margin: 0;
-        }
-        #map {
-            width: 100%;
-            height: 100%;
-        }
-    </style>
+<meta charset="utf-8">
+<title>Leaflet – Male/Female Schools Layers</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+  html, body { height: 100%; margin: 0; }
+  #map { width: 100%; height: 100%; }
+</style>
 </head>
-
 <body>
-    <div id="map"></div>
+<div id="map"></div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ---------------- Map Setup ----------------
+const map = L.map('map', {
+  fadeAnimation: false,
+  zoomAnimation: false,
+  markerZoomAnimation: false,
+  preferCanvas: true
+}).setView([23.8859, 45.0792], 6);
 
-    <script>
-        // Initialize map
-       var map = L.map('map').setView([23.8859, 45.0792], 6);
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 19,
+  attribution: '© OpenStreetMap'
+}).addTo(map);
 
-        // Base map
-        var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap'
-        }).addTo(map);
+map.on('movestart', () => map.closePopup());
 
-        // Function to auto-create popup content
-        function createPopupContent(props) {
-            let html = "<b>Attributes</b><br><table>";
-            for (let key in props) {
-                html += `<tr><td><b>${key}</b></td><td>${props[key]}</td></tr>`;
-            }
-            html += "</table>";
-            return html;
-        }
+// ---------------- Helper Functions ----------------
+function createPopupContent(props) {
+  let html = "<table style='font-size:13px; margin:5px 0'>";
+  for (let key in props) {
+    html += `<tr><td><b>${key}</b></td><td>&nbsp;${props[key] || ''}</td></tr>`;
+  }
+  return html + "</table>";
+}
 
-        // Color function for school cluster_category
-        function schoolColor(category) {
-            return {
-                "1": "red",
-                "2": "blue",
-                "3": "green",
-                 "4": "yellow",
+function schoolColor(cat) {
+  return { "1": "#e74c3c", "2": "#3498db", "3": "#2ecc71", "4": "#f1c40f" }[cat] || "#7f8c8d";
+}
 
-            }[category] || "gray"; // default if unknown
-        }
+const isFemale = p => p.d_school_t === "females";
 
-        // Cluster zones (outline only)
-        var clusterZonesLayer = L.geoJSON(null, {
-    style: function (feature) {
-        let category = feature.properties.cluster_category;
-        let color = schoolColor(category);
+// ---------------- Layer Definitions ----------------
+// Cluster Zones
+const styleCluster = f => ({ color: schoolColor(f.properties.cluster_category), weight: 3, fillOpacity: 0 });
+const onEach = (f, l) => l.bindPopup(createPopupContent(f.properties));
 
-        return {
-            color: color,      // outline uses schoolColor()
-            weight: 2,
-            fillOpacity: 0     // outline only
-        };
-    },
-    onEachFeature: function (feature, layer) {
-        layer.bindPopup(createPopupContent(feature.properties));
-    }
-});
-// Schools (different icons for male/female + color by cluster_category)
-var schoolsLayer = L.geoJSON(null, {
-    pointToLayer: function (feature, latlng) {
+const maleClusterLayer = L.geoJSON(null, { style: styleCluster, onEachFeature: onEach });
+const femaleClusterLayer = L.geoJSON(null, { style: styleCluster, onEachFeature: onEach });
 
-        let color = schoolColor(feature.properties.cluster_category);
-        let gender = feature.properties.d_school_t;   // "males" or "females"
-
-        // If female → star icon
-        if (gender === "females") {
-
-            let starIcon = L.divIcon({
-                className: "star-icon",
-                html: `
-                    <svg width="22" height="22" viewBox="0 0 24 24" 
-                         stroke="${color}" fill="${color}">
-                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 
-                                 1.48 8.279L12 18.896l-7.416 4.517 
-                                 1.48-8.279L0 9.306l8.332-1.151z"/>
-                    </svg>`,
-                iconSize: [22, 22],
-                iconAnchor: [11, 11]
-            });
-
-            return L.marker(latlng, { icon: starIcon });
-        }
-
-        // Otherwise males → circle marker
-        return L.circleMarker(latlng, {
-            radius: 5,
-            color: color,
-            fillColor: color,
-            fillOpacity: 0.8,
-            weight: 1
-        });
-    },
-
-    onEachFeature: function (feature, layer) {
-        layer.bindPopup(createPopupContent(feature.properties));
-    }
+// Schools: Male = Circle, Female = Circle with black outline
+const maleSchoolsLayer = L.geoJSON(null, {
+  pointToLayer: (feature, latlng) => {
+    const color = schoolColor(feature.properties.cluster_category);
+    return L.circleMarker(latlng, { radius:6, color: "white", weight:1.5, fillColor: color, fillOpacity:0.9 });
+  },
+  onEachFeature: onEach
 });
 
+const femaleSchoolsLayer = L.geoJSON(null, {
+  pointToLayer: (feature, latlng) => {
+    const color = schoolColor(feature.properties.cluster_category);
+    return L.circleMarker(latlng, { radius:6, color: "black", weight:1.5, fillColor: color, fillOpacity:0.9 });
+  },
+  onEachFeature: onEach
+});
 
-        // Radius polygon
-        var radiusLayer = L.geoJSON(null, {
-            style: {
-                color: "purple",
-                weight: 2,
-                fillOpacity: 0
-            },
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(createPopupContent(feature.properties));
-            }
-        });
+// Radius Layers (optional, separate male/female)
+const maleRadiusLayer = L.geoJSON(null, { style:{color:"#9b59b6", weight:3, fillOpacity:0}, onEachFeature:onEach });
+const femaleRadiusLayer = L.geoJSON(null, { style:{color:"#59b6a0", weight:3, fillOpacity:0}, onEachFeature:onEach });
 
-        // Load layers
-        fetch("Cluster_Zones.geojson")
-            .then(res => res.json())
-            .then(data => {
-                clusterZonesLayer.addData(data);
-                map.fitBounds(clusterZonesLayer.getBounds());
-            });
+// ---------------- Data Loader (Progressive + Split by Gender) ----------------
+function loadAndSplit(url, layerMale, layerFemale, clusterMale=null, clusterFemale=null, radiusMale=null, radiusFemale=null, fitAfter=false) {
+  fetch(url).then(r=>r.json()).then(data=>{
+    const features = data.features || [];
+    const maleFeatures = features.filter(f => !isFemale(f.properties));
+    const femaleFeatures = features.filter(f => isFemale(f.properties));
+    
+    // Progressive loading
+    const chunk = 3000;
+    function processList(list, layer) {
+      let i=0;
+      function addChunk() {
+        const end = Math.min(i + chunk, list.length);
+        if(i < end){
+          layer.addData({ type:"FeatureCollection", features: list.slice(i,end) });
+        }
+        i=end;
+        if(i < list.length) requestAnimationFrame(addChunk);
+      }
+      requestAnimationFrame(addChunk);
+    }
 
-        fetch("Schools.geojson")
-            .then(res => res.json())
-            .then(data => schoolsLayer.addData(data));
+    processList(maleFeatures, layerMale);
+    processList(femaleFeatures, layerFemale);
 
-        fetch("Radius_70km.geojson")
-            .then(res => res.json())
-            .then(data => radiusLayer.addData(data));
+    if(clusterMale && clusterFemale){
+      processList(maleFeatures, clusterMale);
+      processList(femaleFeatures, clusterFemale);
+    }
+    if(radiusMale && radiusFemale){
+      processList(maleFeatures, radiusMale);
+      processList(femaleFeatures, radiusFemale);
+    }
 
-        // Layer control
-        L.control.layers(
-            { "OpenStreetMap": osm },
-            {
-                "Cluster Zones": clusterZonesLayer,
-                "Schools": schoolsLayer,
-                "70 km Radius": radiusLayer
-            },
-            { collapsed: false }
-        ).addTo(map);
+    if(fitAfter){
+      setTimeout(()=>{
+        const group = L.featureGroup([layerMale, layerFemale]);
+        if(group.getLayers().length > 0) map.fitBounds(group.getBounds().pad(0.1));
+      }, 800);
+    }
+  }).catch(err=>console.error("Error loading "+url, err));
+}
 
-        // Add all by default
-        clusterZonesLayer.addTo(map);
-        schoolsLayer.addTo(map);
-       
+// ---------------- Load Data ----------------
+loadAndSplit("Cluster_Zones.geojson", maleClusterLayer, femaleClusterLayer, true);
+loadAndSplit("Schools.geojson", maleSchoolsLayer, femaleSchoolsLayer);
+loadAndSplit("Radius_70km.geojson", maleRadiusLayer, femaleRadiusLayer);
 
-    </script>
+// ---------------- Layer Control ----------------
+const overlayMaps = {
+  "Male Schools Cluster Zones": maleClusterLayer,
+  "Female Schools Cluster Zones": femaleClusterLayer,
+  "Male Schools": maleSchoolsLayer,
+  "Female Schools": femaleSchoolsLayer,
+  "Male Schools Radius (70km)": maleRadiusLayer,
+  "Female Schools Radius (70km)": femaleRadiusLayer
+};
+
+L.control.layers(null, overlayMaps, { collapsed:false }).addTo(map);
+
+// ---------------- Add All Layers ----------------
+maleClusterLayer.addTo(map);
+femaleClusterLayer.addTo(map);
+maleSchoolsLayer.addTo(map);
+femaleSchoolsLayer.addTo(map);
+maleRadiusLayer.addTo(map);
+femaleRadiusLayer.addTo(map);
+
+</script>
 </body>
 </html>
