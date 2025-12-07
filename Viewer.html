@@ -50,6 +50,7 @@
                 "1": "red",
                 "2": "blue",
                 "3": "green",
+                 "4": "yellow",
 
             }[category] || "gray"; // default if unknown
         }
@@ -70,24 +71,47 @@
         layer.bindPopup(createPopupContent(feature.properties));
     }
 });
+// Schools (different icons for male/female + color by cluster_category)
+var schoolsLayer = L.geoJSON(null, {
+    pointToLayer: function (feature, latlng) {
 
-        // Schools (color by cluster_category)
-        var schoolsLayer = L.geoJSON(null, {
-            pointToLayer: function (feature, latlng) {
-                let color = schoolColor(feature.properties.cluster_category);
+        let color = schoolColor(feature.properties.cluster_category);
+        let gender = feature.properties.d_school_t;   // "males" or "females"
 
-                return L.circleMarker(latlng, {
-                    radius: 5,
-                    color: color,
-                    fillColor: color,
-                    fillOpacity: 0.8,
-                    weight: 1
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                layer.bindPopup(createPopupContent(feature.properties));
-            }
+        // If female → star icon
+        if (gender === "females") {
+
+            let starIcon = L.divIcon({
+                className: "star-icon",
+                html: `
+                    <svg width="22" height="22" viewBox="0 0 24 24" 
+                         stroke="${color}" fill="${color}">
+                        <path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 
+                                 1.48 8.279L12 18.896l-7.416 4.517 
+                                 1.48-8.279L0 9.306l8.332-1.151z"/>
+                    </svg>`,
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
+            });
+
+            return L.marker(latlng, { icon: starIcon });
+        }
+
+        // Otherwise males → circle marker
+        return L.circleMarker(latlng, {
+            radius: 5,
+            color: color,
+            fillColor: color,
+            fillOpacity: 0.8,
+            weight: 1
         });
+    },
+
+    onEachFeature: function (feature, layer) {
+        layer.bindPopup(createPopupContent(feature.properties));
+    }
+});
+
 
         // Radius polygon
         var radiusLayer = L.geoJSON(null, {
